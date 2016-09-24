@@ -1,6 +1,6 @@
 'use strict';
 
-//var tabStateCtrl = require('../state/tabs');
+var eventManager = require('../utils/eventManager');
 
 
 module.exports = {
