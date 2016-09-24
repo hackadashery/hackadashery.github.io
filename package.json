@@ -1,0 +1,25 @@
+{
+  "name": "fed-prototype",
+  "version": "1.0.0",
+  "description": "Play space for Front End things",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ijmccallum/fed-prototype.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ijmccallum/fed-prototype/issues"
+  },
+  "homepage": "https://github.com/ijmccallum/fed-prototype#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-css-globbing": "^0.1.8",
+    "gulp-sass": "^2.3.2"
+  }
+}

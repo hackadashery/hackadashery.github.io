@@ -1,0 +1,27 @@
+@mixin splitter-content(){
+	display: table;
+	width: 100%;
+
+	&__left {
+		display: table-cell;
+		vertical-align: middle;
+		padding-right: rem($padding);
+	}
+	
+	&__right {
+		display: table-cell;
+		vertical-align: middle;
+		padding-left: rem($padding);
+		text-align: right;
+	}
+}
+
+.splitter {
+	@include splitter-content();
+
+	.splitter--tiny-up { @include breakpoint(tiny){ @include splitter-content(); } }
+	.splitter--small-up { @include breakpoint(small){ @include splitter-content(); } }
+	.splitter--medium-up { @include breakpoint(medium){ @include splitter-content(); } }
+	.splitter--large-up { @include breakpoint(large){ @include splitter-content(); } }
+	.splitter--huge-up { @include breakpoint(huge){ @include splitter-content(); } }
+}

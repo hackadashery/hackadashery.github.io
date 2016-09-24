@@ -1,0 +1,35 @@
+/* 
+VARIABLES
+The various settings / variables that will be used throughout
+*/
+@import "0_variables/**/*.scss";
+
+/*
+MIXINS
+mixins / functions
+*/
+@import "1_mixins/**/*.scss";
+
+/*
+BASE
+The default styling for each html tag
+*/
+@import "2_base/**/*.scss";
+
+/*
+LAYOUTS
+These create the structurs within which components will live
+*/
+@import "3_layouts/**/*.scss";
+
+/*
+COMPONENTS
+BEM land
+*/
+@import "4_components/**/*.scss";
+
+/*
+UTILITY CLASSES
+Single responsability classes
+ */
+@import "5_nukes/**/*.scss";
