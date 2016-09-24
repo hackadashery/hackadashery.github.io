@@ -17,9 +17,14 @@
   },
   "homepage": "https://github.com/ijmccallum/fed-prototype#readme",
   "devDependencies": {
+    "browserify": "^13.1.0",
+    "event-stream": "^3.3.4",
+    "glob": "^7.1.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-css-globbing": "^0.1.8",
-    "gulp-sass": "^2.3.2"
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.2",
+    "vinyl-source-stream": "^1.1.0"
   }
 }
