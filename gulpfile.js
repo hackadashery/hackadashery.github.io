@@ -13,23 +13,23 @@ var gulp = require('gulp'),
 
 
 gulp.task('sass', function() {
-  return gulp.src('staticSrc/sass/main.scss')
+  return gulp.src('src/sass/main.scss')
     .pipe(globbing({
         extensions: ['.scss']
     }))
     .pipe(sass())
     .on('error', sass.logError)
     .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1'))
-    .pipe(gulp.dest('static/css'));
+    .pipe(gulp.dest('dist/css'));
 });
 
 gulp.task('watch:sass', function() {
-    gulp.watch('staticSrc/sass/**/*.scss', gulp.series('sass'));
+    gulp.watch('src/sass/**/*.scss', gulp.series('sass'));
 });
 
 
 gulp.task('es6', function(done) {
-    glob('./staticSrc/es6/**.js', function(err, files) {
+    glob('./src/es6/**.js', function(err, files) {
         if(err) done(err);
 
         var tasks = files.map(function(entry) {
@@ -41,15 +41,15 @@ gulp.task('es6', function(done) {
                     dirname: '',
                     extname: '.bundle.js'
                 }))
-                .pipe(gulp.dest('./static/js'));
+                .pipe(gulp.dest('./dist/js'));
             });
         es.merge(tasks).on('end', done);
     })
 });
 
 gulp.task('watch:es6', function() {
-    gulp.watch('staticSrc/es6/**/*.js', gulp.series('es6'));
+    gulp.watch('src/es6/**/*.js', gulp.series('es6'));
 });
 
-gulp.task('watch', gulp.parallel('watch:sass', 'watch:es6', 'watch:svg'));
-gulp.task('default', gulp.series('sass','es6','svg','watch'));
+gulp.task('watch', gulp.parallel('watch:sass', 'watch:es6'));
+gulp.task('default', gulp.series('sass','es6','watch'));
