@@ -26,5 +26,8 @@
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.3.2",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "d3": "^4.2.6"
   }
 }
