@@ -9,8 +9,17 @@ var gulp = require('gulp'),
     source     = require('vinyl-source-stream'),
     rename     = require('gulp-rename'),
     glob       = require('glob'),
-    es         = require('event-stream');
+    es         = require('event-stream'),
+    notifier   = require('node-notifier');
 
+var fancyErrorHandler = function(err){
+    console.log(err.stack);
+                 
+    notifier.notify({
+        'title': 'Hackadashery Error :(',
+        'message': err.message
+    });
+}
 
 gulp.task('sass', function() {
   return gulp.src('src/sass/main.scss')
@@ -18,7 +27,7 @@ gulp.task('sass', function() {
         extensions: ['.scss']
     }))
     .pipe(sass())
-    .on('error', sass.logError)
+    .on('error', fancyErrorHandler)
     .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1'))
     .pipe(gulp.dest('dist/css'));
 });
@@ -36,6 +45,7 @@ gulp.task('es6', function(done) {
             console.log('entry: ', entry);
             return browserify({ entries: [entry] })
                 .bundle()
+                .on('error', fancyErrorHandler)
                 .pipe(source(entry))
                 .pipe(rename({
                     dirname: '',

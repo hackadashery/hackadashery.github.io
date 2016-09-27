@@ -4,7 +4,7 @@
   "description": "Play space for Front End things",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "gulp"
   },
   "repository": {
     "type": "git",
@@ -25,9 +25,10 @@
     "gulp-css-globbing": "^0.1.8",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.3.2",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "node-notifier": "^4.6.1"
   },
   "dependencies": {
-    "d3": "^4.2.6"
+    "d3": "^4.2.6",
   }
 }
