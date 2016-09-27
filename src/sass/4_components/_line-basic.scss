@@ -1,0 +1,44 @@
+.line-basic 
+{
+	&__line
+	{
+		stroke: steelblue;
+		stroke-width: 2;
+		fill: none;
+	}
+
+	&__area 
+	{
+	    fill: lightsteelblue;
+	    stroke-width: 0;
+	}
+
+	&__grid
+	{
+		.tick 
+		{
+		    stroke: lightgrey;
+		    stroke-opacity: 0.1;
+		    shape-rendering: crispEdges;
+		}
+
+		path 
+		{
+	    	stroke-width: 0;
+		}
+	} 
+
+	&__tooltip
+	{
+		position: absolute;
+		width: 60px;
+		height: 28px;
+		padding: 2px;
+		font-size: 12px;
+		text-align: center;
+		border: 0px;
+		border-radius: 8px;
+		background: lightsteelblue;
+		pointer-events: none;
+	}
+}
