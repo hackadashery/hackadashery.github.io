@@ -19,6 +19,8 @@ var fancyErrorHandler = function(err){
         'title': 'Hackadashery Error :(',
         'message': err.message
     });
+
+    this.emit('end');
 }
 
 gulp.task('sass', function() {
