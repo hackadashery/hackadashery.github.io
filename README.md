@@ -19,6 +19,8 @@ Open the command line / terminal and navigate/cd into the root of the repo (unle
 
 now run `npm install`
 
+An [optional addition](https://www.npmjs.com/package/http-server): `npm install http-server -g` for 
+
 Set up should be complete! Report any errors as issues on this repo and we'll try to get to them / figure out your problem.
 
 ---
@@ -30,3 +32,6 @@ With the command line / terminal open in repo root run `gulp`. This will do a fe
  - compiles all the JavaScript from `src/es6` into `dist/js/common.bundle.js` using [Babel](https://babeljs.io/docs/learn-es2015/) and [Browserify](http://browserify.org/)
  - compiles all the [Sass](http://sass-lang.com/) from `src/sass` into `dist/css/main.css`
  - watches the JS and Sass in src for any saved changes (when you save it'll compile again).
+
+
+ `http-server & `
