@@ -12,6 +12,9 @@ var gulp = require('gulp'),
     es         = require('event-stream'),
     notifier   = require('node-notifier');
 
+
+
+//=============================================================== Errors
 var fancyErrorHandler = function(err){
     console.log(err.stack);
                  
@@ -23,6 +26,9 @@ var fancyErrorHandler = function(err){
     this.emit('end');
 }
 
+
+
+//=============================================================== Sass
 gulp.task('sass', function() {
   return gulp.src('src/sass/main.scss')
     .pipe(globbing({
@@ -33,12 +39,11 @@ gulp.task('sass', function() {
     .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1'))
     .pipe(gulp.dest('dist/css'));
 });
-
-gulp.task('watch:sass', function() {
-    gulp.watch('src/sass/**/*.scss', gulp.series('sass'));
-});
+gulp.task('watch:sass', function() { gulp.watch('src/sass/**/*.scss', gulp.series('sass')); });
 
 
+
+//=============================================================== JS
 gulp.task('es6', function(done) {
     glob('./src/es6/**.js', function(err, files) {
         if(err) done(err);
@@ -58,10 +63,10 @@ gulp.task('es6', function(done) {
         es.merge(tasks).on('end', done);
     })
 });
+gulp.task('watch:es6', function() {  gulp.watch('src/es6/**/*.js', gulp.series('es6')); });
 
-gulp.task('watch:es6', function() {
-    gulp.watch('src/es6/**/*.js', gulp.series('es6'));
-});
 
+
+//=============================================================== `gulp`
 gulp.task('watch', gulp.parallel('watch:sass', 'watch:es6'));
 gulp.task('default', gulp.series('sass','es6','watch'));
