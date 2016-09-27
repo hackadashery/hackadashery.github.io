@@ -4,7 +4,9 @@
   "description": "Play space for Front End things",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm-run-all --parallel gulp server",
+    "server": "http-server &",
+    "gulp": "gulp"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,8 @@
     "gulp-css-globbing": "^0.1.8",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.3.2",
+    "node-notifier": "^4.6.1",
+    "npm-run-all": "^3.1.0",
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {

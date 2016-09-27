@@ -10,7 +10,7 @@ $em-base: 16;
 
   $base: $em-base;
   @if not unitless($base) {
-    $base: strip-units($base);
+    $base: strip-units($base); 
   }
   @return ($pxval / $base) * 1rem;
 }

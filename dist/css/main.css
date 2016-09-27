@@ -462,6 +462,35 @@ These create the structurs within which components will live
 COMPONENTS
 BEM land
 */
+.line-basic__line {
+  stroke: steelblue;
+  stroke-width: 2;
+  fill: none; }
+
+.line-basic__area {
+  fill: lightsteelblue;
+  stroke-width: 0; }
+
+.line-basic__grid .tick {
+  stroke: lightgrey;
+  stroke-opacity: 0.1;
+  shape-rendering: crispEdges; }
+
+.line-basic__grid path {
+  stroke-width: 0; }
+
+.line-basic__tooltip {
+  position: absolute;
+  width: 60px;
+  height: 28px;
+  padding: 2px;
+  font-size: 12px;
+  text-align: center;
+  border: 0px;
+  border-radius: 8px;
+  background: lightsteelblue;
+  pointer-events: none; }
+
 /*
 UTILITY CLASSES
 Single responsability classes
