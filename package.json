@@ -20,6 +20,7 @@
   "homepage": "https://github.com/ijmccallum/fed-prototype#readme",
   "devDependencies": {
     "browserify": "^13.1.0",
+    "d3-selection-multi": "^1.0.0",
     "event-stream": "^3.3.4",
     "glob": "^7.1.0",
     "gulp": "github:gulpjs/gulp#4.0",

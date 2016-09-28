@@ -1,3 +1,5 @@
+/* .splitter is a layout class to make it easy to put things next to each other */
+
 @mixin splitter-content(){
 	display: table;
 	width: 100%;

@@ -380,6 +380,7 @@ textarea {
 LAYOUTS
 These create the structurs within which components will live
 */
+/* .splitter is a layout class to make it easy to put things next to each other */
 .splitter {
   display: table;
   width: 100%; }
