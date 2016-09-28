@@ -1,0 +1,41 @@
+.requests-linechart
+{
+	&__graph
+	{
+		background: $gray;
+	}
+
+	&__title
+	{
+		font-size: 1rem;
+		font-weight: bold;
+		fill: $white;
+		text-transform: uppercase;
+		text-anchor: middle;
+	}
+
+	&__line
+	{
+		stroke: $white;
+		stroke-width: 3;
+		fill: none;
+	}
+
+	&__datapoint
+	{
+		fill: transparent;
+	}
+
+	&__axis
+	{
+		path, line
+		{
+			stroke: transparent;
+		}
+
+		text
+		{
+			fill: $white;
+		}
+	}
+}

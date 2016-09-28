@@ -492,6 +492,30 @@ BEM land
   background: lightsteelblue;
   pointer-events: none; }
 
+.requests-linechart__graph {
+  background: #bec7cc; }
+
+.requests-linechart__title {
+  font-size: 1rem;
+  font-weight: bold;
+  fill: #fff;
+  text-transform: uppercase;
+  text-anchor: middle; }
+
+.requests-linechart__line {
+  stroke: #fff;
+  stroke-width: 3;
+  fill: none; }
+
+.requests-linechart__datapoint {
+  fill: transparent; }
+
+.requests-linechart__axis path, .requests-linechart__axis line {
+  stroke: transparent; }
+
+.requests-linechart__axis text {
+  fill: #fff; }
+
 /*
 UTILITY CLASSES
 Single responsability classes
