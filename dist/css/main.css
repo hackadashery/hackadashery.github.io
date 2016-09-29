@@ -492,6 +492,25 @@ BEM land
   background: lightsteelblue;
   pointer-events: none; }
 
+.requests-barchart {
+  font-weight: 500; }
+  .requests-barchart__bar {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    stroke: black;
+    stroke-width: 1px;
+    rx: 5px;
+    ry: 5px; }
+  .requests-barchart__bar-label {
+    fill: white;
+    font-size: 0.875rem;
+    font-weight: bold;
+    alignment-baseline: middle; }
+  .requests-barchart__bar-number {
+    fill: #ccc;
+    font-size: 1.25rem;
+    alignment-baseline: middle; }
+
 .requests-linechart__graph {
   background: #bec7cc; }
 
@@ -515,6 +534,34 @@ BEM land
 
 .requests-linechart__axis text {
   fill: #fff; }
+
+.tabs {
+  display: -ms-flexbox;
+  display: flex; }
+  .tabs__tab-col {
+    -ms-flex-positive: 1;
+        flex-grow: 1;
+    position: relative;
+    height: 2.5rem; }
+  .tabs__tab {
+    position: absolute;
+    top: 0.625rem;
+    left: 1px;
+    right: 1px;
+    bottom: 0;
+    background: #14b9d6;
+    cursor: pointer;
+    transition: all 0.2s ease; }
+    .tabs__tab:hover, .tabs__tab:active, .tabs__tab.active {
+      top: 0;
+      background: #f27835; }
+  .tabs__tab-text {
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    color: white; }
 
 /*
 UTILITY CLASSES
