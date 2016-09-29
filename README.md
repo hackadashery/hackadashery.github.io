@@ -42,7 +42,9 @@ The gulpfile does a few things for us:
 
  - compiles all the JavaScript from `src/es6` into `dist/js/common.bundle.js` using [Babel](https://babeljs.io/docs/learn-es2015/) and [Browserify](http://browserify.org/)
  - compiles all the [Sass](http://sass-lang.com/) from `src/sass` into `dist/css/main.css`
- - watches the JS and Sass in src for any saved changes (when you save it'll compile again).
+ - compiles all the [Handlebars](http://handlebarsjs.com/) from `src/hbs` to `dist/index.html`
+ - moves the data json files from `src/data` to `dist/data`
+ - watches the es6, Sass, hbs and data files in src for any saved changes (when you save it'll run the relevant compilation task again).
 
 
 ---
