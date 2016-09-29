@@ -13,7 +13,7 @@ module.exports = {
 			.range([0,300]); //output max / min
 
 
-		d3.json('src/data/eg_dept_requests.json', function(error, data) {
+		d3.json('data/eg_dept_requests.json', function(error, data) {
 			var barHeight = 30;
 			var outerBarHeight = barHeight + pad + 2; //plus 2 for the bar stroke
 			let svg = d3.select('.requests-barchart')

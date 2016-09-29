@@ -1,0 +1,22 @@
+[
+	{
+		"department_name": "PPA",
+		"number_of_requests": 90
+	},
+	{
+		"department_name": "L&I",
+		"number_of_requests": 85
+	},
+	{
+		"department_name": "Parks & Rec",
+		"number_of_requests": 80
+	},
+	{
+		"department_name": "Recycling collection",
+		"number_of_requests": 46
+	},
+	{
+		"department_name": "Streets",
+		"number_of_requests": 5
+	}
+]
