@@ -380,6 +380,13 @@ textarea {
 LAYOUTS
 These create the structurs within which components will live
 */
+.main-columns {
+  display: -ms-flexbox;
+  display: flex; }
+  .main-columns__col {
+    -ms-flex-positive: 1;
+        flex-grow: 1; }
+
 /* .splitter is a layout class to make it easy to put things next to each other */
 .splitter {
   display: table;

@@ -88,6 +88,7 @@ gulp.task('hbs', function () {
  
     return gulp.src('src/hbs/index.hbs')
         .pipe(handlebars(templateData, options))
+        .on('error', fancyErrorHandler)
         .pipe(rename('index.html'))
         .pipe(gulp.dest('dist'));
 });
