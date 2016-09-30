@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm-run-all --parallel gulp server",
-    "server": "http-server dist",
+    "server": "http-server &",
     "gulp": "gulp"
   },
   "repository": {
@@ -28,6 +28,7 @@
     "gulp-compile-handlebars": "^0.6.1",
     "gulp-css-globbing": "^0.1.8",
     "gulp-handlebars": "^4.0.0",
+    "gulp-htmlmin": "^3.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.3.2",
     "handlebars": "^4.0.5",

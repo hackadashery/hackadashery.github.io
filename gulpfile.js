@@ -11,7 +11,8 @@ var gulp = require('gulp'),
     glob       = require('glob'),
     es         = require('event-stream'),
     notifier   = require('node-notifier'),
-    handlebars = require('gulp-compile-handlebars');
+    handlebars = require('gulp-compile-handlebars'),
+    htmlmin    = require('gulp-htmlmin');
 
 
 
@@ -71,7 +72,7 @@ gulp.task('watch:es6', function() {  gulp.watch('src/es6/**/*.js', gulp.series('
 //=============================================================== Handlebars -> HTML
 gulp.task('hbs', function () {
     var templateData = {
-        firstName: 'Kaanon'
+        distUrl: 'dist/'
     },
     options = {
         ignorePartials: true, //ignores the unknown footer2 partial in the handlebars template, defaults to false 
@@ -88,9 +89,10 @@ gulp.task('hbs', function () {
  
     return gulp.src('src/hbs/index.hbs')
         .pipe(handlebars(templateData, options))
+        .pipe(htmlmin({collapseWhitespace: true}))
         .on('error', fancyErrorHandler)
         .pipe(rename('index.html'))
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('./'));
 });
 gulp.task('watch:hbs', function() {  gulp.watch('src/hbs/**/*.hbs', gulp.series('hbs')); });
 

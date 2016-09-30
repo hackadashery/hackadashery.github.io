@@ -7,7 +7,7 @@ var minBarWidth = 30;
 module.exports = {
 	init(){
 
-		d3.json('data/eg_dept_requests.json', function(error, data) {
+		d3.json('dist/data/eg_dept_requests.json', function(error, data) {
 			var w = document.getElementById('requests-barchart').clientWidth;
 			var barHeight = 30;
 			var outerBarHeight = barHeight + bargin + 2; //plus 2 for the bar stroke

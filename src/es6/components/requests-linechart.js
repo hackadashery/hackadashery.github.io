@@ -51,7 +51,7 @@ module.exports = {
 		}
 
 		// GET DATA!
-		d3.json('data/line-basic-data.json', function(error, data) {
+		d3.json('dist/data/line-basic-data.json', function(error, data) {
 			data.forEach(function(d) {
 				d.date = parseDate(d.date);
 				d.close = +d.close; // '+' operator sets close to numeric value
