@@ -6,14 +6,16 @@
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body>
-	<p>Hello Philly!</p>
+	<h1>Philly 311</h1>
 
 	<div class="main-columns">
 		<div class="main-columns__col">
+			{{> timespan_tabs }}
 			<section class="requests-linechart"></section>
 		</div>
 		<div class="main-columns__col">
-			{{> department_totals_barchart }}
+			{{> timespan_tabs }}
+			<svg id="requests-barchart" class="requests-barchart"></svg>
 		</div>
 		<div class="main-columns__col">
 			

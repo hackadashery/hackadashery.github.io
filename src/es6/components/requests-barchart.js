@@ -1,24 +1,18 @@
 'use strict';
 
 var d3 = require('d3');
-var w = 300;
-var h = 200;
 var pad = 5;
+var minBarWidth = 30;
 
 module.exports = {
 	init(){
-		
-		var scale = d3.scaleLinear()
-			.domain([0,100]) //input max / min
-			.range([0,300]); //output max / min
-
 
 		d3.json('data/eg_dept_requests.json', function(error, data) {
+			var w = document.getElementById('requests-barchart').clientWidth;
+			console.log('w', w);
 			var barHeight = 30;
 			var outerBarHeight = barHeight + pad + 2; //plus 2 for the bar stroke
-			let svg = d3.select('.requests-barchart')
-				.append('svg')
-				.attr('width', w)
+			let svg = d3.select('#requests-barchart')
 				.attr('height', ((outerBarHeight * data.length) + (pad) ));
 			
 			//find the highest and lowest number of requests
@@ -32,13 +26,17 @@ module.exports = {
 					lowestRequestNumber = obj.number_of_requests;
 				}
 			});
-			console.log('highestRequestNumber', highestRequestNumber);
-			console.log('lowestRequestNumber', lowestRequestNumber);
+
+			var chartWidthScale = d3.scaleLinear()
+				.domain([minBarWidth,highestRequestNumber]) //input max / min
+				.range([minBarWidth,(w-minBarWidth)]); //output max / min
 
 			var colorScale = d3.scaleLinear()
 				.domain([lowestRequestNumber,highestRequestNumber])
-				.range([100,200])
+				.range([100,200]);
 
+
+			// =================================== Starting D3
 			var bar = svg.selectAll("bar")
 				.data(data)
 				.enter()
@@ -47,7 +45,7 @@ module.exports = {
 				
 				bar.append("rect")
 					.attr('class', 'requests-barchart__bar')
-					.attr('width', function(d){	return scale(d.number_of_requests); })
+					.attr('width', function(d){	return chartWidthScale(d.number_of_requests); })
 					.attr('height', barHeight)
 					.attr('fill', function(d){ 
 						var g = Math.ceil(colorScale(d.number_of_requests));
@@ -62,7 +60,7 @@ module.exports = {
 
 				bar.append("text")
 					.attr('class', 'requests-barchart__bar-number')
-					.attr('x', function(d){ return scale(d.number_of_requests) + pad; })
+					.attr('x', function(d){ return chartWidthScale(d.number_of_requests) + pad; })
 					.attr('y', (barHeight / 2) )
 					.text(function(d){ return d.number_of_requests; });
 

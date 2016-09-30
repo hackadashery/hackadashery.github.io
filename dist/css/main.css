@@ -500,12 +500,14 @@ BEM land
   pointer-events: none; }
 
 .requests-barchart {
-  font-weight: 500; }
+  font-weight: 500;
+  width: 100%; }
   .requests-barchart__bar {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     stroke: black;
     stroke-width: 1px;
+    x: 1;
     rx: 5px;
     ry: 5px; }
   .requests-barchart__bar-label {
