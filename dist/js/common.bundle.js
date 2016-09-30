@@ -16471,7 +16471,7 @@ module.exports = {
 'use strict';
 
 var d3 = require('d3');
-var pad = 5;
+var bargin = 5; //bar margin - :D
 var minBarWidth = 30;
 
 module.exports = {
@@ -16479,11 +16479,11 @@ module.exports = {
 
 		d3.json('data/eg_dept_requests.json', function(error, data) {
 			var w = document.getElementById('requests-barchart').clientWidth;
-			console.log('w', w);
 			var barHeight = 30;
-			var outerBarHeight = barHeight + pad + 2; //plus 2 for the bar stroke
+			var outerBarHeight = barHeight + bargin + 2; //plus 2 for the bar stroke
+			var barsHeight = (outerBarHeight * data.length) + (bargin) 
 			let svg = d3.select('#requests-barchart')
-				.attr('height', ((outerBarHeight * data.length) + (pad) ));
+				.attr('height', barsHeight + 50);
 			
 			//find the highest and lowest number of requests
 			var highestRequestNumber = -Infinity;
@@ -16498,8 +16498,8 @@ module.exports = {
 			});
 
 			var chartWidthScale = d3.scaleLinear()
-				.domain([minBarWidth,highestRequestNumber]) //input max / min
-				.range([minBarWidth,(w-minBarWidth)]); //output max / min
+				.domain([0,highestRequestNumber]) //input max / min
+				.range([0,(w-minBarWidth)]); //output max / min
 
 			var colorScale = d3.scaleLinear()
 				.domain([lowestRequestNumber,highestRequestNumber])
@@ -16511,8 +16511,9 @@ module.exports = {
 				.data(data)
 				.enter()
 				.append("g")
-					.attr('transform', function(d, i){ return "translate(0," + ((i * outerBarHeight)+pad) + ")"; });
+					.attr('transform', function(d, i){ return "translate(0," + ((i * outerBarHeight)+bargin) + ")"; });
 				
+				//the bars
 				bar.append("rect")
 					.attr('class', 'requests-barchart__bar')
 					.attr('width', function(d){	return chartWidthScale(d.number_of_requests); })
@@ -16522,17 +16523,25 @@ module.exports = {
 						return "rgb(20," + g + ", 213)"; 
 					});
 
+				//department name within the bar
 				bar.append("text")
 					.attr('class', 'requests-barchart__bar-label')
-					.attr('x', pad)
+					.attr('x', bargin)
 					.attr('y', (barHeight / 2) )
 					.text(function(d){ return d.department_name; });
 
+				//number of requests to the right of the bar
 				bar.append("text")
 					.attr('class', 'requests-barchart__bar-number')
-					.attr('x', function(d){ return chartWidthScale(d.number_of_requests) + pad; })
+					.attr('x', function(d){ return chartWidthScale(d.number_of_requests) + bargin; })
 					.attr('y', (barHeight / 2) )
 					.text(function(d){ return d.number_of_requests; });
+
+				//The X axis
+				svg.append('g')
+					.attr('transform', 'translate(0,' + barsHeight + ')')
+					.call(d3.axisBottom(chartWidthScale).ticks(10));
+					//.attr('class', 'requests-linechart__axis requests-linechart__axis-x')
 
 		});
 	}
