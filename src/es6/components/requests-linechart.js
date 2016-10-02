@@ -16,10 +16,14 @@ module.exports = {
 			height = 300 - margin.top - margin.bottom;
 
 		// parse the date
-		var parseDate = d3.timeParse("%d-%b-%y");
+		var parseDate = d3.timeParse("%-m/%-d/%-y %H:%M");
+		var parseDay = d3.timeParse("%-m/%-d/%-y");
 
 		// style the date for tooltips
-		var formatDate = d3.timeFormat('%e %B');
+		var formatDate = d3.timeFormat('%a %b %e');
+
+		// for aggregation
+		var dayDate = d3.timeFormat("%-m/%-d/%-y");
 
 		// scale the data to the size of the graph
 		var x = d3.scaleTime().range([0,width]);
@@ -27,8 +31,8 @@ module.exports = {
 
 		// generate line path and set up strucure to put data into sets of x,y coordinates
 		var valueline = d3.line()
-			.x(function(d) { return x(d.date); })
-			.y(function(d) { return y(d.close); });
+			.x(function(d) { return x(d.day); })
+			.y(function(d) { return y(d.sum); });
 
 		// generate tooltop div element
 		var div = d3.select('.requests-linechart')
@@ -45,16 +49,31 @@ module.exports = {
 			.append('g')
 				.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-		// make grid lines for graph
+		// make horizontal grid lines for graph
 		function make_y_axis() {
 			return d3.axisLeft(y).ticks(5);
 		}
 
 		// GET DATA!
-		d3.json('dist/data/line-basic-data.json', function(error, data) {
+		d3.json('dist/data/sept311.json', function(error, data) {
 			data.forEach(function(d) {
-				d.date = parseDate(d.date);
-				d.close = +d.close; // '+' operator sets close to numeric value
+				d.date = parseDate(d['Requested Date'].Time);
+				d.dayDate = dayDate(d.date);
+			});
+
+			var reqsPerDay = d3.nest()
+				.key(function(d) { return d.dayDate; })
+				.key(function(d) { return d["Service Name"]; })
+				.rollup(function(v) { return {
+					"count": v.length } 
+				})
+				.entries(data);
+			console.log(JSON.stringify(reqsPerDay));
+
+			reqsPerDay.forEach(function(d) {
+				d.sum = +d.values[0].value.count;
+				d.day = parseDay(d.key);
+				
 			});
 
 			// define the scope of the data on x and y axes
@@ -62,8 +81,8 @@ module.exports = {
 				return d.date;
 			}));
 
-			y.domain([0, d3.max(data, function(d) {
-				return d.close;
+			y.domain([0, d3.max(reqsPerDay, function(d) {
+				return d.sum;
 			})]);
 
 			// add graph grid
@@ -76,7 +95,7 @@ module.exports = {
 
 			// add valueline path with data
 			svg.append('path')
-				.data([data])
+				.data([reqsPerDay])
 				.attr('class', 'requests-linechart__line')
 				.attr('d', valueline);
 
@@ -98,19 +117,19 @@ module.exports = {
 				.attr('class', 'requests-linechart__title')
 				.text('Requests Received');
 
-			// add data points with tooltips
+			//add data points with tooltips
 			svg.selectAll('dot')
-					.data(data)
+					.data(reqsPerDay)
 				.enter().append('circle')
 					.attr('r', 5) 
-					.attr('cx', function(d) {return x(d.date); })
-					.attr('cy', function(d) { return y(d.close); })
+					.attr('cx', function(d) {return x(d.day); })
+					.attr('cy', function(d) { return y(d.sum); })
 					.attr('class', 'requests-linechart__datapoint')
 					.on('mouseover', function(d) {
 						div.transition()
 							.duration(200)
 							.style('opacity', .9);
-						div.html(formatDate(d.date) + '<br/>' + d.close)
+						div.html(formatDate(d.day) + '<br/>' + d.sum)
 							.style('left', (d3.event.pageX) + 'px')
 							.style('top', (d3.event.pageY - 28) + 'px');
 					})
