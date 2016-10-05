@@ -480,6 +480,11 @@ BEM land
   fill: url(#redstripe);
   stroke-width: 0; }
 
+.burnchart__new-dot {
+  fill: white;
+  stroke: #d18462;
+  stroke-width: 2; }
+
 .burnchart__resolved-line {
   stroke: #a1bd89;
   stroke-width: 2;
@@ -489,11 +494,21 @@ BEM land
   fill: rgba(161, 189, 137, 0.3);
   stroke-width: 0; }
 
+.burnchart__resolved-dot {
+  fill: white;
+  stroke: #a1bd89;
+  stroke-width: 2; }
+
 .burnchart__balance-line {
   stroke: #496b7c;
   stroke-dasharray: 5, 5;
   stroke-width: 2;
   fill: none; }
+
+.burnchart__balance-dot {
+  fill: white;
+  stroke: #496b7c;
+  stroke-width: 2; }
 
 .line-basic__line {
   stroke: steelblue;

@@ -94,6 +94,30 @@ module.exports = {
 				.datum(data)
 				.attr("class", "burnchart__balance-line")
 				.attr("d", balanceLine);
+			
+
+			//The dots
+			svg.selectAll("point")
+				.data(data)
+				.enter().append("circle")
+				.attr("r", 5)
+				.attr("class", "burnchart__new-dot")
+				.attr("cx", (d) => { return dateScale(d.date) })
+				.attr("cy", (d) => { return burnScale(d.new) });
+			svg.selectAll("point")
+				.data(data)
+				.enter().append("circle")
+				.attr("r", 5)
+				.attr("class", "burnchart__resolved-dot")
+				.attr("cx", (d) => { return dateScale(d.date) })
+				.attr("cy", (d) => { return burnScale(d.resolved) });
+			svg.selectAll("point")
+				.data(data)
+				.enter().append("circle")
+				.attr("r", 5)
+				.attr("class", "burnchart__balance-dot")
+				.attr("cx", (d) => { return dateScale(d.date) })
+				.attr("cy", (d) => { return balanceScale(d.balance) });
 
 		});
 	}
