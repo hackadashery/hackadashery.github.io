@@ -1,0 +1,30 @@
+.burnchart {
+	
+	&__new-line {
+		stroke: #d18462;
+		stroke-width: 2;
+		fill: none;
+	}
+	&__new-area {
+		fill: rgba(#d18462, 0.3);
+		fill: url(#redstripe);
+		stroke-width: 0;
+	}
+
+	&__resolved-line {
+		stroke: #a1bd89;
+		stroke-width: 2;
+		fill: none;
+	}
+	&__resolved-area {
+		fill: rgba(#a1bd89, 0.3);
+		stroke-width: 0;
+	}
+
+	&__balance-line {
+		stroke: #496b7c;
+		stroke-dasharray: 5, 5;
+		stroke-width: 2;
+		fill: none;
+	}
+}
