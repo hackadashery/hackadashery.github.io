@@ -128,6 +128,21 @@ module.exports = {
 				.attr("cx", (d) => { return dateScale(d.date) })
 				.attr("cy", (d) => { return balanceScale(d.balance) });
 
+			//Left Y
+			svg.append('g')
+				.attr('transform', 'translate(' + pxToChartLeft + ',0)')
+				.call(d3.axisLeft(balanceScale).ticks(10));
+
+			//The X axis
+			svg.append('g')
+				.attr('transform', 'translate(0,' + pxToChartBottom + ')')
+				.call(d3.axisBottom(dateScale).ticks(10));
+
+			//Right Y
+			svg.append('g')
+				.attr('transform', 'translate(' + pxToChartRight + ',0)')
+				.call(d3.axisRight(burnScale).ticks(10));
+
 		});
 	}
 }
