@@ -1,15 +1,21 @@
 'use strict';
 
 var d3 = require('d3');
-var chartPadding = { top: 0, right: 40, bottom: 40, left: 40 }
+var chartPadding = { top: 10, right: 40, bottom: 40, left: 40 }
 
 module.exports = {
 	init(){
 		d3.json('dist/data/burn_total.json', function(error, data) {
-			// =================================== Variables		
-			var chartWidth = document.getElementById('burnchart').clientWidth;
-			var chartHeight = chartWidth * 0.7;
-			console.log('chartWidth', chartWidth);
+			// =================================== Variables	
+			var svgWidth = document.getElementById('burnchart').clientWidth;
+			var svgHeight = svgWidth * 0.7;
+			var chartWidth = (-chartPadding.left) + svgWidth + (-chartPadding.right);
+			var chartHeight = (-chartPadding.top) + svgHeight + (-chartPadding.bottom);
+			var pxToChartTop = chartPadding.top;
+			var pxToChartBottom = chartPadding.top + chartHeight;
+			var pxToChartLeft = chartPadding.left;
+			var pxToChartRight = chartPadding.left + chartWidth;
+
 			var balanceMax = -Infinity;
 			var balanceMin = Infinity;
 			var burnMax = -Infinity;
@@ -29,19 +35,22 @@ module.exports = {
 
 
 			// =================================== Scales
+			//left vert
 			var balanceScale = d3.scaleLinear()
 				.domain([balanceMin, balanceMax])
-				.range([chartHeight, 0]);
+				.range([pxToChartBottom, pxToChartTop]);
 
+			//base horz
 			var parseDate = d3.timeParse("%d-%b-%y");
 			var formatDate = d3.timeFormat('%e %B');
 			var dateScale = d3.scaleTime()
 				.domain([new Date(dateOldest), new Date(dateNewest)])
-				.range([0,chartWidth]);
+				.range([pxToChartLeft,pxToChartRight]);
 			
+			//right vert
 			var burnScale = d3.scaleLinear()
 				.domain([burnMax+1, burnMin-1])
-				.range([0,chartHeight]);
+				.range([pxToChartTop, pxToChartBottom]);
 
 
 
@@ -50,7 +59,7 @@ module.exports = {
 				.y(function(d) { return burnScale(d.new); });
 			var newArea = d3.area()
 				.x(function(d) { return dateScale(d.date); })
-				.y0(chartHeight)
+				.y0(pxToChartBottom)
 				.y1(function(d) { return burnScale(d.new); });
 
 			var resolvedLine = d3.line()
@@ -58,7 +67,7 @@ module.exports = {
 				.y(function(d) { return burnScale(d.resolved); });
 			var resolvedArea = d3.area()
 				.x(function(d) { return dateScale(d.date); })
-				.y0(chartHeight)
+				.y0(pxToChartBottom)
 				.y1(function(d) { return burnScale(d.resolved); });
 
 			var balanceLine = d3.line()
@@ -67,7 +76,7 @@ module.exports = {
 
 			// =================================== Starting D3
 			let svg = d3.select('#burnchart')
-				.attr('height', chartHeight);
+				.attr('height', svgHeight);
 
 			//new issues line
 			svg.append("path")
