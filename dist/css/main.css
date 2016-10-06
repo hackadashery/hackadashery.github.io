@@ -510,6 +510,15 @@ BEM land
   stroke: #496b7c;
   stroke-width: 2; }
 
+.burnchart__axis path {
+  stroke: #cacaca; }
+
+.burnchart__axis line {
+  stroke: #cacaca; }
+
+.burnchart__axis-label {
+  text-anchor: middle; }
+
 .line-basic__line {
   stroke: steelblue;
   stroke-width: 2;

@@ -42,4 +42,16 @@
 		stroke: #496b7c;
 		stroke-width: 2;
 	}
+
+	&__axis {
+		path {
+			stroke: #cacaca;
+		}
+		line {
+			stroke: #cacaca;
+		}
+	}
+		&__axis-label {
+			text-anchor: middle; //center align
+		}
 }

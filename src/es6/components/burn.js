@@ -1,7 +1,7 @@
 'use strict';
 
 var d3 = require('d3');
-var chartPadding = { top: 10, right: 40, bottom: 40, left: 40 }
+var chartPadding = { top: 10, right: 60, bottom: 40, left: 60 }
 
 module.exports = {
 	init(){
@@ -78,6 +78,24 @@ module.exports = {
 			let svg = d3.select('#burnchart')
 				.attr('height', svgHeight);
 
+			//Left Y
+			svg.append('g')
+				.attr('transform', 'translate(' + pxToChartLeft + ',0)')
+				.attr('class', 'burnchart__axis')
+				.call(d3.axisLeft(balanceScale).ticks(10));
+
+			//The X axis
+			svg.append('g')
+				.attr('transform', 'translate(0,' + pxToChartBottom + ')')
+				.attr('class', 'burnchart__axis')
+				.call(d3.axisBottom(dateScale).ticks(10));
+
+			//Right Y
+			svg.append('g')
+				.attr('transform', 'translate(' + pxToChartRight + ',0)')
+				.attr('class', 'burnchart__axis')
+				.call(d3.axisRight(burnScale).ticks(10));
+
 			//new issues line
 			svg.append("path")
 				.datum(data)
@@ -128,20 +146,37 @@ module.exports = {
 				.attr("cx", (d) => { return dateScale(d.date) })
 				.attr("cy", (d) => { return balanceScale(d.balance) });
 
-			//Left Y
-			svg.append('g')
-				.attr('transform', 'translate(' + pxToChartLeft + ',0)')
-				.call(d3.axisLeft(balanceScale).ticks(10));
+			var xChartCenter = pxToChartTop + (chartHeight/2);
+			//Axis labels
+			svg.append('text')
+				.attr('y',0)
+				.attr('transform', 'translate(18, ' + Number(xChartCenter) + ') rotate(-90)')
+				.attr('class', 'burnchart__axis-label')
+				.text('Balance');
+			svg.append('line')
+				.attr('x1', 25)
+				.attr('y1', pxToChartTop)
+				.attr('x2', 25)
+				.attr('y2', pxToChartBottom)
+				.attr("class", "burnchart__balance-line")
 
-			//The X axis
-			svg.append('g')
-				.attr('transform', 'translate(0,' + pxToChartBottom + ')')
-				.call(d3.axisBottom(dateScale).ticks(10));
-
-			//Right Y
-			svg.append('g')
-				.attr('transform', 'translate(' + pxToChartRight + ',0)')
-				.call(d3.axisRight(burnScale).ticks(10));
+			svg.append('text')
+				.attr('y',0)
+				.attr('transform', 'translate(' + (svgWidth - 18) + ', ' + Number(xChartCenter) + ') rotate(90)')
+				.attr('class', 'burnchart__axis-label')
+				.text('New / Resolved');
+			svg.append('line')
+				.attr('x1', (svgWidth - 25))
+				.attr('y1', pxToChartTop)
+				.attr('x2', (svgWidth - 25))
+				.attr('y2', xChartCenter)
+				.attr("class", "burnchart__new-line")
+			svg.append('line')
+				.attr('x1', (svgWidth - 25))
+				.attr('y1', xChartCenter)
+				.attr('x2', (svgWidth - 25))
+				.attr('y2', pxToChartBottom)
+				.attr("class", "burnchart__resolved-line")
 
 		});
 	}
