@@ -49,7 +49,7 @@ module.exports = {
 			
 			//right vert
 			var burnScale = d3.scaleLinear()
-				.domain([burnMax+1, burnMin-1])
+				.domain([burnMax, burnMin])
 				.range([pxToChartTop, pxToChartBottom]);
 
 
@@ -95,6 +95,26 @@ module.exports = {
 				.attr('transform', 'translate(' + pxToChartRight + ',0)')
 				.attr('class', 'burnchart__axis')
 				.call(d3.axisRight(burnScale).ticks(10));
+
+
+			//Hover area
+			svg.selectAll("hovergroup")
+				.data(data)
+				.enter().append("rect")
+				.attr('x', (d) => { return dateScale(d.date) - 20 })
+				.attr('y', (pxToChartTop - 10))
+				.attr('width', 40)
+				.attr('height', chartHeight + 10);
+			//Hover line
+			svg.selectAll("hover")
+				.data(data)
+				.enter().append("line")
+				.attr('x1', (d) => { return dateScale(d.date) })
+				.attr('y1', (pxToChartTop - 10))
+				.attr('x2', (d) => { return dateScale(d.date) })
+				.attr('y2', pxToChartBottom)
+				.attr('class','burnchart__hover-line')
+
 
 			//new issues line
 			svg.append("path")

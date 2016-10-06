@@ -54,4 +54,8 @@
 		&__axis-label {
 			text-anchor: middle; //center align
 		}
+
+	&__hover-line {
+		stroke: #cacaca;
+	}
 }
