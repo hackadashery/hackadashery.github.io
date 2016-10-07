@@ -16295,7 +16295,7 @@ require('./components/burn').init();
 'use strict';
 
 var d3 = require('d3');
-var chartPadding = { top: 10, right: 60, bottom: 40, left: 60 }
+var chartPadding = { top: 60, right: 60, bottom: 40, left: 60 }
 
 module.exports = {
 	init(){
@@ -16408,6 +16408,14 @@ module.exports = {
 				.attr('x2', (d) => { return dateScale(d.date) })
 				.attr('y2', pxToChartBottom)
 				.attr('class','burnchart__hover-line')
+			//Hover note
+			svg.selectAll("hovernote")
+				.data(data)
+				.enter().append('g')
+				.attr('transform', (d) => { return 'translate(' + dateScale(d.date) + ',' + (pxToChartTop - 10) + ')' })
+				.attr('class', 'burnchart__hover-note')
+				.append('text')
+				.text((d) => { return formatDate(d.date) });
 
 
 			//new issues line

@@ -522,6 +522,9 @@ BEM land
 .burnchart__hover-line {
   stroke: #cacaca; }
 
+.burnchart__hover-note {
+  text-anchor: middle; }
+
 .line-basic__line {
   stroke: steelblue;
   stroke-width: 2;

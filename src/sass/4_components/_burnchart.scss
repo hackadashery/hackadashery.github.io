@@ -58,4 +58,7 @@
 	&__hover-line {
 		stroke: #cacaca;
 	}
+	&__hover-note {
+		text-anchor: middle; //center align
+	}
 }
