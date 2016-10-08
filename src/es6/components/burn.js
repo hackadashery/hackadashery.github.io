@@ -30,6 +30,7 @@ module.exports = {
 				date.date = Date.parse(date.date);
 				dateOldest = Math.min(date.date, dateOldest);
 				dateNewest = Math.max(date.date, dateNewest);
+				date.dotRadius = 5;
 			});
 
 
@@ -74,6 +75,16 @@ module.exports = {
 				.x(function(d) { return dateScale(d.date); })
 				.y(function(d) { return balanceScale(d.balance); });
 
+			//
+			function hoverIn(dataObj){
+				console.log('Hover in', dataObj);
+				dataObj.dotRadius = 10;
+			}
+			function hoverOut(dataObj){
+				console.log('Hover out', dataObj);
+				dataObj.dotRadius = 5;
+			}
+
 			// =================================== Starting D3
 			let svg = d3.select('#burnchart')
 				.attr('height', svgHeight);
@@ -97,14 +108,6 @@ module.exports = {
 				.call(d3.axisRight(burnScale).ticks(10));
 
 
-			//Hover area
-			svg.selectAll("hovergroup")
-				.data(data)
-				.enter().append("rect")
-				.attr('x', (d) => { return dateScale(d.date) - 20 })
-				.attr('y', (pxToChartTop - 10))
-				.attr('width', 40)
-				.attr('height', chartHeight + 10);
 			//Hover line
 			svg.selectAll("hover")
 				.data(data)
@@ -155,21 +158,21 @@ module.exports = {
 			svg.selectAll("point")
 				.data(data)
 				.enter().append("circle")
-				.attr("r", 5)
+				.attr("r", (d) => { return d.dotRadius })
 				.attr("class", "burnchart__new-dot")
 				.attr("cx", (d) => { return dateScale(d.date) })
 				.attr("cy", (d) => { return burnScale(d.new) });
 			svg.selectAll("point")
 				.data(data)
 				.enter().append("circle")
-				.attr("r", 5)
+				.attr("r", (d) => { return d.dotRadius })
 				.attr("class", "burnchart__resolved-dot")
 				.attr("cx", (d) => { return dateScale(d.date) })
 				.attr("cy", (d) => { return burnScale(d.resolved) });
 			svg.selectAll("point")
 				.data(data)
 				.enter().append("circle")
-				.attr("r", 5)
+				.attr("r", (d) => { return d.dotRadius })
 				.attr("class", "burnchart__balance-dot")
 				.attr("cx", (d) => { return dateScale(d.date) })
 				.attr("cy", (d) => { return balanceScale(d.balance) });
@@ -206,6 +209,17 @@ module.exports = {
 				.attr('y2', pxToChartBottom)
 				.attr("class", "burnchart__resolved-line")
 
+			//Hover area
+			svg.selectAll("hovergroup")
+				.data(data)
+				.enter().append("rect")
+				.attr('x', (d) => { return dateScale(d.date) - 5 })
+				.attr('y', (pxToChartTop - 10))
+				.attr('width', 10)
+				.attr('height', chartHeight + 10)
+				.attr('fill', 'rgba(0,255,0,0.5')
+				.on("mouseover", hoverIn)
+				.on("mouseout", hoverOut);
 		});
 	}
 }
