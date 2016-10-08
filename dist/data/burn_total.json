@@ -1,0 +1,38 @@
+[
+	{
+		"balance": 0,
+		"new": 0,
+		"resolved": 0,
+		"date": "01-Jan-12"
+	},
+	{
+		"balance": 15,
+		"new": 20,
+		"resolved": 5,
+		"date": "01-Feb-12"
+	},
+	{
+		"balance": 28,
+		"new": 27,
+		"resolved": 14,
+		"date": "01-Mar-12"
+	},
+	{
+		"balance": 60,
+		"new": 38,
+		"resolved": 6,
+		"date": "01-Apr-12"
+	},
+	{
+		"balance": 75,
+		"new": 40,
+		"resolved": 25,
+		"date": "01-May-12"
+	},
+	{
+		"balance": 91,
+		"new": 36,
+		"resolved": 20,
+		"date": "01-Jun-12"
+	}
+]

@@ -6,6 +6,14 @@
 	<link rel="stylesheet" type="text/css" href="{{ distUrl }}css/main.css">
 </head>
 <body>
+	<svg>
+		<defs>
+			<pattern id="redstripe" patternUnits="userSpaceOnUse" width="20" height="20">
+				<rect width="20" height="20" style="fill: rgba(255,0,0,0.2);"/>
+				<path d="M-1,1 l2,-2            M0,20 l20,-20            M19,21 l2,-2" style="stroke:rgba(255,0,0,0.2);" stroke-width="2"/>
+			</pattern>
+		</defs>
+	</svg>
 	<h1>Philly 311</h1>
 
 	<div class="main-columns">
@@ -18,7 +26,7 @@
 			<svg id="requests-barchart" class="requests-barchart"></svg>
 		</div>
 		<div class="main-columns__col">
-			
+			<svg id="burnchart" class="burnchart"></svg>
 		</div>
 	</div>
 

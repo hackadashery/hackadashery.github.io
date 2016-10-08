@@ -68,7 +68,7 @@ module.exports = {
 					"count": v.length } 
 				})
 				.entries(data);
-			console.log(JSON.stringify(reqsPerDay));
+			//console.log(JSON.stringify(reqsPerDay));
 
 			reqsPerDay.forEach(function(d) {
 				d.sum = +d.values[0].value.count;

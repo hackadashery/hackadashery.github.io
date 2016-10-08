@@ -51,8 +51,11 @@ The gulpfile does a few things for us:
 
 ---
 
-###Charts
+###Chart ideas
 
- - Additions & deletions per week / day (look at the github one vs the Target Process one). Y: time, X: total open line, resolved bar, new bar
+*Burn chart*: X is time, Y (left) is number of active issues, Y (right) total number of issues. red line for issues added, green line for issues resolved, blue line for total number of issues.
+ 
+*Additions & deletions per week* / day (look at the github one vs the Target Process one). Y: time, X: total open line, resolved bar, new bar
+
  - Seasonal punchcard (rows are months, cols are days)
  - Y: number of open bugs, X: time (week / month / year). Line for each week / month / year
