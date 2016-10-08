@@ -554,6 +554,15 @@ BEM land
   background: lightsteelblue;
   pointer-events: none; }
 
+.map {
+  height: 800px;
+  width: 90%;
+  margin: 30px auto;
+  background: white;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  border-radius: 5px; }
+
 .requests-barchart {
   font-weight: 500;
   width: 100%; }
