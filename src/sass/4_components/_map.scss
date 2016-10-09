@@ -1,10 +1,28 @@
 .map
 {
   height: 800px;
-  width: 90%;
-  margin: 30px auto;
-  background: white;
+  width: 100%;
   background: rgba(255,255,255,0.8);
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
-  border-radius: 5px;
+
+  &__view
+  {
+    display: inline-block;
+    width: 60%;
+    height: 100%;
+  }
+
+  &__sidebar
+  {
+    display: inline-block;
+    width: 40%;
+    background: gray;
+  }
+}
+
+.btn
+{
+  display: inline-block;
+  padding: 5px;
+  color: white;
+  background: gray;
 }

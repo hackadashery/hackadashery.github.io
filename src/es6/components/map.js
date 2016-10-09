@@ -16,6 +16,9 @@ module.exports = {
             layers: [CartoDB_Positron]
         }).setView([39.952583, -75.165222], 12);
 
+        var markersLayer = new L.LayerGroup();
+        map.addLayer(markersLayer);
+
         var info = L.control();
 
         // Figure out what the date was 7 days ago
@@ -32,36 +35,77 @@ module.exports = {
         + cleanDate((weekAgo.getMonth() + 1)) + '-' 
         + cleanDate((weekAgo.getDate()));
 
-        // get 311 data from API
-        $.ajax({
-            url: "https://data.phila.gov/resource/4t9v-rppq.json",
-            type: "GET",
-            data: {
-              $where : "requested_datetime>=" + "'" + weekAgo + "'"
-            }, 
-            success: function(data){
-                console.log(data);
-                var i = 0;
-                var j = 0;
-                $.each(data, function(key, obj) {
-                    if ( this.lat && this.lon ) {
-                        var lat = Number(this.lat);
-                        var lon = Number(this.lon);
-                        new L.marker([lat, lon])
-                        .addTo( map );
-                        i++;
-                        console.log("i: " + i);
-                    } else {
-                        j++;
-                        console.log("j: " + j);
-                    }
-                });
-            },
-            error: function(){
-                console.log('error');
-            }
+        $('.js-id-request').off().on('click', function() {
+            event.preventDefault();
+            var id = $('.map__request').val();
+            // 10646418
+            getRequest(id); 
         });
 
+        // get 311 data based on service request id
+        var getRequest = function getRequest(id) {
+            $.ajax({
+                url: "https://data.phila.gov/resource/4t9v-rppq.json",
+                type: "GET",
+                data: {
+                  $where : "service_request_id=" + "'" + id + "'"
+                }, 
+                success: function(data){
+                    console.log(data);
+                    $.each(data, function(key, obj) {
+                        // add to map if lat and long are available
+                        if ( this.lat && this.lon ) {
+                            var lat = Number(this.lat);
+                            var lon = Number(this.lon);
+                            new L.marker([lat, lon])
+                            .addTo( markersLayer );
+                            map.setView([lat, lon],16, {animate: true});
+                        } else {
+                            console.log("incomplete geographic info");
+                        }
+
+                        // add issues with same request type to map
+                        if ( this.service_name ) {
+                            var service = this.service_name;
+                            getRelatedRequests(service);
+                        } else {
+                            console.log("can't get service type");
+                        }
+                    });
+                },
+                error: function(){
+                    console.log('error');
+                }
+            });
+        }
+
+        // get 311 data based on service name for the last 7 days
+        var getRelatedRequests = function getRelatedRequests(service) {
+            $.ajax({
+                url: "https://data.phila.gov/resource/4t9v-rppq.json",
+                type: "GET",
+                data: {
+                  $where : "service_name=" + "'" + service + "' AND requested_datetime>=" + "'" + weekAgo + "'"
+                }, 
+                success: function(data){
+                    console.log(data);
+                    $.each(data, function(key, obj) {
+                        // add to map if lat and long are available
+                        if ( this.lat && this.lon ) {
+                            var lat = Number(this.lat);
+                            var lon = Number(this.lon);
+                            new L.marker([lat, lon])
+                            .addTo( markersLayer );
+                        } else {
+                            console.log("incomplete geographic info");
+                        }
+                    });
+                },
+                error: function(){
+                    console.log('error');
+                }
+            });
+        }
 
         // info.onAdd = function (map) {
         //     this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
