@@ -1,0 +1,11 @@
+.main {
+	display: flex;
+	width: 100%;
+
+	&__sidebar {
+		width: rem(300);
+	}
+	&__body {
+		flex-grow: 1;
+	}
+}

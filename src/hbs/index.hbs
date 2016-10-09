@@ -7,7 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="{{ distUrl }}css/main.css">
 </head>
 <body>
-	<svg>
+	<svg width="0" height="0" style="position: absolute; z-index: -1;">
 		<defs>
 			<pattern id="redstripe" patternUnits="userSpaceOnUse" width="20" height="20">
 				<rect width="20" height="20" style="fill: rgba(255,0,0,0.2);"/>
@@ -15,33 +15,53 @@
 			</pattern>
 		</defs>
 	</svg>
+
 	<h1>Philly 311</h1>
 
-	<div class="main-columns">
-		<div class="main-columns__col">
-			{{> timespan_tabs }}
-			<section class="requests-linechart"></section>
+	<div class="main">
+		<div class="main__sidebar">
+			
+			<nav>
+				<button class="nav-button">Grey Linechart</button>
+				<button class="nav-button">Blue barchart</button>
+				<button class="nav-button">Balance Linechart</button>
+				<button class="nav-button">Map</button>
+			</nav>
+
 		</div>
-		<div class="main-columns__col">
-			{{> timespan_tabs }}
-			<svg id="requests-barchart" class="requests-barchart"></svg>
+		<div class="main__body">
+			
+			<section>
+				{{> timespan_tabs }}
+				<div class="requests-linechart"></div>
+			</section>
+
+			<section>
+				{{> timespan_tabs }}
+				<svg id="requests-barchart" class="requests-barchart"></svg>
+			</section>
+
+			<section>
+				<svg id="burnchart" class="burnchart"></svg>
+			</section>
+
+			<section>
+				<div class="toolbar">
+				  <label for="map__request">Enter request ID</label>
+				  <input type="text" id="map__request" class="map__request" />
+				  <input type="submit" class="btn js-id-request" value="Submit" />
+				</div>
+				<div class="map">
+				  <div id="map" class="map__view"></div>
+				  <div class="map__sidebar">
+				  	<div class="map__sidebar--status">
+				  		
+				  	</div>
+				  </div>
+				</div>
+			</section>
+
 		</div>
-		<div class="main-columns__col">
-			<svg id="burnchart" class="burnchart"></svg>
-		</div>
-	</div>
-	<div class="toolbar">
-	  <label for="map__request">Enter request ID</label>
-	  <input type="text" id="map__request" class="map__request" />
-	  <input type="submit" class="btn js-id-request" value="Submit" />
-	</div>
-	<div class="map">
-	  <div id="map" class="map__view"></div>
-	  <div class="map__sidebar">
-	  	<div class="map__sidebar--status">
-	  		
-	  	</div>
-	  </div>
 	</div>
 </body>
 

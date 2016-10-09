@@ -1,0 +1,20 @@
+.nav-button {
+	display: block;
+	width: 100%;
+	text-align: left;
+	background: white;
+	color: $gray-5;
+	text-transform: uppercase;
+	font-weight: 700;
+	padding: rem(8) rem(15);
+	cursor: pointer;
+
+	border: 0;
+	+ .nav-button {
+		border-top: 1px solid #eee;
+	}
+
+	&:hover {
+		color: $gray-3;
+	}
+}

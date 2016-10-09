@@ -10,6 +10,26 @@ mixins / functions
 BASE
 The default styling for each html tag
 */
+html {
+  background: #eaedf2;
+  color: #323a45; }
+
+.nav-button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: white;
+  color: #5d6d80;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 0.5rem 0.9375rem;
+  cursor: pointer;
+  border: 0; }
+  .nav-button + .nav-button {
+    border-top: 1px solid #eee; }
+  .nav-button:hover {
+    color: #323a45; }
+
 /*! normalize.css v4.1.1 | MIT License | github.com/necolas/normalize.css */
 /**
  * 1. Change the default font family in all browsers (opinionated).
@@ -384,6 +404,16 @@ These create the structurs within which components will live
   display: -ms-flexbox;
   display: flex; }
   .main-columns__col {
+    -ms-flex-positive: 1;
+        flex-grow: 1; }
+
+.main {
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%; }
+  .main__sidebar {
+    width: 18.75rem; }
+  .main__body {
     -ms-flex-positive: 1;
         flex-grow: 1; }
 
