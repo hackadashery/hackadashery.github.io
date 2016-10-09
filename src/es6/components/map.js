@@ -37,6 +37,7 @@ module.exports = {
 
         $('.js-id-request').off().on('click', function() {
             event.preventDefault();
+            markersLayer.clearLayers();
             var id = $('.map__request').val();
             // 10646418
             getRequest(id); 
@@ -53,12 +54,18 @@ module.exports = {
                 success: function(data){
                     console.log(data);
                     $.each(data, function(key, obj) {
+
                         // add to map if lat and long are available
                         if ( this.lat && this.lon ) {
                             var lat = Number(this.lat);
                             var lon = Number(this.lon);
+                            var options = "<p><b>Case ID</b><br>" + this.service_request_id + "<br>";
+                                options += "<b>Request Type</b><br>" + this.service_name + "<br>";
+                                options += "<b>Agency Responsible</b><br>" + this.agency_responsible + "<br>";
+                                options += "<b>Address</b><br>" + this.address + "<br>";
+                                options += "<b>Status</b><br>" + this.status + "<br></p>";
                             new L.marker([lat, lon])
-                            .addTo( markersLayer );
+                            .addTo( markersLayer ).bindPopup(options);
                             map.setView([lat, lon],16, {animate: true});
                         } else {
                             console.log("incomplete geographic info");
@@ -94,8 +101,13 @@ module.exports = {
                         if ( this.lat && this.lon ) {
                             var lat = Number(this.lat);
                             var lon = Number(this.lon);
+                            var options = "<p><b>Case ID</b><br>" + this.service_request_id + "<br>";
+                                options += "<b>Request Type</b><br>" + this.service_name + "<br>";
+                                options += "<b>Agency Responsible</b><br>" + this.agency_responsible + "<br>";
+                                options += "<b>Address</b><br>" + this.address + "<br>";
+                                options += "<b>Status</b><br>" + this.status + "<br></p>";
                             new L.marker([lat, lon])
-                            .addTo( markersLayer );
+                            .addTo( markersLayer ).bindPopup(options);
                         } else {
                             console.log("incomplete geographic info");
                         }
