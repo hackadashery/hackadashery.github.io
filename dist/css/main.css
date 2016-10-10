@@ -666,6 +666,12 @@ BEM land
     font-weight: bold;
     color: white; }
 
+.toolbar {
+  position: relative;
+  z-index: 1;
+  left: 50px;
+  top: 20px; }
+
 /*
 UTILITY CLASSES
 Single responsability classes
