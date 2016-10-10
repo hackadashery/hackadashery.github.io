@@ -35,10 +35,11 @@
 
 	<h1>Philly 311</h1>
 
-	<div class="main">
+	<div class="main js-main">
 		<div class="main__sidebar">
 			
 			<nav>
+				<button class="nav-button js-nav-button" data-section="welcome">Welcome</button>
 				<button class="nav-button js-nav-button" data-section="linebasic">Grey Linechart</button>
 				<button class="nav-button js-nav-button" data-section="bluebar">Blue barchart</button>
 				<button class="nav-button js-nav-button" data-section="burnrate">Burnrate</button>
@@ -47,6 +48,11 @@
 
 		</div>
 		<div class="main__body">
+
+			<section id="welcome" class="js-nav-section">
+				<h2>Hello!</h2>
+				<h6>Some kind of lead in / this is what this is chat here...</h6>
+			</section>
 			
 			<section id="linebasic" class="js-nav-section">
 				{{> timespan_tabs }}

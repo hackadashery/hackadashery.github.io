@@ -30,11 +30,16 @@ function runNavigation(newSection){
 
 module.exports = {
 	init(){
+		var chartLoaded = false;
 		//what's the URL we're on?
 		var loadChart = urlParameter.getParameter('chart');
 		if (loadChart) {
 			runNavigation(loadChart);
+		} else {
+			//load the welcome screen
+			runNavigation('welcome');
 		}
+		$('.js-main').addClass('js-loaded');
 
 		//listen to the buttons for they shall speak to you
 		$('.js-nav-button').on('click', function(){		
