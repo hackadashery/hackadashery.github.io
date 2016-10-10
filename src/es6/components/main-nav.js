@@ -16,8 +16,8 @@ function runNavigation(newSection){
 	$('#' + newSection).show();
 	
 	//Let everyone know
-	eventManager.fire('section_opened', {owner:'nav', data:{section: newSection}});
-	eventManager.fire('section_closed', {owner:'nav', data:{section: previousSection}});
+	eventManager.fire('section_opened', {owner:'main_nav', data:{section: newSection}});
+	eventManager.fire('section_closed', {owner:'main_nav', data:{section: previousSection}});
 	
 	//update the url history!
 	if (window.history) {
@@ -32,8 +32,6 @@ module.exports = {
 	init(){
 		//what's the URL we're on?
 		var loadChart = urlParameter.getParameter('chart');
-		
-		console.log('NAVIGATION LOADED!', loadChart);
 		if (loadChart) {
 			runNavigation(loadChart);
 		}

@@ -41232,239 +41232,260 @@ if (typeof module !== 'undefined') {
 },{}],34:[function(require,module,exports){
 window.WL_STATE = {};
 
-require('./components/nav').init();
 require('./components/line-basic').init();
 require('./components/requests-barchart').init();
 require('./components/requests-linechart').init();
 require('./components/burn').init();
 require('./components/map').init();
-},{"./components/burn":35,"./components/line-basic":36,"./components/map":37,"./components/nav":38,"./components/requests-barchart":39,"./components/requests-linechart":40}],35:[function(require,module,exports){
+
+//Load this last - the events fired from here will kick things off so if you set up a subsciber after this has run you might miss out on something!
+require('./components/main-nav').init();
+},{"./components/burn":35,"./components/line-basic":36,"./components/main-nav":37,"./components/map":38,"./components/requests-barchart":39,"./components/requests-linechart":40}],35:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
+var eventManager = require('../utils/eventManager');
+
 var chartPadding = { top: 60, right: 60, bottom: 40, left: 60 }
+
 
 module.exports = {
 	init(){
-		d3.json('dist/data/burn_total.json', function(error, data) {
-			// =================================== Variables	
-			var svgWidth = document.getElementById('burnchart').clientWidth;
-			var svgHeight = svgWidth * 0.7;
-			var chartWidth = (-chartPadding.left) + svgWidth + (-chartPadding.right);
-			var chartHeight = (-chartPadding.top) + svgHeight + (-chartPadding.bottom);
-			var pxToChartTop = chartPadding.top;
-			var pxToChartBottom = chartPadding.top + chartHeight;
-			var pxToChartLeft = chartPadding.left;
-			var pxToChartRight = chartPadding.left + chartWidth;
-
-			var balanceMax = -Infinity;
-			var balanceMin = Infinity;
-			var burnMax = -Infinity;
-			var burnMin = Infinity;
-			var dateOldest = Infinity; //?
-			var dateNewest = -Infinity; //?
-			data.map(function(date){
-				balanceMax = Math.max(date.balance, balanceMax);
-				balanceMin = Math.min(date.balance, balanceMin);
-				burnMax = Math.max(date.new, date.resolved, burnMax);
-				burnMin = Math.min(date.new, date.resolved, burnMin);
-				date.date = Date.parse(date.date);
-				dateOldest = Math.min(date.date, dateOldest);
-				dateNewest = Math.max(date.date, dateNewest);
-				date.dotRadius = 5;
-			});
-
-
-
-			// =================================== Scales
-			//left vert
-			var balanceScale = d3.scaleLinear()
-				.domain([balanceMin, balanceMax])
-				.range([pxToChartBottom, pxToChartTop]);
-
-			//base horz
-			var parseDate = d3.timeParse("%d-%b-%y");
-			var formatDate = d3.timeFormat('%e %B');
-			var dateScale = d3.scaleTime()
-				.domain([new Date(dateOldest), new Date(dateNewest)])
-				.range([pxToChartLeft,pxToChartRight]);
-			
-			//right vert
-			var burnScale = d3.scaleLinear()
-				.domain([burnMax, burnMin])
-				.range([pxToChartTop, pxToChartBottom]);
-
-
-
-			var newLine = d3.line()
-				.x(function(d) { return dateScale(d.date); })
-				.y(function(d) { return burnScale(d.new); });
-			var newArea = d3.area()
-				.x(function(d) { return dateScale(d.date); })
-				.y0(pxToChartBottom)
-				.y1(function(d) { return burnScale(d.new); });
-
-			var resolvedLine = d3.line()
-				.x(function(d) { return dateScale(d.date); })
-				.y(function(d) { return burnScale(d.resolved); });
-			var resolvedArea = d3.area()
-				.x(function(d) { return dateScale(d.date); })
-				.y0(pxToChartBottom)
-				.y1(function(d) { return burnScale(d.resolved); });
-
-			var balanceLine = d3.line()
-				.x(function(d) { return dateScale(d.date); })
-				.y(function(d) { return balanceScale(d.balance); });
-
-			//
-			function hoverIn(dataObj){
-				console.log('Hover in', dataObj);
-				dataObj.dotRadius = 10;
+		eventManager.subscribe('section_opened', function(event){
+			if (event.data.section == 'burnrate') {
+				buildChart();
 			}
-			function hoverOut(dataObj){
-				console.log('Hover out', dataObj);
-				dataObj.dotRadius = 5;
+		});
+		eventManager.subscribe('section_closed', function(event){
+			if (event.data.section == 'burnrate') {
+				//unload the DOM elements
 			}
-
-			// =================================== Starting D3
-			let svg = d3.select('#burnchart')
-				.attr('height', svgHeight);
-
-			//Left Y
-			svg.append('g')
-				.attr('transform', 'translate(' + pxToChartLeft + ',0)')
-				.attr('class', 'burnchart__axis')
-				.call(d3.axisLeft(balanceScale).ticks(10));
-
-			//The X axis
-			svg.append('g')
-				.attr('transform', 'translate(0,' + pxToChartBottom + ')')
-				.attr('class', 'burnchart__axis')
-				.call(d3.axisBottom(dateScale).ticks(10));
-
-			//Right Y
-			svg.append('g')
-				.attr('transform', 'translate(' + pxToChartRight + ',0)')
-				.attr('class', 'burnchart__axis')
-				.call(d3.axisRight(burnScale).ticks(10));
-
-
-			//Hover line
-			svg.selectAll("hover")
-				.data(data)
-				.enter().append("line")
-				.attr('x1', (d) => { return dateScale(d.date) })
-				.attr('y1', (pxToChartTop - 10))
-				.attr('x2', (d) => { return dateScale(d.date) })
-				.attr('y2', pxToChartBottom)
-				.attr('class','burnchart__hover-line')
-			//Hover note
-			svg.selectAll("hovernote")
-				.data(data)
-				.enter().append('g')
-				.attr('transform', (d) => { return 'translate(' + dateScale(d.date) + ',' + (pxToChartTop - 10) + ')' })
-				.attr('class', 'burnchart__hover-note')
-				.append('text')
-				.text((d) => { return formatDate(d.date) });
-
-
-			//new issues line
-			svg.append("path")
-				.datum(data)
-				.attr("class", "burnchart__new-line")
-				.attr("d", newLine);
-			svg.append("path")
-				.datum(data)
-				.attr("class", "burnchart__new-area")
-				.attr("d", newArea);
-
-			//resolved issues line
-			svg.append("path")
-				.datum(data)
-				.attr("class", "burnchart__resolved-line")
-				.attr("d", resolvedLine);
-			svg.append("path")
-				.datum(data)
-				.attr("class", "burnchart__resolved-area")
-				.attr("d", resolvedArea);
-
-			//total issues line
-			svg.append("path")
-				.datum(data)
-				.attr("class", "burnchart__balance-line")
-				.attr("d", balanceLine);
-			
-
-			//The dots
-			svg.selectAll("point")
-				.data(data)
-				.enter().append("circle")
-				.attr("r", (d) => { return d.dotRadius })
-				.attr("class", "burnchart__new-dot")
-				.attr("cx", (d) => { return dateScale(d.date) })
-				.attr("cy", (d) => { return burnScale(d.new) });
-			svg.selectAll("point")
-				.data(data)
-				.enter().append("circle")
-				.attr("r", (d) => { return d.dotRadius })
-				.attr("class", "burnchart__resolved-dot")
-				.attr("cx", (d) => { return dateScale(d.date) })
-				.attr("cy", (d) => { return burnScale(d.resolved) });
-			svg.selectAll("point")
-				.data(data)
-				.enter().append("circle")
-				.attr("r", (d) => { return d.dotRadius })
-				.attr("class", "burnchart__balance-dot")
-				.attr("cx", (d) => { return dateScale(d.date) })
-				.attr("cy", (d) => { return balanceScale(d.balance) });
-
-			var xChartCenter = pxToChartTop + (chartHeight/2);
-			//Axis labels
-			svg.append('text')
-				.attr('y',0)
-				.attr('transform', 'translate(18, ' + Number(xChartCenter) + ') rotate(-90)')
-				.attr('class', 'burnchart__axis-label')
-				.text('Balance');
-			svg.append('line')
-				.attr('x1', 25)
-				.attr('y1', pxToChartTop)
-				.attr('x2', 25)
-				.attr('y2', pxToChartBottom)
-				.attr("class", "burnchart__balance-line")
-
-			svg.append('text')
-				.attr('y',0)
-				.attr('transform', 'translate(' + (svgWidth - 18) + ', ' + Number(xChartCenter) + ') rotate(90)')
-				.attr('class', 'burnchart__axis-label')
-				.text('New / Resolved');
-			svg.append('line')
-				.attr('x1', (svgWidth - 25))
-				.attr('y1', pxToChartTop)
-				.attr('x2', (svgWidth - 25))
-				.attr('y2', xChartCenter)
-				.attr("class", "burnchart__new-line")
-			svg.append('line')
-				.attr('x1', (svgWidth - 25))
-				.attr('y1', xChartCenter)
-				.attr('x2', (svgWidth - 25))
-				.attr('y2', pxToChartBottom)
-				.attr("class", "burnchart__resolved-line")
-
-			//Hover area
-			svg.selectAll("hovergroup")
-				.data(data)
-				.enter().append("rect")
-				.attr('x', (d) => { return dateScale(d.date) - 5 })
-				.attr('y', (pxToChartTop - 10))
-				.attr('width', 10)
-				.attr('height', chartHeight + 10)
-				.attr('fill', 'rgba(0,255,0,0.5')
-				.on("mouseover", hoverIn)
-				.on("mouseout", hoverOut);
 		});
 	}
 }
-},{"d3":2}],36:[function(require,module,exports){
+
+function buildChart(){
+	d3.json('dist/data/burn_total.json', function(error, data) {
+		// =================================== Variables	
+		var svgWidth = document.getElementById('burnchart').clientWidth;
+		var svgHeight = svgWidth * 0.7;
+		var chartWidth = (-chartPadding.left) + svgWidth + (-chartPadding.right);
+		var chartHeight = (-chartPadding.top) + svgHeight + (-chartPadding.bottom);
+		var pxToChartTop = chartPadding.top;
+		var pxToChartBottom = chartPadding.top + chartHeight;
+		var pxToChartLeft = chartPadding.left;
+		var pxToChartRight = chartPadding.left + chartWidth;
+
+		var balanceMax = -Infinity;
+		var balanceMin = Infinity;
+		var burnMax = -Infinity;
+		var burnMin = Infinity;
+		var dateOldest = Infinity; //?
+		var dateNewest = -Infinity; //?
+		data.map(function(date){
+			balanceMax = Math.max(date.balance, balanceMax);
+			balanceMin = Math.min(date.balance, balanceMin);
+			burnMax = Math.max(date.new, date.resolved, burnMax);
+			burnMin = Math.min(date.new, date.resolved, burnMin);
+			date.date = Date.parse(date.date);
+			dateOldest = Math.min(date.date, dateOldest);
+			dateNewest = Math.max(date.date, dateNewest);
+			date.dotRadius = 5;
+		});
+
+
+
+		// =================================== Scales
+		//left vert
+		var balanceScale = d3.scaleLinear()
+			.domain([balanceMin, balanceMax])
+			.range([pxToChartBottom, pxToChartTop]);
+
+		//base horz
+		var parseDate = d3.timeParse("%d-%b-%y");
+		var formatDate = d3.timeFormat('%e %B');
+		var dateScale = d3.scaleTime()
+			.domain([new Date(dateOldest), new Date(dateNewest)])
+			.range([pxToChartLeft,pxToChartRight]);
+		
+		//right vert
+		var burnScale = d3.scaleLinear()
+			.domain([burnMax, burnMin])
+			.range([pxToChartTop, pxToChartBottom]);
+
+
+
+		var newLine = d3.line()
+			.x(function(d) { return dateScale(d.date); })
+			.y(function(d) { return burnScale(d.new); });
+		var newArea = d3.area()
+			.x(function(d) { return dateScale(d.date); })
+			.y0(pxToChartBottom)
+			.y1(function(d) { return burnScale(d.new); });
+
+		var resolvedLine = d3.line()
+			.x(function(d) { return dateScale(d.date); })
+			.y(function(d) { return burnScale(d.resolved); });
+		var resolvedArea = d3.area()
+			.x(function(d) { return dateScale(d.date); })
+			.y0(pxToChartBottom)
+			.y1(function(d) { return burnScale(d.resolved); });
+
+		var balanceLine = d3.line()
+			.x(function(d) { return dateScale(d.date); })
+			.y(function(d) { return balanceScale(d.balance); });
+
+		//
+		function hoverIn(dataObj){
+			console.log('Hover in', dataObj);
+			dataObj.dotRadius = 10;
+		}
+		function hoverOut(dataObj){
+			console.log('Hover out', dataObj);
+			dataObj.dotRadius = 5;
+		}
+
+		// =================================== Starting D3
+		let svg = d3.select('#burnchart')
+			.attr('height', svgHeight);
+
+		//Left Y
+		svg.append('g')
+			.attr('transform', 'translate(' + pxToChartLeft + ',0)')
+			.attr('class', 'burnchart__axis')
+			.call(d3.axisLeft(balanceScale).ticks(10));
+
+		//The X axis
+		svg.append('g')
+			.attr('transform', 'translate(0,' + pxToChartBottom + ')')
+			.attr('class', 'burnchart__axis')
+			.call(d3.axisBottom(dateScale).ticks(10));
+
+		//Right Y
+		svg.append('g')
+			.attr('transform', 'translate(' + pxToChartRight + ',0)')
+			.attr('class', 'burnchart__axis')
+			.call(d3.axisRight(burnScale).ticks(10));
+
+
+		//Hover line
+		svg.selectAll("hover")
+			.data(data)
+			.enter().append("line")
+			.attr('x1', (d) => { return dateScale(d.date) })
+			.attr('y1', (pxToChartTop - 10))
+			.attr('x2', (d) => { return dateScale(d.date) })
+			.attr('y2', pxToChartBottom)
+			.attr('class','burnchart__hover-line')
+		//Hover note
+		svg.selectAll("hovernote")
+			.data(data)
+			.enter().append('g')
+			.attr('transform', (d) => { return 'translate(' + dateScale(d.date) + ',' + (pxToChartTop - 10) + ')' })
+			.attr('class', 'burnchart__hover-note')
+			.append('text')
+			.text((d) => { return formatDate(d.date) });
+
+
+		//new issues line
+		svg.append("path")
+			.datum(data)
+			.attr("class", "burnchart__new-line")
+			.attr("d", newLine);
+		svg.append("path")
+			.datum(data)
+			.attr("class", "burnchart__new-area")
+			.attr("d", newArea);
+
+		//resolved issues line
+		svg.append("path")
+			.datum(data)
+			.attr("class", "burnchart__resolved-line")
+			.attr("d", resolvedLine);
+		svg.append("path")
+			.datum(data)
+			.attr("class", "burnchart__resolved-area")
+			.attr("d", resolvedArea);
+
+		//total issues line
+		svg.append("path")
+			.datum(data)
+			.attr("class", "burnchart__balance-line")
+			.attr("d", balanceLine);
+		
+
+		//The dots
+		svg.selectAll("point")
+			.data(data)
+			.enter().append("circle")
+			.attr("r", (d) => { return d.dotRadius })
+			.attr("class", "burnchart__new-dot")
+			.attr("cx", (d) => { return dateScale(d.date) })
+			.attr("cy", (d) => { return burnScale(d.new) });
+		svg.selectAll("point")
+			.data(data)
+			.enter().append("circle")
+			.attr("r", (d) => { return d.dotRadius })
+			.attr("class", "burnchart__resolved-dot")
+			.attr("cx", (d) => { return dateScale(d.date) })
+			.attr("cy", (d) => { return burnScale(d.resolved) });
+		svg.selectAll("point")
+			.data(data)
+			.enter().append("circle")
+			.attr("r", (d) => { return d.dotRadius })
+			.attr("class", "burnchart__balance-dot")
+			.attr("cx", (d) => { return dateScale(d.date) })
+			.attr("cy", (d) => { return balanceScale(d.balance) });
+
+		var xChartCenter = pxToChartTop + (chartHeight/2);
+		//Axis labels
+		svg.append('text')
+			.attr('y',0)
+			.attr('transform', 'translate(18, ' + Number(xChartCenter) + ') rotate(-90)')
+			.attr('class', 'burnchart__axis-label')
+			.text('Balance');
+		svg.append('line')
+			.attr('x1', 25)
+			.attr('y1', pxToChartTop)
+			.attr('x2', 25)
+			.attr('y2', pxToChartBottom)
+			.attr("class", "burnchart__balance-line")
+
+		svg.append('text')
+			.attr('y',0)
+			.attr('transform', 'translate(' + (svgWidth - 18) + ', ' + Number(xChartCenter) + ') rotate(90)')
+			.attr('class', 'burnchart__axis-label')
+			.text('New / Resolved');
+		svg.append('line')
+			.attr('x1', (svgWidth - 25))
+			.attr('y1', pxToChartTop)
+			.attr('x2', (svgWidth - 25))
+			.attr('y2', xChartCenter)
+			.attr("class", "burnchart__new-line")
+		svg.append('line')
+			.attr('x1', (svgWidth - 25))
+			.attr('y1', xChartCenter)
+			.attr('x2', (svgWidth - 25))
+			.attr('y2', pxToChartBottom)
+			.attr("class", "burnchart__resolved-line")
+
+		//Hover area
+		svg.selectAll("hovergroup")
+			.data(data)
+			.enter().append("rect")
+			.attr('x', (d) => { return dateScale(d.date) - 5 })
+			.attr('y', (pxToChartTop - 10))
+			.attr('width', 10)
+			.attr('height', chartHeight + 10)
+			.attr('fill', 'rgba(0,255,0,0.5')
+			.on("mouseover", hoverIn)
+			.on("mouseout", hoverOut);
+	});
+	
+}
+
+
+},{"../utils/eventManager":41,"d3":2}],36:[function(require,module,exports){
 'use strict';
 
 // ===================================================================================
@@ -41475,311 +41496,189 @@ module.exports = {
 // ===================================================================================
 
 var d3 = require('d3');
+var eventManager = require('../utils/eventManager');
 
 module.exports = {
 	init: function(){
-		// define the margins of the graph element, and the width and height of the 
-		// inner-container where the graph will live
-		var margin = {
-			top: 30,
-			right: 20,
-			bottom: 30,
-			left: 50
-		},
-
-			width = 960 - margin.left - margin.right,
-			height = 500 - margin.top - margin.bottom;
-
-		// parse the date
-		var parseDate = d3.timeParse("%d-%b-%y");
-
-		// style the date for tooltips
-		var formatDate = d3.timeFormat('%e %B');
-
-		// scale the date to the size of the graph
-		// the coordinates '0,0' originate in the top-left, so we need to reverse
-		// the y-axis default so higher values are close to the '0,0' position
-		var x = d3.scaleTime().range([0,width]);
-		var y = d3.scaleLinear().range([height,0]);
-
-		//generate area for line graph fill
-		var area = d3.area()
-			.x(function(d) { return x(d.date); })
-			.y0(height)
-			.y1(function(d) { return y(d.close); })
-
-		// generate line path and set up strucure to put data into sets of x,y coordinates
-		var valueline = d3.line()
-			.x(function(d) { return x(d.date); })
-			.y(function(d) { return y(d.close); });
-
-		// generate tooltop div element
-		var div = d3.select('.line-basic')
-			.append('div')
-				.attr('class', 'line-basic__tooltip')
-				.style('opacity', 0);
-
-		// add SVG element to DOM as our line graph canvas and set its dimensions
-		// add a 'g' element, which will be a grouping element for our graph
-		// move g element to top-left corner of the graph's inner-container
-		var svg = d3.select('.line-basic')
-			.append('svg')
-				.attr('width', width + margin.left + margin.right)
-				.attr('height', height + margin.top + margin.bottom)
-			.append('g')
-				.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-		// make grid lines for graph
-		function make_x_axis() {
-			return d3.axisBottom(x).ticks(5);
-		}
-
-		function make_y_axis() {
-			return d3.axisLeft(y).ticks(5);
-		}
-
-		// GET DATA!
-		d3.json('dist/data/line-basic-data.json', function(error, data) {
-			data.forEach(function(d) {
-				d.date = parseDate(d.date);
-				d.close = +d.close; // '+' operator sets close to numeric value
-			});
-
-			// define the scope of the data on x and y axes
-			// extent() grabs highest and lowest values
-			// domain() defines those high/low values as the range
-			x.domain(d3.extent(data, function(d) {
-				return d.date;
-			}));
-			// for y, we find the max value and define the domain as  0 to max
-			y.domain([0, d3.max(data, function(d) {
-				return d.close;
-			})]);
-
-			// add area with data
-			svg.append('path')
-				.datum(data)
-				.attr('class', 'line-basic__area')
-				.attr('d', area);
-
-			// add valueline path with data
-			svg.append('path')
-				.data([data])
-				.attr('class', 'line-basic__line')
-				.attr('d', valueline);
-
-			// add x-axis
-			svg.append('g')
-				.attr('transform', 'translate(0,' + height + ')') // moves x axis from original position at top of graph to bottom
-				.call(d3.axisBottom(x).ticks(5));
-
-			// label x-axis, centering it using graph size variables
-			svg.append('text')
-				.attr('transform',
-					'translate(' + (width/2) + ',' + (height + margin.bottom) + ')')
-				.style('text-anchor', 'middle')
-				.text('Date');
-
-			// add y-axis
-			svg.append('g')
-				.call(d3.axisLeft(y).ticks(5));
-
-			// label y-axis, centering and rotating it
-			svg.append('text')
-				.attr('transform', 'rotate(-90)') // puts reference point in bottom-left corner as 'y,x'
-				.attr('y', 0 - margin.left) // moves text left the width of margin-left, off-canvas
-				.attr('x', 0 - (height/2))  // moves text up to center it vertically
-				.attr('dy', '1em') // nudges text right again by the height of the text
-				.style('text-anchor', 'middle')
-				.text('Value');
-
-			// add graph title
-			svg.append('text')
-				.attr('x', (width/2))
-				.attr('y', 0 - (margin.top / 2))
-				.attr('text-anchor', 'middle')
-				.style('font-size', '16px')
-				.style('text-decoration', 'underline')
-				.text('Simple Line Graph');
-
-			// add graph grid
-			svg.append('g')
-				.attr('class', 'line-basic__grid')
-				.attr('transform', 'translate(0,' + height + ')')
-				.call(make_x_axis()
-					.tickSize(-height, 0, 0)  // make the 'major' ticks the height of graph
-					.tickFormat("") // disallows labels on these 'ticks'
-				)
-
-			svg.append('g')
-				.attr('class', 'line-basic__grid')
-				.call(make_y_axis()
-					.tickSize(-width, 0, 0) // make the 'major' ticks the width of graph
-					.tickFormat("")
-				)
-
-			// add data points with tooltips
-			svg.selectAll('dot') // provides a grouping label for the elements to be added
-					.data(data)
-				.enter().append('circle')
-					.attr('r', 5)  // declare radius
-					.attr('cx', function(d) {return x(d.date); })  // assign x,y coordinates
-					.attr('cy', function(d) { return y(d.close); })
-					.on('mouseover', function(d) {
-						div.transition()
-							.duration(200)
-							.style('opacity', .9);
-						div.html(formatDate(d.date) + '<br/>' + d.close)
-							.style('left', (d3.event.pageX) + 'px')
-							.style('top', (d3.event.pageY - 28) + 'px');
-					})
-					.on('mouseout', function(d) {
-						div.transition()
-							.duration(500)
-							.style('opacity', 0);
-					});
+		eventManager.subscribe('section_opened', function(event){
+			if (event.data.section == 'linebasic') {
+				buildChart();
+			}
+		});
+		eventManager.subscribe('section_closed', function(event){
+			if (event.data.section == 'linebasic') {
+				//unload the DOM elements
+			}
 		});
 	}
 }
-},{"d3":2}],37:[function(require,module,exports){
-'use strict';
 
-var $ = require("jquery");
-require('mapbox.js');
+function buildChart(){
+	// define the margins of the graph element, and the width and height of the 
+	// inner-container where the graph will live
+	var margin = {
+		top: 30,
+		right: 20,
+		bottom: 30,
+		left: 50
+	},
 
-module.exports = {
-    init: function(){
-        // Map variables
-        var CartoDB_Positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-            subdomains: 'abcd',
-            maxZoom: 19
-        });
+		width = 960 - margin.left - margin.right,
+		height = 500 - margin.top - margin.bottom;
 
-        var map = L.map('map', {
-            layers: [CartoDB_Positron]
-        }).setView([39.952583, -75.165222], 12);
+	// parse the date
+	var parseDate = d3.timeParse("%d-%b-%y");
 
-        var markersLayer = new L.LayerGroup();
-        map.addLayer(markersLayer);
+	// style the date for tooltips
+	var formatDate = d3.timeFormat('%e %B');
 
-        var info = L.control();
+	// scale the date to the size of the graph
+	// the coordinates '0,0' originate in the top-left, so we need to reverse
+	// the y-axis default so higher values are close to the '0,0' position
+	var x = d3.scaleTime().range([0,width]);
+	var y = d3.scaleLinear().range([height,0]);
 
-        // Figure out what the date was 7 days ago
-        var weekAgo = new Date();
-        weekAgo.setDate(weekAgo.getDate() - 7);
+	//generate area for line graph fill
+	var area = d3.area()
+		.x(function(d) { return x(d.date); })
+		.y0(height)
+		.y1(function(d) { return y(d.close); })
 
-        //add leading zero if month or day is less than 10
-        function cleanDate(input) {
-            return (input < 10) ? '0' + input : input;
-        }
+	// generate line path and set up strucure to put data into sets of x,y coordinates
+	var valueline = d3.line()
+		.x(function(d) { return x(d.date); })
+		.y(function(d) { return y(d.close); });
 
-        // Create date string for 7 days ago that looks like: YYYY-mm-dd
-        weekAgo = weekAgo.getFullYear() + '-' 
-        + cleanDate((weekAgo.getMonth() + 1)) + '-' 
-        + cleanDate((weekAgo.getDate()));
+	// generate tooltop div element
+	var div = d3.select('.line-basic')
+		.append('div')
+			.attr('class', 'line-basic__tooltip')
+			.style('opacity', 0);
 
-        $('.js-id-request').off().on('click', function() {
-            event.preventDefault();
-            markersLayer.clearLayers();
-            var id = $('.map__request').val();
-            // 10646418
-            getRequest(id); 
-        });
+	// add SVG element to DOM as our line graph canvas and set its dimensions
+	// add a 'g' element, which will be a grouping element for our graph
+	// move g element to top-left corner of the graph's inner-container
+	var svg = d3.select('.line-basic')
+		.append('svg')
+			.attr('width', width + margin.left + margin.right)
+			.attr('height', height + margin.top + margin.bottom)
+		.append('g')
+			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-        // get 311 data based on service request id
-        var getRequest = function getRequest(id) {
-            $.ajax({
-                url: "https://data.phila.gov/resource/4t9v-rppq.json",
-                type: "GET",
-                data: {
-                  $where : "service_request_id=" + "'" + id + "'"
-                }, 
-                success: function(data){
-                    console.log(data);
-                    $.each(data, function(key, obj) {
+	// make grid lines for graph
+	function make_x_axis() {
+		return d3.axisBottom(x).ticks(5);
+	}
 
-                        // add to map if lat and long are available
-                        if ( this.lat && this.lon ) {
-                            var lat = Number(this.lat);
-                            var lon = Number(this.lon);
-                            var options = "<p><b>Case ID</b><br>" + this.service_request_id + "<br>";
-                                options += "<b>Request Type</b><br>" + this.service_name + "<br>";
-                                options += "<b>Agency Responsible</b><br>" + this.agency_responsible + "<br>";
-                                options += "<b>Address</b><br>" + this.address + "<br>";
-                                options += "<b>Status</b><br>" + this.status + "<br></p>";
-                            new L.marker([lat, lon])
-                            .addTo( markersLayer ).bindPopup(options);
-                            map.setView([lat, lon],16, {animate: true});
-                        } else {
-                            console.log("incomplete geographic info");
-                        }
+	function make_y_axis() {
+		return d3.axisLeft(y).ticks(5);
+	}
 
-                        // add issues with same request type to map
-                        if ( this.service_name ) {
-                            var service = this.service_name;
-                            getRelatedRequests(service);
-                        } else {
-                            console.log("can't get service type");
-                        }
-                    });
-                },
-                error: function(){
-                    console.log('error');
-                }
-            });
-        }
+	// GET DATA!
+	d3.json('dist/data/line-basic-data.json', function(error, data) {
+		data.forEach(function(d) {
+			d.date = parseDate(d.date);
+			d.close = +d.close; // '+' operator sets close to numeric value
+		});
 
-        // get 311 data based on service name for the last 7 days
-        var getRelatedRequests = function getRelatedRequests(service) {
-            $.ajax({
-                url: "https://data.phila.gov/resource/4t9v-rppq.json",
-                type: "GET",
-                data: {
-                  $where : "service_name=" + "'" + service + "' AND requested_datetime>=" + "'" + weekAgo + "'"
-                }, 
-                success: function(data){
-                    console.log(data);
-                    $.each(data, function(key, obj) {
-                        // add to map if lat and long are available
-                        if ( this.lat && this.lon ) {
-                            var lat = Number(this.lat);
-                            var lon = Number(this.lon);
-                            var options = "<p><b>Case ID</b><br>" + this.service_request_id + "<br>";
-                                options += "<b>Request Type</b><br>" + this.service_name + "<br>";
-                                options += "<b>Agency Responsible</b><br>" + this.agency_responsible + "<br>";
-                                options += "<b>Address</b><br>" + this.address + "<br>";
-                                options += "<b>Status</b><br>" + this.status + "<br></p>";
-                            new L.marker([lat, lon])
-                            .addTo( markersLayer ).bindPopup(options);
-                        } else {
-                            console.log("incomplete geographic info");
-                        }
-                    });
-                },
-                error: function(){
-                    console.log('error');
-                }
-            });
-        }
+		// define the scope of the data on x and y axes
+		// extent() grabs highest and lowest values
+		// domain() defines those high/low values as the range
+		x.domain(d3.extent(data, function(d) {
+			return d.date;
+		}));
+		// for y, we find the max value and define the domain as  0 to max
+		y.domain([0, d3.max(data, function(d) {
+			return d.close;
+		})]);
 
-        // info.onAdd = function (map) {
-        //     this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-        //     this.update();
-        //     return this._div;
-        // };
+		// add area with data
+		svg.append('path')
+			.datum(data)
+			.attr('class', 'line-basic__area')
+			.attr('d', area);
 
-        // // method to update the control based on feature properties passed
-        // info.update = function (neighborhoods) {
-        //     this._div.innerHTML = '<h3>Neighborhood Facts</h3>' + (neighborhoods ? '<h4>Name</h4>' +
-        //         '<b>' + neighborhoods.listname + '</b><br /><br /><h4>Area</h4>' + neighborhoods.shape_area : 'Hover over a neighborhood</p>');
-        // };
+		// add valueline path with data
+		svg.append('path')
+			.data([data])
+			.attr('class', 'line-basic__line')
+			.attr('d', valueline);
 
-        // info.addTo(map);
+		// add x-axis
+		svg.append('g')
+			.attr('transform', 'translate(0,' + height + ')') // moves x axis from original position at top of graph to bottom
+			.call(d3.axisBottom(x).ticks(5));
 
-    }
+		// label x-axis, centering it using graph size variables
+		svg.append('text')
+			.attr('transform',
+				'translate(' + (width/2) + ',' + (height + margin.bottom) + ')')
+			.style('text-anchor', 'middle')
+			.text('Date');
+
+		// add y-axis
+		svg.append('g')
+			.call(d3.axisLeft(y).ticks(5));
+
+		// label y-axis, centering and rotating it
+		svg.append('text')
+			.attr('transform', 'rotate(-90)') // puts reference point in bottom-left corner as 'y,x'
+			.attr('y', 0 - margin.left) // moves text left the width of margin-left, off-canvas
+			.attr('x', 0 - (height/2))  // moves text up to center it vertically
+			.attr('dy', '1em') // nudges text right again by the height of the text
+			.style('text-anchor', 'middle')
+			.text('Value');
+
+		// add graph title
+		svg.append('text')
+			.attr('x', (width/2))
+			.attr('y', 0 - (margin.top / 2))
+			.attr('text-anchor', 'middle')
+			.style('font-size', '16px')
+			.style('text-decoration', 'underline')
+			.text('Simple Line Graph');
+
+		// add graph grid
+		svg.append('g')
+			.attr('class', 'line-basic__grid')
+			.attr('transform', 'translate(0,' + height + ')')
+			.call(make_x_axis()
+				.tickSize(-height, 0, 0)  // make the 'major' ticks the height of graph
+				.tickFormat("") // disallows labels on these 'ticks'
+			)
+
+		svg.append('g')
+			.attr('class', 'line-basic__grid')
+			.call(make_y_axis()
+				.tickSize(-width, 0, 0) // make the 'major' ticks the width of graph
+				.tickFormat("")
+			)
+
+		// add data points with tooltips
+		svg.selectAll('dot') // provides a grouping label for the elements to be added
+				.data(data)
+			.enter().append('circle')
+				.attr('r', 5)  // declare radius
+				.attr('cx', function(d) {return x(d.date); })  // assign x,y coordinates
+				.attr('cy', function(d) { return y(d.close); })
+				.on('mouseover', function(d) {
+					div.transition()
+						.duration(200)
+						.style('opacity', .9);
+					div.html(formatDate(d.date) + '<br/>' + d.close)
+						.style('left', (d3.event.pageX) + 'px')
+						.style('top', (d3.event.pageY - 28) + 'px');
+				})
+				.on('mouseout', function(d) {
+					div.transition()
+						.duration(500)
+						.style('opacity', 0);
+				});
+	});
 }
-},{"jquery":4,"mapbox.js":16}],38:[function(require,module,exports){
+
+
+},{"../utils/eventManager":41,"d3":2}],37:[function(require,module,exports){
 'use strict';
 
 var eventManager = require('../utils/eventManager');
@@ -41798,8 +41697,8 @@ function runNavigation(newSection){
 	$('#' + newSection).show();
 	
 	//Let everyone know
-	eventManager.fire('section_opened', {owner:'nav', data:{section: newSection}});
-	eventManager.fire('section_closed', {owner:'nav', data:{section: previousSection}});
+	eventManager.fire('section_opened', {owner:'main_nav', data:{section: newSection}});
+	eventManager.fire('section_closed', {owner:'main_nav', data:{section: previousSection}});
 	
 	//update the url history!
 	if (window.history) {
@@ -41814,8 +41713,6 @@ module.exports = {
 	init(){
 		//what's the URL we're on?
 		var loadChart = urlParameter.getParameter('chart');
-		
-		console.log('NAVIGATION LOADED!', loadChart);
 		if (loadChart) {
 			runNavigation(loadChart);
 		}
@@ -41830,86 +41727,257 @@ module.exports = {
 	}
 }
 
-},{"../utils/eventManager":41,"../utils/urlParameter":42,"jquery":4}],39:[function(require,module,exports){
+},{"../utils/eventManager":41,"../utils/urlParameter":42,"jquery":4}],38:[function(require,module,exports){
+'use strict';
+
+var $ = require("jquery");
+var eventManager = require('../utils/eventManager');
+require('mapbox.js');
+
+module.exports = {
+    init: function(){
+        eventManager.subscribe('section_opened', function(event){
+            if (event.data.section == 'map') {
+                buildChart();
+            }
+        });
+        eventManager.subscribe('section_closed', function(event){
+            if (event.data.section == 'map') {
+                //unload the DOM elements
+            }
+        });
+
+    }
+}
+
+function buildChart(){
+    // Map variables
+    var CartoDB_Positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+    });
+
+    var map = L.map('map', {
+        layers: [CartoDB_Positron]
+    }).setView([39.952583, -75.165222], 12);
+
+    var markersLayer = new L.LayerGroup();
+    map.addLayer(markersLayer);
+
+    var info = L.control();
+
+    // Figure out what the date was 7 days ago
+    var weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+
+    //add leading zero if month or day is less than 10
+    function cleanDate(input) {
+        return (input < 10) ? '0' + input : input;
+    }
+
+    // Create date string for 7 days ago that looks like: YYYY-mm-dd
+    weekAgo = weekAgo.getFullYear() + '-' 
+    + cleanDate((weekAgo.getMonth() + 1)) + '-' 
+    + cleanDate((weekAgo.getDate()));
+
+    $('.js-id-request').off().on('click', function() {
+        event.preventDefault();
+        markersLayer.clearLayers();
+        var id = $('.map__request').val();
+        // 10646418
+        getRequest(id); 
+    });
+
+    // get 311 data based on service request id
+    var getRequest = function getRequest(id) {
+        $.ajax({
+            url: "https://data.phila.gov/resource/4t9v-rppq.json",
+            type: "GET",
+            data: {
+              $where : "service_request_id=" + "'" + id + "'"
+            }, 
+            success: function(data){
+                console.log(data);
+                $.each(data, function(key, obj) {
+
+                    // add to map if lat and long are available
+                    if ( this.lat && this.lon ) {
+                        var lat = Number(this.lat);
+                        var lon = Number(this.lon);
+                        var options = "<p><b>Case ID</b><br>" + this.service_request_id + "<br>";
+                            options += "<b>Request Type</b><br>" + this.service_name + "<br>";
+                            options += "<b>Agency Responsible</b><br>" + this.agency_responsible + "<br>";
+                            options += "<b>Address</b><br>" + this.address + "<br>";
+                            options += "<b>Status</b><br>" + this.status + "<br></p>";
+                        new L.marker([lat, lon])
+                        .addTo( markersLayer ).bindPopup(options);
+                        map.setView([lat, lon],16, {animate: true});
+                    } else {
+                        console.log("incomplete geographic info");
+                    }
+
+                    // add issues with same request type to map
+                    if ( this.service_name ) {
+                        var service = this.service_name;
+                        getRelatedRequests(service);
+                    } else {
+                        console.log("can't get service type");
+                    }
+                });
+            },
+            error: function(){
+                console.log('error');
+            }
+        });
+    }
+
+    // get 311 data based on service name for the last 7 days
+    var getRelatedRequests = function getRelatedRequests(service) {
+        $.ajax({
+            url: "https://data.phila.gov/resource/4t9v-rppq.json",
+            type: "GET",
+            data: {
+              $where : "service_name=" + "'" + service + "' AND requested_datetime>=" + "'" + weekAgo + "'"
+            }, 
+            success: function(data){
+                console.log(data);
+                $.each(data, function(key, obj) {
+                    // add to map if lat and long are available
+                    if ( this.lat && this.lon ) {
+                        var lat = Number(this.lat);
+                        var lon = Number(this.lon);
+                        var options = "<p><b>Case ID</b><br>" + this.service_request_id + "<br>";
+                            options += "<b>Request Type</b><br>" + this.service_name + "<br>";
+                            options += "<b>Agency Responsible</b><br>" + this.agency_responsible + "<br>";
+                            options += "<b>Address</b><br>" + this.address + "<br>";
+                            options += "<b>Status</b><br>" + this.status + "<br></p>";
+                        new L.marker([lat, lon])
+                        .addTo( markersLayer ).bindPopup(options);
+                    } else {
+                        console.log("incomplete geographic info");
+                    }
+                });
+            },
+            error: function(){
+                console.log('error');
+            }
+        });
+    }
+
+    // info.onAdd = function (map) {
+    //     this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    //     this.update();
+    //     return this._div;
+    // };
+
+    // // method to update the control based on feature properties passed
+    // info.update = function (neighborhoods) {
+    //     this._div.innerHTML = '<h3>Neighborhood Facts</h3>' + (neighborhoods ? '<h4>Name</h4>' +
+    //         '<b>' + neighborhoods.listname + '</b><br /><br /><h4>Area</h4>' + neighborhoods.shape_area : 'Hover over a neighborhood</p>');
+    // };
+
+    // info.addTo(map);
+    
+}
+
+
+},{"../utils/eventManager":41,"jquery":4,"mapbox.js":16}],39:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
+var eventManager = require('../utils/eventManager');
 var bargin = 5; //bar margin - :D
 var minBarWidth = 30;
 
 module.exports = {
 	init(){
-
-		d3.json('dist/data/eg_dept_requests.json', function(error, data) {
-			var w = document.getElementById('requests-barchart').clientWidth;
-			var barHeight = 30;
-			var outerBarHeight = barHeight + bargin + 2; //plus 2 for the bar stroke
-			var barsHeight = (outerBarHeight * data.length) + (bargin) 
-			let svg = d3.select('#requests-barchart')
-				.attr('height', barsHeight + 50);
-			
-			//find the highest and lowest number of requests
-			var highestRequestNumber = -Infinity;
-			var lowestRequestNumber = Infinity;
-			data.map(function(obj){
-				if (obj.number_of_requests > highestRequestNumber) {
-					highestRequestNumber = obj.number_of_requests;
-				}
-				if (obj.number_of_requests < lowestRequestNumber) {
-					lowestRequestNumber = obj.number_of_requests;
-				}
-			});
-
-			var chartWidthScale = d3.scaleLinear()
-				.domain([0,highestRequestNumber]) //input max / min
-				.range([0,(w-minBarWidth)]); //output max / min
-
-			var colorScale = d3.scaleLinear()
-				.domain([lowestRequestNumber,highestRequestNumber])
-				.range([100,200]);
-
-
-			// =================================== Starting D3
-			var bar = svg.selectAll("bar")
-				.data(data)
-				.enter()
-				.append("g")
-					.attr('transform', function(d, i){ return "translate(0," + ((i * outerBarHeight)+bargin) + ")"; });
-				
-				//the bars
-				bar.append("rect")
-					.attr('class', 'requests-barchart__bar')
-					.attr('width', function(d){	return chartWidthScale(d.number_of_requests); })
-					.attr('height', barHeight)
-					.attr('fill', function(d){ 
-						var g = Math.ceil(colorScale(d.number_of_requests));
-						return "rgb(20," + g + ", 213)"; 
-					});
-
-				//department name within the bar
-				bar.append("text")
-					.attr('class', 'requests-barchart__bar-label')
-					.attr('x', bargin)
-					.attr('y', (barHeight / 2) )
-					.text(function(d){ return d.department_name; });
-
-				//number of requests to the right of the bar
-				bar.append("text")
-					.attr('class', 'requests-barchart__bar-number')
-					.attr('x', function(d){ return chartWidthScale(d.number_of_requests) + bargin; })
-					.attr('y', (barHeight / 2) )
-					.text(function(d){ return d.number_of_requests; });
-
-				//The X axis
-				svg.append('g')
-					.attr('transform', 'translate(0,' + barsHeight + ')')
-					.call(d3.axisBottom(chartWidthScale).ticks(10));
-					//.attr('class', 'requests-linechart__axis requests-linechart__axis-x')
-
+		eventManager.subscribe('section_opened', function(event){
+			if (event.data.section == 'bluebar') {
+				buildChart();
+			}
 		});
+		eventManager.subscribe('section_closed', function(event){
+			if (event.data.section == 'bluebar') {
+				//unload the DOM elements
+			}
+		});
+
 	}
 }
-},{"d3":2}],40:[function(require,module,exports){
+
+function buildChart(){
+	d3.json('dist/data/eg_dept_requests.json', function(error, data) {
+		var w = document.getElementById('requests-barchart').clientWidth;
+		var barHeight = 30;
+		var outerBarHeight = barHeight + bargin + 2; //plus 2 for the bar stroke
+		var barsHeight = (outerBarHeight * data.length) + (bargin) 
+		let svg = d3.select('#requests-barchart')
+			.attr('height', barsHeight + 50);
+		
+		//find the highest and lowest number of requests
+		var highestRequestNumber = -Infinity;
+		var lowestRequestNumber = Infinity;
+		data.map(function(obj){
+			if (obj.number_of_requests > highestRequestNumber) {
+				highestRequestNumber = obj.number_of_requests;
+			}
+			if (obj.number_of_requests < lowestRequestNumber) {
+				lowestRequestNumber = obj.number_of_requests;
+			}
+		});
+
+		var chartWidthScale = d3.scaleLinear()
+			.domain([0,highestRequestNumber]) //input max / min
+			.range([0,(w-minBarWidth)]); //output max / min
+
+		var colorScale = d3.scaleLinear()
+			.domain([lowestRequestNumber,highestRequestNumber])
+			.range([100,200]);
+
+
+		// =================================== Starting D3
+		var bar = svg.selectAll("bar")
+			.data(data)
+			.enter()
+			.append("g")
+				.attr('transform', function(d, i){ return "translate(0," + ((i * outerBarHeight)+bargin) + ")"; });
+			
+			//the bars
+			bar.append("rect")
+				.attr('class', 'requests-barchart__bar')
+				.attr('width', function(d){	return chartWidthScale(d.number_of_requests); })
+				.attr('height', barHeight)
+				.attr('fill', function(d){ 
+					var g = Math.ceil(colorScale(d.number_of_requests));
+					return "rgb(20," + g + ", 213)"; 
+				});
+
+			//department name within the bar
+			bar.append("text")
+				.attr('class', 'requests-barchart__bar-label')
+				.attr('x', bargin)
+				.attr('y', (barHeight / 2) )
+				.text(function(d){ return d.department_name; });
+
+			//number of requests to the right of the bar
+			bar.append("text")
+				.attr('class', 'requests-barchart__bar-number')
+				.attr('x', function(d){ return chartWidthScale(d.number_of_requests) + bargin; })
+				.attr('y', (barHeight / 2) )
+				.text(function(d){ return d.number_of_requests; });
+
+			//The X axis
+			svg.append('g')
+				.attr('transform', 'translate(0,' + barsHeight + ')')
+				.call(d3.axisBottom(chartWidthScale).ticks(10));
+				//.attr('class', 'requests-linechart__axis requests-linechart__axis-x')
+
+	});
+}
+
+
+},{"../utils/eventManager":41,"d3":2}],40:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');

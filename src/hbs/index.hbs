@@ -22,30 +22,30 @@
 		<div class="main__sidebar">
 			
 			<nav>
-				<button class="nav-button js-nav-button" data-section="one">Grey Linechart</button>
-				<button class="nav-button js-nav-button" data-section="two">Blue barchart</button>
-				<button class="nav-button js-nav-button" data-section="twiddly">Balance Linechart</button>
-				<button class="nav-button js-nav-button" data-section="dee">Map</button>
+				<button class="nav-button js-nav-button" data-section="linebasic">Grey Linechart</button>
+				<button class="nav-button js-nav-button" data-section="bluebar">Blue barchart</button>
+				<button class="nav-button js-nav-button" data-section="burnrate">Burnrate</button>
+				<button class="nav-button js-nav-button" data-section="map">Map</button>
 			</nav>
 
 		</div>
 		<div class="main__body">
 			
-			<section id="one" class="js-nav-section">
+			<section id="linebasic" class="js-nav-section">
 				{{> timespan_tabs }}
 				<div class="requests-linechart"></div>
 			</section>
 
-			<section id="two" class="js-nav-section">
+			<section id="bluebar" class="js-nav-section">
 				{{> timespan_tabs }}
 				<svg id="requests-barchart" class="requests-barchart"></svg>
 			</section>
 
-			<section id="twiddly" class="js-nav-section">
+			<section id="burnrate" class="js-nav-section">
 				<svg id="burnchart" class="burnchart"></svg>
 			</section>
 
-			<section id="dee" class="js-nav-section">
+			<section id="map" class="js-nav-section">
 				<div class="toolbar">
 				  <label for="map__request">Enter request ID</label>
 				  <input type="text" id="map__request" class="map__request" />
