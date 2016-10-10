@@ -41232,12 +41232,13 @@ if (typeof module !== 'undefined') {
 },{}],34:[function(require,module,exports){
 window.WL_STATE = {};
 
+require('./components/nav').init();
 require('./components/line-basic').init();
 require('./components/requests-barchart').init();
 require('./components/requests-linechart').init();
 require('./components/burn').init();
 require('./components/map').init();
-},{"./components/burn":35,"./components/line-basic":36,"./components/map":37,"./components/requests-barchart":38,"./components/requests-linechart":39}],35:[function(require,module,exports){
+},{"./components/burn":35,"./components/line-basic":36,"./components/map":37,"./components/nav":38,"./components/requests-barchart":39,"./components/requests-linechart":40}],35:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -41781,6 +41782,57 @@ module.exports = {
 },{"jquery":4,"mapbox.js":16}],38:[function(require,module,exports){
 'use strict';
 
+var eventManager = require('../utils/eventManager');
+var urlParameter = require('../utils/urlParameter');
+var $ = require('jquery');
+
+//remember this and the last for the event manager
+var previousSection = '';
+var currentSection = '';
+
+function runNavigation(newSection){
+	previousSection = currentSection;
+	
+	//hide and show
+	$('.js-nav-section').hide();
+	$('#' + newSection).show();
+	
+	//Let everyone know
+	eventManager.fire('section_opened', {owner:'nav', data:{section: newSection}});
+	eventManager.fire('section_closed', {owner:'nav', data:{section: previousSection}});
+	
+	//update the url history!
+	if (window.history) {
+		var stateObj = null; //could be interesting...
+		history.pushState(stateObj, newSection, "?chart=" + newSection);
+	}
+
+	currentSection = newSection;
+}
+
+module.exports = {
+	init(){
+		//what's the URL we're on?
+		var loadChart = urlParameter.getParameter('chart');
+		
+		console.log('NAVIGATION LOADED!', loadChart);
+		if (loadChart) {
+			runNavigation(loadChart);
+		}
+
+		//listen to the buttons for they shall speak to you
+		$('.js-nav-button').on('click', function(){		
+			var newSection = $(this).data('section');
+			runNavigation(newSection);
+		});
+
+		//Listen for going "back"
+	}
+}
+
+},{"../utils/eventManager":41,"../utils/urlParameter":42,"jquery":4}],39:[function(require,module,exports){
+'use strict';
+
 var d3 = require('d3');
 var bargin = 5; //bar margin - :D
 var minBarWidth = 30;
@@ -41857,7 +41909,7 @@ module.exports = {
 		});
 	}
 }
-},{"d3":2}],39:[function(require,module,exports){
+},{"d3":2}],40:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -42001,4 +42053,93 @@ module.exports = {
 		});
 	}
 }
-},{"d3":2}]},{},[34]);
+},{"d3":2}],41:[function(require,module,exports){
+'use strict';
+
+/* The Event Manager
+ * each type of event that is subscribed to becomes an array by the same name
+ * That array holds all the functions that have subscribed to the event
+ * So when the event fires, those functions will be run
+ * When firing an event, you can also pass in data that will be accessible to the subscribers
+ * Try not to mutate that data, you never know who else might be expecting it.
+ */
+
+var eventSubscribers = {};
+
+var addSubscriber = function(event, subscriber){
+	if (eventSubscribers[event]) {
+		eventSubscribers[event].push(subscriber);
+	} else {
+		eventSubscribers[event] = [subscriber];
+	}
+}
+
+module.exports = {
+	subscribe: function(event, subscriber){
+		/* Takes the name of an event to subscribe to
+		 * and a function to run when that event is fired.
+		 * An index number is returned. This will be needed if 
+		 * the subscriber is ever to be removed. (or we could implement some other kind of id system?)
+		 */	
+		if (Array.isArray(event)){
+			for (var e = 0; e < event.length; e++) {
+				addSubscriber(event[e], subscriber);
+			}
+			return;
+		}
+
+		addSubscriber(event, subscriber);
+	},
+
+	unsubscribe: function(event, index){
+		eventSubscribers[event].splice(index, 1);
+	},
+
+	fire: function(event, data){
+		console.log('EVENT:', event, data);
+		if (eventSubscribers[event]) {
+			for (var s = 0; s < eventSubscribers[event].length; s++) { //s for subscriber
+				eventSubscribers[event][s](data);
+			}
+		}
+	}
+}
+},{}],42:[function(require,module,exports){
+'use strict';
+
+/* A URL parameter reader
+ *
+ */
+
+module.exports = {
+	getParameter: function(paramName){
+		/* Takes the name of a parameter
+		 * returns whatever string may be attached to it.
+		 */	
+
+		var query = window.location.search.substring(1);
+		
+		//find the index of paranName
+		var paramIndex = query.indexOf(paramName);
+		if (paramIndex == -1){
+			return '';
+		}
+		var startSlice = paramIndex + paramName.length + 1; //+1 for the "="
+		
+		//find index of the next &
+		var endSlice = query.indexOf('&', startSlice);
+		if (endSlice == -1) {
+			endSlice = query.length;
+		}
+
+		var returnString = query.slice(startSlice, endSlice);
+		return returnString;
+	},
+	setParameter(paramName, value){
+		/* Sets paramName in the URL param string
+		 * Note - if said param already exists, it will be overwritten
+		 */
+
+	}
+}
+},{}]},{},[34]);

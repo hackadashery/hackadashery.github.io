@@ -22,30 +22,30 @@
 		<div class="main__sidebar">
 			
 			<nav>
-				<button class="nav-button">Grey Linechart</button>
-				<button class="nav-button">Blue barchart</button>
-				<button class="nav-button">Balance Linechart</button>
-				<button class="nav-button">Map</button>
+				<button class="nav-button js-nav-button" data-section="one">Grey Linechart</button>
+				<button class="nav-button js-nav-button" data-section="two">Blue barchart</button>
+				<button class="nav-button js-nav-button" data-section="twiddly">Balance Linechart</button>
+				<button class="nav-button js-nav-button" data-section="dee">Map</button>
 			</nav>
 
 		</div>
 		<div class="main__body">
 			
-			<section>
+			<section id="one" class="js-nav-section">
 				{{> timespan_tabs }}
 				<div class="requests-linechart"></div>
 			</section>
 
-			<section>
+			<section id="two" class="js-nav-section">
 				{{> timespan_tabs }}
 				<svg id="requests-barchart" class="requests-barchart"></svg>
 			</section>
 
-			<section>
+			<section id="twiddly" class="js-nav-section">
 				<svg id="burnchart" class="burnchart"></svg>
 			</section>
 
-			<section>
+			<section id="dee" class="js-nav-section">
 				<div class="toolbar">
 				  <label for="map__request">Enter request ID</label>
 				  <input type="text" id="map__request" class="map__request" />

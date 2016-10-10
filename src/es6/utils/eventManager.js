@@ -46,10 +46,5 @@ module.exports = {
 				eventSubscribers[event][s](data);
 			}
 		}
-
-		//also fire the 'anyevent' event
-		for (var s = 0; s < eventSubscribers.anyevent.length; s++) { //s for subscriber
-			eventSubscribers.anyevent[s](data, event); 
-		}
 	}
 }
