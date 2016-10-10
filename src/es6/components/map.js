@@ -4,6 +4,8 @@ var $ = require("jquery");
 var eventManager = require('../utils/eventManager');
 require('mapbox.js');
 
+var chartIsBuilt = false;
+
 module.exports = {
     init: function(){
         eventManager.subscribe('section_opened', function(event){
@@ -21,6 +23,9 @@ module.exports = {
 }
 
 function buildChart(){
+    if (chartIsBuilt) { return; }
+    chartIsBuilt = true;
+
     // Map variables
     var CartoDB_Positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',

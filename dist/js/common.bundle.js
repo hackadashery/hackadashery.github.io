@@ -41246,6 +41246,7 @@ require('./components/main-nav').init();
 var d3 = require('d3');
 var eventManager = require('../utils/eventManager');
 
+var chartIsBuilt = false;
 var chartPadding = { top: 60, right: 60, bottom: 40, left: 60 }
 
 
@@ -41265,6 +41266,9 @@ module.exports = {
 }
 
 function buildChart(){
+	if (chartIsBuilt) { return; }
+	chartIsBuilt = true;
+	
 	d3.json('dist/data/burn_total.json', function(error, data) {
 		// =================================== Variables	
 		var svgWidth = document.getElementById('burnchart').clientWidth;
@@ -41497,6 +41501,7 @@ function buildChart(){
 
 var d3 = require('d3');
 var eventManager = require('../utils/eventManager');
+var chartIsBuilt = false;
 
 module.exports = {
 	init: function(){
@@ -41514,6 +41519,8 @@ module.exports = {
 }
 
 function buildChart(){
+	if (chartIsBuilt) { return; }
+	chartIsBuilt = true;
 	// define the margins of the graph element, and the width and height of the 
 	// inner-container where the graph will live
 	var margin = {
@@ -41734,6 +41741,8 @@ var $ = require("jquery");
 var eventManager = require('../utils/eventManager');
 require('mapbox.js');
 
+var chartIsBuilt = false;
+
 module.exports = {
     init: function(){
         eventManager.subscribe('section_opened', function(event){
@@ -41751,6 +41760,9 @@ module.exports = {
 }
 
 function buildChart(){
+    if (chartIsBuilt) { return; }
+    chartIsBuilt = true;
+
     // Map variables
     var CartoDB_Positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
@@ -41889,6 +41901,7 @@ var d3 = require('d3');
 var eventManager = require('../utils/eventManager');
 var bargin = 5; //bar margin - :D
 var minBarWidth = 30;
+var chartIsBuilt = false;
 
 module.exports = {
 	init(){
@@ -41907,6 +41920,9 @@ module.exports = {
 }
 
 function buildChart(){
+	if (chartIsBuilt) { return; }
+	chartIsBuilt = true;
+	
 	d3.json('dist/data/eg_dept_requests.json', function(error, data) {
 		var w = document.getElementById('requests-barchart').clientWidth;
 		var barHeight = 30;

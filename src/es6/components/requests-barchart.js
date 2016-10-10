@@ -4,6 +4,7 @@ var d3 = require('d3');
 var eventManager = require('../utils/eventManager');
 var bargin = 5; //bar margin - :D
 var minBarWidth = 30;
+var chartIsBuilt = false;
 
 module.exports = {
 	init(){
@@ -22,6 +23,9 @@ module.exports = {
 }
 
 function buildChart(){
+	if (chartIsBuilt) { return; }
+	chartIsBuilt = true;
+	
 	d3.json('dist/data/eg_dept_requests.json', function(error, data) {
 		var w = document.getElementById('requests-barchart').clientWidth;
 		var barHeight = 30;

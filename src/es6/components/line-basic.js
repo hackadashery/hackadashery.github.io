@@ -9,6 +9,7 @@
 
 var d3 = require('d3');
 var eventManager = require('../utils/eventManager');
+var chartIsBuilt = false;
 
 module.exports = {
 	init: function(){
@@ -26,6 +27,8 @@ module.exports = {
 }
 
 function buildChart(){
+	if (chartIsBuilt) { return; }
+	chartIsBuilt = true;
 	// define the margins of the graph element, and the width and height of the 
 	// inner-container where the graph will live
 	var margin = {

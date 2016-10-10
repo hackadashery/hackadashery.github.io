@@ -3,6 +3,7 @@
 var d3 = require('d3');
 var eventManager = require('../utils/eventManager');
 
+var chartIsBuilt = false;
 var chartPadding = { top: 60, right: 60, bottom: 40, left: 60 }
 
 
@@ -22,6 +23,9 @@ module.exports = {
 }
 
 function buildChart(){
+	if (chartIsBuilt) { return; }
+	chartIsBuilt = true;
+	
 	d3.json('dist/data/burn_total.json', function(error, data) {
 		// =================================== Variables	
 		var svgWidth = document.getElementById('burnchart').clientWidth;
