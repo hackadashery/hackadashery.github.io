@@ -16,8 +16,8 @@ function runNavigation(newSection){
 	$('#' + newSection).show();
 	
 	//Let everyone know
-	eventManager.fire('section_opened', {owner:'nav', data:{section: newSection}});
-	eventManager.fire('section_closed', {owner:'nav', data:{section: previousSection}});
+	eventManager.fire('section_opened', {owner:'main_nav', data:{section: newSection}});
+	eventManager.fire('section_closed', {owner:'main_nav', data:{section: previousSection}});
 	
 	//update the url history!
 	if (window.history) {
@@ -30,13 +30,16 @@ function runNavigation(newSection){
 
 module.exports = {
 	init(){
+		var chartLoaded = false;
 		//what's the URL we're on?
 		var loadChart = urlParameter.getParameter('chart');
-		
-		console.log('NAVIGATION LOADED!', loadChart);
 		if (loadChart) {
 			runNavigation(loadChart);
+		} else {
+			//load the welcome screen
+			runNavigation('welcome');
 		}
+		$('.js-main').addClass('js-loaded');
 
 		//listen to the buttons for they shall speak to you
 		$('.js-nav-button').on('click', function(){		

@@ -51,6 +51,12 @@ The gulpfile does a few things for us:
 
 ---
 
+###Tests
+
+Located in `/spec` written in [Jasmine](http://jasmine.github.io/), run `npm test` to run tests!
+
+---
+
 ###Chart ideas
 
 *Burn chart*: X is time, Y (left) is number of active issues, Y (right) total number of issues. red line for issues added, green line for issues resolved, blue line for total number of issues.

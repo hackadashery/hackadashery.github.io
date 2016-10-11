@@ -6,7 +6,8 @@
   "scripts": {
     "start": "npm-run-all --parallel gulp server",
     "server": "http-server &",
-    "gulp": "gulp"
+    "gulp": "gulp",
+    "test": "jasmine"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.3.2",
     "handlebars": "^4.0.5",
+    "jasmine": "^2.5.2",
     "node-notifier": "^4.6.1",
     "npm-run-all": "^3.1.0",
     "vinyl-source-stream": "^1.1.0"

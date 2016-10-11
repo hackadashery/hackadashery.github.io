@@ -1,6 +1,14 @@
 .main {
 	display: flex;
 	width: 100%;
+	transform: translate(0, -10px);
+	opacity: 0;
+	transition: opacity 0.5s ease, transform 0.5s ease;
+
+	&.js-loaded {
+		opacity: 1;
+		transform: translate(0, 0px);
+	}
 
 	&__sidebar {
 		width: rem(300);
