@@ -9,13 +9,22 @@
     display: inline-block;
     width: 60%;
     height: 100%;
+    vertical-align: top;
   }
 
   &__sidebar
   {
     display: inline-block;
     width: 40%;
-    background: gray;
+    vertical-align: top;
+  }
+
+  &__round-icon
+  {
+    width: 10px;
+    height: 10px;
+    background: #14b9d6;
+    border-radius: 50%;
   }
 }
 

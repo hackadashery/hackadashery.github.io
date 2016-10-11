@@ -19,6 +19,8 @@ module.exports = {
         var markersLayer = new L.LayerGroup();
         map.addLayer(markersLayer);
 
+        var roundIcon = L.divIcon({className: 'map__round-icon'});
+
         var info = L.control();
 
         // Figure out what the date was 7 days ago
@@ -66,6 +68,7 @@ module.exports = {
                                 options += "<b>Status</b><br>" + this.status + "<br></p>";
                             new L.marker([lat, lon])
                             .addTo( markersLayer ).bindPopup(options);
+                            $('.map__sidebar').append(options);
                             map.setView([lat, lon],16, {animate: true});
                         } else {
                             console.log("incomplete geographic info");
@@ -106,7 +109,7 @@ module.exports = {
                                 options += "<b>Agency Responsible</b><br>" + this.agency_responsible + "<br>";
                                 options += "<b>Address</b><br>" + this.address + "<br>";
                                 options += "<b>Status</b><br>" + this.status + "<br></p>";
-                            new L.marker([lat, lon])
+                            new L.marker([lat, lon], {icon: roundIcon})
                             .addTo( markersLayer ).bindPopup(options);
                         } else {
                             console.log("incomplete geographic info");
