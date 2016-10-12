@@ -589,14 +589,17 @@ BEM land
     width: 60%;
     height: 100%;
     vertical-align: top; }
-  .map__sidebar {
-    display: inline-block;
-    width: 40%;
-    vertical-align: top; }
   .map__round-icon {
-    width: 10px;
-    height: 10px;
+    width: 15px !important;
+    height: 15px !important;
     background: #14b9d6;
+    border-radius: 50%; }
+    .map__round-icon--single {
+      background: #f27835; }
+  .map__round-icon-single {
+    width: 15px !important;
+    height: 15px !important;
+    background: #f27835;
     border-radius: 50%; }
 
 .btn {
@@ -604,6 +607,18 @@ BEM land
   padding: 5px;
   color: white;
   background: gray; }
+
+.sidebar {
+  display: inline-block;
+  width: 35.8%;
+  padding: 20px;
+  vertical-align: top; }
+  .sidebar__title {
+    font-size: 1.5rem;
+    color: #5d6d80;
+    text-transform: uppercase; }
+    .sidebar__title--sub {
+      font-size: 1.3rem; }
 
 .requests-barchart {
   font-weight: 500;

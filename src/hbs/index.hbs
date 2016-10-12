@@ -72,14 +72,20 @@
 			</section>
 
 			<section id="map" class="js-nav-section">
-				<div class="toolbar">
+				<div class="map__toolbar">
 				  <label for="map__request">Enter request ID</label>
 				  <input type="text" id="map__request" class="map__request" />
 				  <input type="submit" class="btn js-id-request" value="Submit" />
 				</div>
 				<div class="map">
-				  <div id="map" class="map__view"></div>
-				  <div class="map__sidebar"></div>
+				  <div id="map__view" class="map__view"></div>
+				  <div class="sidebar">
+				  	<h1 class="sidebar__title">Your Service Request</h1> 
+				  	<div class="sidebar__response">
+				  		<p>Enter your case ID to check the status of your request</p>
+				  	</div> 
+				  	<div class="sidebar__response-type"></div>
+				  </div>
 				</div>
 			</section>
 

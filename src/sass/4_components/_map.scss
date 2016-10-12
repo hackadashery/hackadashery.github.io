@@ -12,19 +12,25 @@
     vertical-align: top;
   }
 
-  &__sidebar
-  {
-    display: inline-block;
-    width: 40%;
-    vertical-align: top;
-  }
-
   &__round-icon
   {
-    width: 10px;
-    height: 10px;
-    background: #14b9d6;
+    width: 15px !important;
+    height: 15px !important;
+    background: #14b9d6; 
     border-radius: 50%;
+
+    &--single
+    {
+      background: #f27835;
+    }
+  }
+
+  &__round-icon-single
+  {
+    width: 15px !important;
+    height: 15px !important;
+    background: #f27835;
+    border-radius: 50%; 
   }
 }
 
@@ -34,4 +40,24 @@
   padding: 5px;
   color: white;
   background: gray;
+}
+
+.sidebar
+{
+  display: inline-block;
+  width: 35.8%;
+  padding: 20px;
+  vertical-align: top;
+
+  &__title
+  {
+    font-size: 1.5rem;
+    color: #5d6d80;
+    text-transform: uppercase;
+
+    &--sub
+    {
+      font-size: 1.3rem; 
+    }
+  }
 }

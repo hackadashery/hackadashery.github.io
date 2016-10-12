@@ -1,99 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-function corslite(url, callback, cors) {
-    var sent = false;
-
-    if (typeof window.XMLHttpRequest === 'undefined') {
-        return callback(Error('Browser not supported'));
-    }
-
-    if (typeof cors === 'undefined') {
-        var m = url.match(/^\s*https?:\/\/[^\/]*/);
-        cors = m && (m[0] !== location.protocol + '//' + location.domain +
-                (location.port ? ':' + location.port : ''));
-    }
-
-    var x = new window.XMLHttpRequest();
-
-    function isSuccessful(status) {
-        return status >= 200 && status < 300 || status === 304;
-    }
-
-    if (cors && !('withCredentials' in x)) {
-        // IE8-9
-        x = new window.XDomainRequest();
-
-        // Ensure callback is never called synchronously, i.e., before
-        // x.send() returns (this has been observed in the wild).
-        // See https://github.com/mapbox/mapbox.js/issues/472
-        var original = callback;
-        callback = function() {
-            if (sent) {
-                original.apply(this, arguments);
-            } else {
-                var that = this, args = arguments;
-                setTimeout(function() {
-                    original.apply(that, args);
-                }, 0);
-            }
-        }
-    }
-
-    function loaded() {
-        if (
-            // XDomainRequest
-            x.status === undefined ||
-            // modern browsers
-            isSuccessful(x.status)) callback.call(x, null, x);
-        else callback.call(x, x, null);
-    }
-
-    // Both `onreadystatechange` and `onload` can fire. `onreadystatechange`
-    // has [been supported for longer](http://stackoverflow.com/a/9181508/229001).
-    if ('onload' in x) {
-        x.onload = loaded;
-    } else {
-        x.onreadystatechange = function readystate() {
-            if (x.readyState === 4) {
-                loaded();
-            }
-        };
-    }
-
-    // Call the callback with the XMLHttpRequest object as an error and prevent
-    // it from ever being called again by reassigning it to `noop`
-    x.onerror = function error(evt) {
-        // XDomainRequest provides no evt parameter
-        callback.call(this, evt || true, null);
-        callback = function() { };
-    };
-
-    // IE9 must have onprogress be set to a unique function.
-    x.onprogress = function() { };
-
-    x.ontimeout = function(evt) {
-        callback.call(this, evt, null);
-        callback = function() { };
-    };
-
-    x.onabort = function(evt) {
-        callback.call(this, evt, null);
-        callback = function() { };
-    };
-
-    // GET is the only supported HTTP Verb by XDomainRequest and is the
-    // only one supported here.
-    x.open('GET', url, true);
-
-    // Send the request. Sending data is not supported.
-    x.send(null);
-    sent = true;
-
-    return x;
-}
-
-if (typeof module !== 'undefined') module.exports = corslite;
-
-},{}],2:[function(require,module,exports){
 // https://d3js.org Version 4.2.6. Copyright 2016 Mike Bostock.
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
@@ -16379,12 +16284,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
 
-},{}],3:[function(require,module,exports){
-module.exports = Array.isArray || function (arr) {
-  return Object.prototype.toString.call(arr) == '[object Array]';
-};
-
-},{}],4:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.1.1
  * https://jquery.com/
@@ -26606,6 +26506,106 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
+},{}],3:[function(require,module,exports){
+function corslite(url, callback, cors) {
+    var sent = false;
+
+    if (typeof window.XMLHttpRequest === 'undefined') {
+        return callback(Error('Browser not supported'));
+    }
+
+    if (typeof cors === 'undefined') {
+        var m = url.match(/^\s*https?:\/\/[^\/]*/);
+        cors = m && (m[0] !== location.protocol + '//' + location.domain +
+                (location.port ? ':' + location.port : ''));
+    }
+
+    var x = new window.XMLHttpRequest();
+
+    function isSuccessful(status) {
+        return status >= 200 && status < 300 || status === 304;
+    }
+
+    if (cors && !('withCredentials' in x)) {
+        // IE8-9
+        x = new window.XDomainRequest();
+
+        // Ensure callback is never called synchronously, i.e., before
+        // x.send() returns (this has been observed in the wild).
+        // See https://github.com/mapbox/mapbox.js/issues/472
+        var original = callback;
+        callback = function() {
+            if (sent) {
+                original.apply(this, arguments);
+            } else {
+                var that = this, args = arguments;
+                setTimeout(function() {
+                    original.apply(that, args);
+                }, 0);
+            }
+        }
+    }
+
+    function loaded() {
+        if (
+            // XDomainRequest
+            x.status === undefined ||
+            // modern browsers
+            isSuccessful(x.status)) callback.call(x, null, x);
+        else callback.call(x, x, null);
+    }
+
+    // Both `onreadystatechange` and `onload` can fire. `onreadystatechange`
+    // has [been supported for longer](http://stackoverflow.com/a/9181508/229001).
+    if ('onload' in x) {
+        x.onload = loaded;
+    } else {
+        x.onreadystatechange = function readystate() {
+            if (x.readyState === 4) {
+                loaded();
+            }
+        };
+    }
+
+    // Call the callback with the XMLHttpRequest object as an error and prevent
+    // it from ever being called again by reassigning it to `noop`
+    x.onerror = function error(evt) {
+        // XDomainRequest provides no evt parameter
+        callback.call(this, evt || true, null);
+        callback = function() { };
+    };
+
+    // IE9 must have onprogress be set to a unique function.
+    x.onprogress = function() { };
+
+    x.ontimeout = function(evt) {
+        callback.call(this, evt, null);
+        callback = function() { };
+    };
+
+    x.onabort = function(evt) {
+        callback.call(this, evt, null);
+        callback = function() { };
+    };
+
+    // GET is the only supported HTTP Verb by XDomainRequest and is the
+    // only one supported here.
+    x.open('GET', url, true);
+
+    // Send the request. Sending data is not supported.
+    x.send(null);
+    sent = true;
+
+    return x;
+}
+
+if (typeof module !== 'undefined') module.exports = corslite;
+
+},{}],4:[function(require,module,exports){
+module.exports = Array.isArray || function (arr) {
+  return Object.prototype.toString.call(arr) == '[object Array]';
+};
+
 },{}],5:[function(require,module,exports){
 /*
  Leaflet, a JavaScript library for mobile-friendly interactive maps. http://leafletjs.com
@@ -35776,2360 +35776,6 @@ L.Map.include({
 
 }(window, document));
 },{}],6:[function(require,module,exports){
-module.exports={
-  "_args": [
-    [
-      {
-        "name": "mapbox.js",
-        "raw": "mapbox.js@^2.4.0",
-        "rawSpec": "^2.4.0",
-        "scope": null,
-        "spec": ">=2.4.0 <3.0.0",
-        "type": "range"
-      },
-      "C:\\Users\\IJ\\Projects\\Hackadashery\\fed-prototype"
-    ]
-  ],
-  "_from": "mapbox.js@>=2.4.0 <3.0.0",
-  "_id": "mapbox.js@2.4.0",
-  "_inCache": true,
-  "_installable": true,
-  "_location": "/mapbox.js",
-  "_nodeVersion": "5.9.1",
-  "_npmOperationalInternal": {
-    "host": "packages-16-east.internal.npmjs.com",
-    "tmp": "tmp/mapbox.js-2.4.0.tgz_1459367631719_0.44528863835148513"
-  },
-  "_npmUser": {
-    "email": "tom@macwright.org",
-    "name": "tmcw"
-  },
-  "_npmVersion": "3.7.3",
-  "_phantomChildren": {},
-  "_requested": {
-    "name": "mapbox.js",
-    "raw": "mapbox.js@^2.4.0",
-    "rawSpec": "^2.4.0",
-    "scope": null,
-    "spec": ">=2.4.0 <3.0.0",
-    "type": "range"
-  },
-  "_requiredBy": [
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/mapbox.js/-/mapbox.js-2.4.0.tgz",
-  "_shasum": "c43b084a5dd71334c83ee1df28fa67443d73c29c",
-  "_shrinkwrap": null,
-  "_spec": "mapbox.js@^2.4.0",
-  "_where": "C:\\Users\\IJ\\Projects\\Hackadashery\\fed-prototype",
-  "author": {
-    "name": "Mapbox"
-  },
-  "bugs": {
-    "url": "https://github.com/mapbox/mapbox.js/issues"
-  },
-  "dependencies": {
-    "corslite": "0.0.6",
-    "isarray": "0.0.1",
-    "leaflet": "0.7.7",
-    "mustache": "2.2.1",
-    "sanitize-caja": "0.1.3"
-  },
-  "description": "mapbox javascript api",
-  "devDependencies": {
-    "browserify": "^13.0.0",
-    "clean-css": "~2.0.7",
-    "eslint": "^0.23.0",
-    "expect.js": "0.3.1",
-    "happen": "0.1.3",
-    "leaflet-fullscreen": "0.0.4",
-    "leaflet-hash": "0.2.1",
-    "marked": "~0.3.0",
-    "minifyify": "^6.1.0",
-    "minimist": "0.0.5",
-    "mocha": "2.4.5",
-    "mocha-phantomjs": "4.0.2",
-    "sinon": "1.10.2"
-  },
-  "directories": {},
-  "dist": {
-    "shasum": "c43b084a5dd71334c83ee1df28fa67443d73c29c",
-    "tarball": "https://registry.npmjs.org/mapbox.js/-/mapbox.js-2.4.0.tgz"
-  },
-  "engines": {
-    "node": "*"
-  },
-  "gitHead": "60c85505a0c99805a94c9ea9262412c43c9e971a",
-  "homepage": "http://mapbox.com/",
-  "license": "BSD-3-Clause",
-  "main": "src/index.js",
-  "maintainers": [
-    {
-      "email": "mxn@1ec5.org",
-      "name": "1ec5"
-    },
-    {
-      "email": "aaronlidman@gmail.com",
-      "name": "aaronlidman"
-    },
-    {
-      "email": "aj.ashton@gmail.com",
-      "name": "ajashton"
-    },
-    {
-      "email": "ulsh@mapbox.com",
-      "name": "alulsh"
-    },
-    {
-      "email": "ansis.brammanis@gmail.com",
-      "name": "ansis"
-    },
-    {
-      "email": "andrew@mapbox.com",
-      "name": "apendleton"
-    },
-    {
-      "email": "wb@bergwerk-gis.at",
-      "name": "bergwerkgis"
-    },
-    {
-      "email": "bryan@mapbox.com",
-      "name": "bhousel"
-    },
-    {
-      "email": "bobby@mapbox.com",
-      "name": "bsudekum"
-    },
-    {
-      "email": "camille@mapbox.com",
-      "name": "camilleanne"
-    },
-    {
-      "email": "damon@mapbox.com",
-      "name": "dnomadb"
-    },
-    {
-      "email": "dthompson@gmail.com",
-      "name": "dthompson"
-    },
-    {
-      "email": "emily@mapbox.com",
-      "name": "emilymcafee"
-    },
-    {
-      "email": "flippmoke@gmail.com",
-      "name": "flippmoke"
-    },
-    {
-      "email": "spam@freenerd.de",
-      "name": "freenerd"
-    },
-    {
-      "email": "carol@mapbox.com",
-      "name": "gretacb"
-    },
-    {
-      "email": "ian.villeda@gmail.com",
-      "name": "ian29"
-    },
-    {
-      "email": "ian@mapbox.com",
-      "name": "ianshward"
-    },
-    {
-      "email": "nicholas.ingalls@gmail.com",
-      "name": "ingalls"
-    },
-    {
-      "email": "john.firebaugh@gmail.com",
-      "name": "jfirebaugh"
-    },
-    {
-      "email": "jake@jakepruitt.com",
-      "name": "jrpruit1"
-    },
-    {
-      "email": "karen@mapbox.com",
-      "name": "karenzshea"
-    },
-    {
-      "email": "kelvinabrokwa@gmail.com",
-      "name": "kelvinabrokwa"
-    },
-    {
-      "email": "kkaefer@gmail.com",
-      "name": "kkaefer"
-    },
-    {
-      "email": "lauren@mapbox.com",
-      "name": "lbud"
-    },
-    {
-      "email": "lucas@lucaswoj.com",
-      "name": "lucaswoj"
-    },
-    {
-      "email": "alex@mapbox.com",
-      "name": "lxbarth"
-    },
-    {
-      "email": "lyzi@mapbox.com",
-      "name": "lyzidiamond"
-    },
-    {
-      "email": "accounts@mapbox.com",
-      "name": "mapbox-admin"
-    },
-    {
-      "email": "matt@mapbox.com",
-      "name": "mateov"
-    },
-    {
-      "email": "mcwhittemore@gmail.com",
-      "name": "mcwhittemore"
-    },
-    {
-      "email": "jeff@miccolis.net",
-      "name": "miccolis"
-    },
-    {
-      "email": "michael.patrick.morris@gmail.com",
-      "name": "mikemorris"
-    },
-    {
-      "email": "morgan.herlocker@gmail.com",
-      "name": "morganherlocker"
-    },
-    {
-      "email": "agafonkin@gmail.com",
-      "name": "mourner"
-    },
-    {
-      "email": "irwin@mapbox.com",
-      "name": "mtirwin"
-    },
-    {
-      "email": "nicki@mapbox.com",
-      "name": "nickidlugash"
-    },
-    {
-      "email": "ryan.clark.j@gmail.com",
-      "name": "rclark"
-    },
-    {
-      "email": "saman@mapbox.com",
-      "name": "samanbb"
-    },
-    {
-      "email": "tlee@mapbox.com",
-      "name": "sbma44"
-    },
-    {
-      "email": "scothis@gmail.com",
-      "name": "scothis"
-    },
-    {
-      "email": "sean@mapbox.com",
-      "name": "sgillies"
-    },
-    {
-      "email": "dane@mapbox.com",
-      "name": "springmeyer"
-    },
-    {
-      "email": "patrick@mapbox.com",
-      "name": "themarex"
-    },
-    {
-      "email": "tom@macwright.org",
-      "name": "tmcw"
-    },
-    {
-      "email": "tristen.brown@gmail.com",
-      "name": "tristen"
-    },
-    {
-      "email": "will@mapbox.com",
-      "name": "willwhite"
-    },
-    {
-      "email": "young@mapbox.com",
-      "name": "yhahn"
-    }
-  ],
-  "name": "mapbox.js",
-  "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/mapbox/mapbox.js.git"
-  },
-  "scripts": {
-    "test": "eslint --no-eslintrc -c .eslintrc src && mocha-phantomjs test/index.html"
-  },
-  "version": "2.4.0"
-}
-
-},{}],7:[function(require,module,exports){
-'use strict';
-
-module.exports = {
-    HTTP_URL: 'http://a.tiles.mapbox.com/v4',
-    HTTPS_URL: 'https://a.tiles.mapbox.com/v4',
-    FORCE_HTTPS: false,
-    REQUIRE_ACCESS_TOKEN: true
-};
-
-},{}],8:[function(require,module,exports){
-'use strict';
-
-var util = require('./util'),
-    format_url = require('./format_url'),
-    request = require('./request'),
-    marker = require('./marker'),
-    simplestyle = require('./simplestyle');
-
-// # featureLayer
-//
-// A layer of features, loaded from Mapbox or else. Adds the ability
-// to reset features, filter them, and load them from a GeoJSON URL.
-var FeatureLayer = L.FeatureGroup.extend({
-    options: {
-        filter: function() { return true; },
-        sanitizer: require('sanitize-caja'),
-        style: simplestyle.style,
-        popupOptions: { closeButton: false }
-    },
-
-    initialize: function(_, options) {
-        L.setOptions(this, options);
-
-        this._layers = {};
-
-        if (typeof _ === 'string') {
-            util.idUrl(_, this);
-        // javascript object of TileJSON data
-        } else if (_ && typeof _ === 'object') {
-            this.setGeoJSON(_);
-        }
-    },
-
-    setGeoJSON: function(_) {
-        this._geojson = _;
-        this.clearLayers();
-        this._initialize(_);
-        return this;
-    },
-
-    getGeoJSON: function() {
-        return this._geojson;
-    },
-
-    loadURL: function(url) {
-        if (this._request && 'abort' in this._request) this._request.abort();
-        this._request = request(url, L.bind(function(err, json) {
-            this._request = null;
-            if (err && err.type !== 'abort') {
-                util.log('could not load features at ' + url);
-                this.fire('error', {error: err});
-            } else if (json) {
-                this.setGeoJSON(json);
-                this.fire('ready');
-            }
-        }, this));
-        return this;
-    },
-
-    loadID: function(id) {
-        return this.loadURL(format_url('/v4/' + id + '/features.json', this.options.accessToken));
-    },
-
-    setFilter: function(_) {
-        this.options.filter = _;
-        if (this._geojson) {
-            this.clearLayers();
-            this._initialize(this._geojson);
-        }
-        return this;
-    },
-
-    getFilter: function() {
-        return this.options.filter;
-    },
-
-    _initialize: function(json) {
-        var features = L.Util.isArray(json) ? json : json.features,
-            i, len;
-
-        if (features) {
-            for (i = 0, len = features.length; i < len; i++) {
-                // Only add this if geometry or geometries are set and not null
-                if (features[i].geometries || features[i].geometry || features[i].features) {
-                    this._initialize(features[i]);
-                }
-            }
-        } else if (this.options.filter(json)) {
-
-            var opts = {accessToken: this.options.accessToken},
-                pointToLayer = this.options.pointToLayer || function(feature, latlon) {
-                  return marker.style(feature, latlon, opts);
-                },
-                layer = L.GeoJSON.geometryToLayer(json, pointToLayer),
-                popupHtml = marker.createPopup(json, this.options.sanitizer),
-                style = this.options.style,
-                defaultStyle = style === simplestyle.style;
-
-            if (style && 'setStyle' in layer &&
-                // if the style method is the simplestyle default, then
-                // never style L.Circle or L.CircleMarker because
-                // simplestyle has no rules over them, only over geometry
-                // primitives directly from GeoJSON
-                (!(defaultStyle && (layer instanceof L.Circle ||
-                  layer instanceof L.CircleMarker)))) {
-                if (typeof style === 'function') {
-                    style = style(json);
-                }
-                layer.setStyle(style);
-            }
-
-            layer.feature = json;
-
-            if (popupHtml) {
-                layer.bindPopup(popupHtml, this.options.popupOptions);
-            }
-
-            this.addLayer(layer);
-        }
-    }
-});
-
-module.exports.FeatureLayer = FeatureLayer;
-
-module.exports.featureLayer = function(_, options) {
-    return new FeatureLayer(_, options);
-};
-
-},{"./format_url":10,"./marker":24,"./request":25,"./simplestyle":27,"./util":30,"sanitize-caja":32}],9:[function(require,module,exports){
-'use strict';
-
-var Feedback = L.Class.extend({
-    includes: L.Mixin.Events,
-    data: {},
-    record: function(data) {
-        L.extend(this.data, data);
-        this.fire('change');
-    }
-});
-
-module.exports = new Feedback();
-
-},{}],10:[function(require,module,exports){
-'use strict';
-
-var config = require('./config'),
-    version = require('../package.json').version;
-
-module.exports = function(path, accessToken) {
-    accessToken = accessToken || L.mapbox.accessToken;
-
-    if (!accessToken && config.REQUIRE_ACCESS_TOKEN) {
-        throw new Error('An API access token is required to use Mapbox.js. ' +
-            'See https://www.mapbox.com/mapbox.js/api/v' + version + '/api-access-tokens/');
-    }
-
-    var url = (document.location.protocol === 'https:' || config.FORCE_HTTPS) ? config.HTTPS_URL : config.HTTP_URL;
-    url = url.replace(/\/v4$/, '');
-    url += path;
-
-    if (config.REQUIRE_ACCESS_TOKEN) {
-        if (accessToken[0] === 's') {
-            throw new Error('Use a public access token (pk.*) with Mapbox.js, not a secret access token (sk.*). ' +
-                'See https://www.mapbox.com/mapbox.js/api/v' + version + '/api-access-tokens/');
-        }
-
-        url += url.indexOf('?') !== -1 ? '&access_token=' : '?access_token=';
-        url += accessToken;
-    }
-
-    return url;
-};
-
-module.exports.tileJSON = function(urlOrMapID, accessToken) {
-
-    if (urlOrMapID.indexOf('mapbox://styles') === 0) {
-        throw new Error('Styles created with Mapbox Studio need to be used with ' +
-            'L.mapbox.styleLayer, not L.mapbox.tileLayer');
-    }
-
-    if (urlOrMapID.indexOf('/') !== -1)
-        return urlOrMapID;
-
-    var url = module.exports('/v4/' + urlOrMapID + '.json', accessToken);
-
-    // TileJSON requests need a secure flag appended to their URLs so
-    // that the server knows to send SSL-ified resource references.
-    if (url.indexOf('https') === 0)
-        url += '&secure';
-
-    return url;
-};
-
-
-module.exports.style = function(styleURL, accessToken) {
-    if (styleURL.indexOf('mapbox://styles/') === -1) throw new Error('Incorrectly formatted Mapbox style at ' + styleURL);
-
-    var ownerIDStyle = styleURL.split('mapbox://styles/')[1];
-    var url = module.exports('/styles/v1/' + ownerIDStyle, accessToken)
-        .replace('http://', 'https://');
-
-    return url;
-};
-
-},{"../package.json":6,"./config":7}],11:[function(require,module,exports){
-'use strict';
-
-var isArray = require('isarray'),
-    util = require('./util'),
-    format_url = require('./format_url'),
-    feedback = require('./feedback'),
-    request = require('./request');
-
-// Low-level geocoding interface - wraps specific API calls and their
-// return values.
-module.exports = function(url, options) {
-    if (!options) options = {};
-    var geocoder = {};
-
-    util.strict(url, 'string');
-
-    if (url.indexOf('/') === -1) {
-        url = format_url('/geocoding/v5/' + url + '/{query}.json', options.accessToken, 5);
-    }
-
-    function roundTo(latLng, precision) {
-        var mult = Math.pow(10, precision);
-        latLng.lat = Math.round(latLng.lat * mult) / mult;
-        latLng.lng = Math.round(latLng.lng * mult) / mult;
-        return latLng;
-    }
-
-    geocoder.getURL = function() {
-        return url;
-    };
-
-    geocoder.queryURL = function(_) {
-        var isObject = !(isArray(_) || typeof _ === 'string'),
-            query = isObject ? _.query : _;
-
-        if (isArray(query)) {
-            var parts = [];
-            for (var i = 0; i < query.length; i++) {
-                parts[i] = encodeURIComponent(query[i]);
-            }
-            query = parts.join(';');
-        } else {
-            query = encodeURIComponent(query);
-        }
-
-        feedback.record({ geocoding: query });
-
-        var url = L.Util.template(geocoder.getURL(), {query: query});
-
-        if (isObject) {
-            if (_.types) {
-                if (isArray(_.types)) {
-                    url += '&types=' + _.types.join();
-                } else {
-                    url += '&types=' + _.types;
-                }
-            }
-
-            if (_.country) {
-                if (isArray(_.country)) {
-                    url += '&country=' + _.country.join();
-                } else {
-                    url += '&country=' + _.country;
-                }
-            }
-
-            if (_.proximity) {
-                var proximity = roundTo(L.latLng(_.proximity), 3);
-                url += '&proximity=' + proximity.lng + ',' + proximity.lat;
-            }
-
-            if (typeof _.autocomplete === 'boolean') {
-                url += '&autocomplete=' + _.autocomplete;
-            }
-        }
-
-        return url;
-    };
-
-    geocoder.query = function(_, callback) {
-        util.strict(callback, 'function');
-
-        request(geocoder.queryURL(_), function(err, json) {
-            if (json && (json.length || json.features)) {
-                var res = {
-                    results: json
-                };
-                if (json.features && json.features.length) {
-                    res.latlng = [
-                        json.features[0].center[1],
-                        json.features[0].center[0]];
-
-                    if (json.features[0].bbox) {
-                        res.bounds = json.features[0].bbox;
-                        res.lbounds = util.lbounds(res.bounds);
-                    }
-                }
-                callback(null, res);
-            } else callback(err || true);
-        });
-
-        return geocoder;
-    };
-
-    // a reverse geocode:
-    //
-    //  geocoder.reverseQuery([80, 20])
-    geocoder.reverseQuery = function(_, callback) {
-        var q = '';
-
-        // sort through different ways people represent lat and lon pairs
-        function normalize(x) {
-            var latLng;
-            if (x.lat !== undefined && x.lng !== undefined) {
-                latLng = L.latLng(x.lat, x.lng);
-            } else if (x.lat !== undefined && x.lon !== undefined) {
-                latLng = L.latLng(x.lat, x.lon);
-            } else {
-                latLng = L.latLng(x[1], x[0]);
-            }
-            latLng = roundTo(latLng, 5);
-            return latLng.lng + ',' + latLng.lat;
-        }
-
-        if (_.length && _[0].length) {
-            for (var i = 0, pts = []; i < _.length; i++) {
-                pts.push(normalize(_[i]));
-            }
-            q = pts.join(';');
-        } else {
-            q = normalize(_);
-        }
-
-        request(geocoder.queryURL(q), function(err, json) {
-            callback(err, json);
-        });
-
-        return geocoder;
-    };
-
-    return geocoder;
-};
-
-},{"./feedback":9,"./format_url":10,"./request":25,"./util":30,"isarray":3}],12:[function(require,module,exports){
-'use strict';
-
-var geocoder = require('./geocoder'),
-    util = require('./util');
-
-var GeocoderControl = L.Control.extend({
-    includes: L.Mixin.Events,
-
-    options: {
-        proximity: true,
-        position: 'topleft',
-        pointZoom: 16,
-        keepOpen: false,
-        autocomplete: false,
-        queryOptions: {}
-    },
-
-    initialize: function(_, options) {
-        L.Util.setOptions(this, options);
-        this.setURL(_);
-        this._updateSubmit = L.bind(this._updateSubmit, this);
-        this._updateAutocomplete = L.bind(this._updateAutocomplete, this);
-        this._chooseResult = L.bind(this._chooseResult, this);
-    },
-
-    setURL: function(_) {
-        this.geocoder = geocoder(_, {
-            accessToken: this.options.accessToken
-        });
-        return this;
-    },
-
-    getURL: function() {
-        return this.geocoder.getURL();
-    },
-
-    setID: function(_) {
-        return this.setURL(_);
-    },
-
-    setTileJSON: function(_) {
-        return this.setURL(_.geocoder);
-    },
-
-    _toggle: function(e) {
-        if (e) L.DomEvent.stop(e);
-        if (L.DomUtil.hasClass(this._container, 'active')) {
-            L.DomUtil.removeClass(this._container, 'active');
-            this._results.innerHTML = '';
-            this._input.blur();
-        } else {
-            L.DomUtil.addClass(this._container, 'active');
-            this._input.focus();
-            this._input.select();
-        }
-    },
-
-    _closeIfOpen: function() {
-        if (L.DomUtil.hasClass(this._container, 'active') &&
-            !this.options.keepOpen) {
-            L.DomUtil.removeClass(this._container, 'active');
-            this._results.innerHTML = '';
-            this._input.blur();
-        }
-    },
-
-    onAdd: function(map) {
-
-        var container = L.DomUtil.create('div', 'leaflet-control-mapbox-geocoder leaflet-bar leaflet-control'),
-            link = L.DomUtil.create('a', 'leaflet-control-mapbox-geocoder-toggle mapbox-icon mapbox-icon-geocoder', container),
-            results = L.DomUtil.create('div', 'leaflet-control-mapbox-geocoder-results', container),
-            wrap = L.DomUtil.create('div', 'leaflet-control-mapbox-geocoder-wrap', container),
-            form = L.DomUtil.create('form', 'leaflet-control-mapbox-geocoder-form', wrap),
-            input = L.DomUtil.create('input', '', form);
-
-        link.href = '#';
-        link.innerHTML = '&nbsp;';
-
-        input.type = 'text';
-        input.setAttribute('placeholder', 'Search');
-
-        L.DomEvent.addListener(form, 'submit', this._geocode, this);
-        L.DomEvent.addListener(input, 'keyup', this._autocomplete, this);
-        L.DomEvent.disableClickPropagation(container);
-
-        this._map = map;
-        this._results = results;
-        this._input = input;
-        this._form = form;
-
-        if (this.options.keepOpen) {
-            L.DomUtil.addClass(container, 'active');
-        } else {
-            this._map.on('click', this._closeIfOpen, this);
-            L.DomEvent.addListener(link, 'click', this._toggle, this);
-        }
-
-        return container;
-    },
-
-    _updateSubmit: function(err, resp) {
-        L.DomUtil.removeClass(this._container, 'searching');
-        this._results.innerHTML = '';
-        if (err || !resp) {
-            this.fire('error', {error: err});
-        } else {
-            var features = [];
-            if (resp.results && resp.results.features) {
-                features = resp.results.features;
-            }
-            if (features.length === 1) {
-                this.fire('autoselect', { feature: features[0] });
-                this.fire('found', {results: resp.results});
-                this._chooseResult(features[0]);
-                this._closeIfOpen();
-            } else if (features.length > 1) {
-                this.fire('found', {results: resp.results});
-                this._displayResults(features);
-            } else {
-                this.fire('notfound');
-                this._displayResults(features);
-            }
-        }
-    },
-
-    _updateAutocomplete: function(err, resp) {
-        this._results.innerHTML = '';
-        if (err || !resp) {
-            this.fire('error', {error: err});
-        } else {
-            var features = [];
-            if (resp.results && resp.results.features) {
-                features = resp.results.features;
-            }
-            if (features.length) {
-                this.fire('found', {results: resp.results});
-            } else {
-                this.fire('notfound');
-            }
-            this._displayResults(features);
-        }
-    },
-
-    _displayResults: function(features) {
-        for (var i = 0, l = Math.min(features.length, 5); i < l; i++) {
-            var feature = features[i];
-            var name = feature.place_name;
-            if (!name.length) continue;
-
-            var r = L.DomUtil.create('a', '', this._results);
-            var text = ('innerText' in r) ? 'innerText' : 'textContent';
-            r[text] = name;
-            r.setAttribute('title', name);
-            r.href = '#';
-
-            (L.bind(function(feature) {
-                L.DomEvent.addListener(r, 'click', function(e) {
-                    this._chooseResult(feature);
-                    L.DomEvent.stop(e);
-                    this.fire('select', { feature: feature });
-                }, this);
-            }, this))(feature);
-        }
-        if (features.length > 5) {
-            var outof = L.DomUtil.create('span', '', this._results);
-            outof.innerHTML = 'Top 5 of ' + features.length + '  results';
-        }
-    },
-
-    _chooseResult: function(result) {
-        if (result.bbox) {
-            this._map.fitBounds(util.lbounds(result.bbox));
-        } else if (result.center) {
-            this._map.setView([result.center[1], result.center[0]], (this._map.getZoom() === undefined) ?
-                this.options.pointZoom :
-                Math.max(this._map.getZoom(), this.options.pointZoom));
-        }
-    },
-
-    _geocode: function(e) {
-        L.DomEvent.preventDefault(e);
-        if (this._input.value === '') return this._updateSubmit();
-        L.DomUtil.addClass(this._container, 'searching');
-        this.geocoder.query(L.Util.extend({
-            query: this._input.value,
-            proximity: this.options.proximity ? this._map.getCenter() : false
-        }, this.options.queryOptions), this._updateSubmit);
-    },
-
-    _autocomplete: function() {
-        if (!this.options.autocomplete) return;
-        if (this._input.value === '') return this._updateAutocomplete();
-        this.geocoder.query(L.Util.extend({
-            query: this._input.value,
-            proximity: this.options.proximity ? this._map.getCenter() : false
-        }, this.options.queryOptions), this._updateAutocomplete);
-    }
-});
-
-module.exports.GeocoderControl = GeocoderControl;
-
-module.exports.geocoderControl = function(_, options) {
-    return new GeocoderControl(_, options);
-};
-
-},{"./geocoder":11,"./util":30}],13:[function(require,module,exports){
-'use strict';
-
-function utfDecode(c) {
-    if (c >= 93) c--;
-    if (c >= 35) c--;
-    return c - 32;
-}
-
-module.exports = function(data) {
-    return function(x, y) {
-        if (!data) return;
-        var idx = utfDecode(data.grid[y].charCodeAt(x)),
-            key = data.keys[idx];
-        return data.data[key];
-    };
-};
-
-},{}],14:[function(require,module,exports){
-'use strict';
-
-var util = require('./util'),
-    Mustache = require('mustache');
-
-var GridControl = L.Control.extend({
-
-    options: {
-        pinnable: true,
-        follow: false,
-        sanitizer: require('sanitize-caja'),
-        touchTeaser: true,
-        location: true
-    },
-
-    _currentContent: '',
-
-    // pinned means that this control is on a feature and the user has likely
-    // clicked. pinned will not become false unless the user clicks off
-    // of the feature onto another or clicks x
-    _pinned: false,
-
-    initialize: function(_, options) {
-        L.Util.setOptions(this, options);
-        util.strict_instance(_, L.Class, 'L.mapbox.gridLayer');
-        this._layer = _;
-    },
-
-    setTemplate: function(template) {
-        util.strict(template, 'string');
-        this.options.template = template;
-        return this;
-    },
-
-    _template: function(format, data) {
-        if (!data) return;
-        var template = this.options.template || this._layer.getTileJSON().template;
-        if (template) {
-            var d = {};
-            d['__' + format + '__'] = true;
-            return this.options.sanitizer(
-                Mustache.to_html(template, L.extend(d, data)));
-        }
-    },
-
-    // change the content of the tooltip HTML if it has changed, otherwise
-    // noop
-    _show: function(content, o) {
-        if (content === this._currentContent) return;
-
-        this._currentContent = content;
-
-        if (this.options.follow) {
-            this._popup.setContent(content)
-                .setLatLng(o.latLng);
-            if (this._map._popup !== this._popup) this._popup.openOn(this._map);
-        } else {
-            this._container.style.display = 'block';
-            this._contentWrapper.innerHTML = content;
-        }
-    },
-
-    hide: function() {
-        this._pinned = false;
-        this._currentContent = '';
-
-        this._map.closePopup();
-        this._container.style.display = 'none';
-        this._contentWrapper.innerHTML = '';
-
-        L.DomUtil.removeClass(this._container, 'closable');
-
-        return this;
-    },
-
-    _mouseover: function(o) {
-        if (o.data) {
-            L.DomUtil.addClass(this._map._container, 'map-clickable');
-        } else {
-            L.DomUtil.removeClass(this._map._container, 'map-clickable');
-        }
-
-        if (this._pinned) return;
-
-        var content = this._template('teaser', o.data);
-        if (content) {
-            this._show(content, o);
-        } else {
-            this.hide();
-        }
-    },
-
-    _mousemove: function(o) {
-        if (this._pinned) return;
-        if (!this.options.follow) return;
-
-        this._popup.setLatLng(o.latLng);
-    },
-
-    _navigateTo: function(url) {
-        window.top.location.href = url;
-    },
-
-    _click: function(o) {
-
-        var location_formatted = this._template('location', o.data);
-        if (this.options.location && location_formatted &&
-            location_formatted.search(/^https?:/) === 0) {
-            return this._navigateTo(this._template('location', o.data));
-        }
-
-        if (!this.options.pinnable) return;
-
-        var content = this._template('full', o.data);
-
-        if (!content && this.options.touchTeaser && L.Browser.touch) {
-            content = this._template('teaser', o.data);
-        }
-
-        if (content) {
-            L.DomUtil.addClass(this._container, 'closable');
-            this._pinned = true;
-            this._show(content, o);
-        } else if (this._pinned) {
-            L.DomUtil.removeClass(this._container, 'closable');
-            this._pinned = false;
-            this.hide();
-        }
-    },
-
-    _onPopupClose: function() {
-        this._currentContent = null;
-        this._pinned = false;
-    },
-
-    _createClosebutton: function(container, fn) {
-        var link = L.DomUtil.create('a', 'close', container);
-
-        link.innerHTML = 'close';
-        link.href = '#';
-        link.title = 'close';
-
-        L.DomEvent
-            .on(link, 'click', L.DomEvent.stopPropagation)
-            .on(link, 'mousedown', L.DomEvent.stopPropagation)
-            .on(link, 'dblclick', L.DomEvent.stopPropagation)
-            .on(link, 'click', L.DomEvent.preventDefault)
-            .on(link, 'click', fn, this);
-
-        return link;
-    },
-
-    onAdd: function(map) {
-        this._map = map;
-
-        var className = 'leaflet-control-grid map-tooltip',
-            container = L.DomUtil.create('div', className),
-            contentWrapper = L.DomUtil.create('div', 'map-tooltip-content');
-
-        // hide the container element initially
-        container.style.display = 'none';
-        this._createClosebutton(container, this.hide);
-        container.appendChild(contentWrapper);
-
-        this._contentWrapper = contentWrapper;
-        this._popup = new L.Popup({ autoPan: false, closeOnClick: false });
-
-        map.on('popupclose', this._onPopupClose, this);
-
-        L.DomEvent
-            .disableClickPropagation(container)
-            // allow people to scroll tooltips with mousewheel
-            .addListener(container, 'mousewheel', L.DomEvent.stopPropagation);
-
-        this._layer
-            .on('mouseover', this._mouseover, this)
-            .on('mousemove', this._mousemove, this)
-            .on('click', this._click, this);
-
-        return container;
-    },
-
-    onRemove: function (map) {
-
-        map.off('popupclose', this._onPopupClose, this);
-
-        this._layer
-            .off('mouseover', this._mouseover, this)
-            .off('mousemove', this._mousemove, this)
-            .off('click', this._click, this);
-    }
-});
-
-module.exports.GridControl = GridControl;
-
-module.exports.gridControl = function(_, options) {
-    return new GridControl(_, options);
-};
-
-},{"./util":30,"mustache":31,"sanitize-caja":32}],15:[function(require,module,exports){
-'use strict';
-
-var util = require('./util'),
-    request = require('./request'),
-    grid = require('./grid');
-
-// forked from danzel/L.UTFGrid
-var GridLayer = L.Class.extend({
-    includes: [L.Mixin.Events, require('./load_tilejson')],
-
-    options: {
-        template: function() { return ''; }
-    },
-
-    _mouseOn: null,
-    _tilejson: {},
-    _cache: {},
-
-    initialize: function(_, options) {
-        L.Util.setOptions(this, options);
-        this._loadTileJSON(_);
-    },
-
-    _setTileJSON: function(json) {
-        util.strict(json, 'object');
-
-        L.extend(this.options, {
-            grids: json.grids,
-            minZoom: json.minzoom,
-            maxZoom: json.maxzoom,
-            bounds: json.bounds && util.lbounds(json.bounds)
-        });
-
-        this._tilejson = json;
-        this._cache = {};
-        this._update();
-
-        return this;
-    },
-
-    getTileJSON: function() {
-        return this._tilejson;
-    },
-
-    active: function() {
-        return !!(this._map && this.options.grids && this.options.grids.length);
-    },
-
-    addTo: function (map) {
-        map.addLayer(this);
-        return this;
-    },
-
-    onAdd: function(map) {
-        this._map = map;
-        this._update();
-
-        this._map
-            .on('click', this._click, this)
-            .on('mousemove', this._move, this)
-            .on('moveend', this._update, this);
-    },
-
-    onRemove: function() {
-        this._map
-            .off('click', this._click, this)
-            .off('mousemove', this._move, this)
-            .off('moveend', this._update, this);
-    },
-
-    getData: function(latlng, callback) {
-        if (!this.active()) return;
-
-        var map = this._map,
-            point = map.project(latlng.wrap()),
-            tileSize = 256,
-            resolution = 4,
-            x = Math.floor(point.x / tileSize),
-            y = Math.floor(point.y / tileSize),
-            max = map.options.crs.scale(map.getZoom()) / tileSize;
-
-        x = (x + max) % max;
-        y = (y + max) % max;
-
-        this._getTile(map.getZoom(), x, y, function(grid) {
-            var gridX = Math.floor((point.x - (x * tileSize)) / resolution),
-                gridY = Math.floor((point.y - (y * tileSize)) / resolution);
-
-            callback(grid(gridX, gridY));
-        });
-
-        return this;
-    },
-
-    _click: function(e) {
-        this.getData(e.latlng, L.bind(function(data) {
-            this.fire('click', {
-                latLng: e.latlng,
-                data: data
-            });
-        }, this));
-    },
-
-    _move: function(e) {
-        this.getData(e.latlng, L.bind(function(data) {
-            if (data !== this._mouseOn) {
-                if (this._mouseOn) {
-                    this.fire('mouseout', {
-                        latLng: e.latlng,
-                        data: this._mouseOn
-                    });
-                }
-
-                this.fire('mouseover', {
-                    latLng: e.latlng,
-                    data: data
-                });
-
-                this._mouseOn = data;
-            } else {
-                this.fire('mousemove', {
-                    latLng: e.latlng,
-                    data: data
-                });
-            }
-        }, this));
-    },
-
-    _getTileURL: function(tilePoint) {
-        var urls = this.options.grids,
-            index = (tilePoint.x + tilePoint.y) % urls.length,
-            url = urls[index];
-
-        return L.Util.template(url, tilePoint);
-    },
-
-    // Load up all required json grid files
-    _update: function() {
-        if (!this.active()) return;
-
-        var bounds = this._map.getPixelBounds(),
-            z = this._map.getZoom(),
-            tileSize = 256;
-
-        if (z > this.options.maxZoom || z < this.options.minZoom) return;
-
-        var tileBounds = L.bounds(
-                bounds.min.divideBy(tileSize)._floor(),
-                bounds.max.divideBy(tileSize)._floor()),
-            max = this._map.options.crs.scale(z) / tileSize;
-
-        for (var x = tileBounds.min.x; x <= tileBounds.max.x; x++) {
-            for (var y = tileBounds.min.y; y <= tileBounds.max.y; y++) {
-                // x wrapped
-                this._getTile(z, ((x % max) + max) % max, ((y % max) + max) % max);
-            }
-        }
-    },
-
-    _getTile: function(z, x, y, callback) {
-        var key = z + '_' + x + '_' + y,
-            tilePoint = L.point(x, y);
-
-        tilePoint.z = z;
-
-        if (!this._tileShouldBeLoaded(tilePoint)) {
-            return;
-        }
-
-        if (key in this._cache) {
-            if (!callback) return;
-
-            if (typeof this._cache[key] === 'function') {
-                callback(this._cache[key]); // Already loaded
-            } else {
-                this._cache[key].push(callback); // Pending
-            }
-
-            return;
-        }
-
-        this._cache[key] = [];
-
-        if (callback) {
-            this._cache[key].push(callback);
-        }
-
-        request(this._getTileURL(tilePoint), L.bind(function(err, json) {
-            var callbacks = this._cache[key];
-            this._cache[key] = grid(json);
-            for (var i = 0; i < callbacks.length; ++i) {
-                callbacks[i](this._cache[key]);
-            }
-        }, this));
-    },
-
-    _tileShouldBeLoaded: function(tilePoint) {
-        if (tilePoint.z > this.options.maxZoom || tilePoint.z < this.options.minZoom) {
-            return false;
-        }
-
-        if (this.options.bounds) {
-            var tileSize = 256,
-                nwPoint = tilePoint.multiplyBy(tileSize),
-                sePoint = nwPoint.add(new L.Point(tileSize, tileSize)),
-                nw = this._map.unproject(nwPoint),
-                se = this._map.unproject(sePoint),
-                bounds = new L.LatLngBounds([nw, se]);
-
-            if (!this.options.bounds.intersects(bounds)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-});
-
-module.exports.GridLayer = GridLayer;
-
-module.exports.gridLayer = function(_, options) {
-    return new GridLayer(_, options);
-};
-
-},{"./grid":13,"./load_tilejson":20,"./request":25,"./util":30}],16:[function(require,module,exports){
-'use strict';
-
-var leaflet = require('./leaflet');
-
-require('./mapbox');
-
-module.exports = leaflet;
-
-},{"./leaflet":18,"./mapbox":22}],17:[function(require,module,exports){
-'use strict';
-
-var InfoControl = L.Control.extend({
-    options: {
-        position: 'bottomright',
-        sanitizer: require('sanitize-caja')
-    },
-
-    initialize: function(options) {
-        L.setOptions(this, options);
-        this._info = {};
-        console.warn('infoControl has been deprecated and will be removed in mapbox.js v3.0.0. Use the default attribution control instead, which is now responsive.');
-    },
-
-    onAdd: function(map) {
-        this._container = L.DomUtil.create('div', 'mapbox-control-info mapbox-small');
-        this._content = L.DomUtil.create('div', 'map-info-container', this._container);
-
-        var link = L.DomUtil.create('a', 'mapbox-info-toggle mapbox-icon mapbox-icon-info', this._container);
-        link.href = '#';
-
-        L.DomEvent.addListener(link, 'click', this._showInfo, this);
-        L.DomEvent.disableClickPropagation(this._container);
-
-        for (var i in map._layers) {
-            if (map._layers[i].getAttribution) {
-                this.addInfo(map._layers[i].getAttribution());
-            }
-        }
-
-        map
-            .on('layeradd', this._onLayerAdd, this)
-            .on('layerremove', this._onLayerRemove, this);
-
-        this._update();
-        return this._container;
-    },
-
-    onRemove: function(map) {
-        map
-            .off('layeradd', this._onLayerAdd, this)
-            .off('layerremove', this._onLayerRemove, this);
-    },
-
-    addInfo: function(text) {
-        if (!text) return this;
-        if (!this._info[text]) this._info[text] = 0;
-        this._info[text] = true;
-        return this._update();
-    },
-
-    removeInfo: function (text) {
-        if (!text) return this;
-        if (this._info[text]) this._info[text] = false;
-        return this._update();
-    },
-
-    _showInfo: function(e) {
-        L.DomEvent.preventDefault(e);
-        if (this._active === true) return this._hidecontent();
-
-        L.DomUtil.addClass(this._container, 'active');
-        this._active = true;
-        this._update();
-    },
-
-    _hidecontent: function() {
-        this._content.innerHTML = '';
-        this._active = false;
-        L.DomUtil.removeClass(this._container, 'active');
-        return;
-    },
-
-    _update: function() {
-        if (!this._map) { return this; }
-        this._content.innerHTML = '';
-        var hide = 'none';
-        var info = [];
-
-        for (var i in this._info) {
-            if (this._info.hasOwnProperty(i) && this._info[i]) {
-                info.push(this.options.sanitizer(i));
-                hide = 'block';
-            }
-        }
-
-        this._content.innerHTML += info.join(' | ');
-
-        // If there are no results in _info then hide this.
-        this._container.style.display = hide;
-        return this;
-    },
-
-    _onLayerAdd: function(e) {
-        if (e.layer.getAttribution && e.layer.getAttribution()) {
-            this.addInfo(e.layer.getAttribution());
-        } else if ('on' in e.layer && e.layer.getAttribution) {
-            e.layer.on('ready', L.bind(function() {
-                this.addInfo(e.layer.getAttribution());
-            }, this));
-        }
-    },
-
-    _onLayerRemove: function (e) {
-        if (e.layer.getAttribution) {
-            this.removeInfo(e.layer.getAttribution());
-        }
-    }
-});
-
-module.exports.InfoControl = InfoControl;
-
-module.exports.infoControl = function(options) {
-    return new InfoControl(options);
-};
-
-},{"sanitize-caja":32}],18:[function(require,module,exports){
-module.exports = window.L = require('leaflet/dist/leaflet-src');
-
-},{"leaflet/dist/leaflet-src":5}],19:[function(require,module,exports){
-'use strict';
-
-var LegendControl = L.Control.extend({
-
-    options: {
-        position: 'bottomright',
-        sanitizer: require('sanitize-caja')
-    },
-
-    initialize: function(options) {
-        L.setOptions(this, options);
-        this._legends = {};
-    },
-
-    onAdd: function() {
-        this._container = L.DomUtil.create('div', 'map-legends wax-legends');
-        L.DomEvent.disableClickPropagation(this._container);
-
-        this._update();
-
-        return this._container;
-    },
-
-    addLegend: function(text) {
-        if (!text) { return this; }
-
-        if (!this._legends[text]) {
-            this._legends[text] = 0;
-        }
-
-        this._legends[text]++;
-        return this._update();
-    },
-
-    removeLegend: function(text) {
-        if (!text) { return this; }
-        if (this._legends[text]) this._legends[text]--;
-        return this._update();
-    },
-
-    _update: function() {
-        if (!this._map) { return this; }
-
-        this._container.innerHTML = '';
-        var hide = 'none';
-
-        for (var i in this._legends) {
-            if (this._legends.hasOwnProperty(i) && this._legends[i]) {
-                var div = L.DomUtil.create('div', 'map-legend wax-legend', this._container);
-                div.innerHTML = this.options.sanitizer(i);
-                hide = 'block';
-            }
-        }
-
-        // hide the control entirely unless there is at least one legend;
-        // otherwise there will be a small grey blemish on the map.
-        this._container.style.display = hide;
-
-        return this;
-    }
-});
-
-module.exports.LegendControl = LegendControl;
-
-module.exports.legendControl = function(options) {
-    return new LegendControl(options);
-};
-
-},{"sanitize-caja":32}],20:[function(require,module,exports){
-'use strict';
-
-var request = require('./request'),
-    format_url = require('./format_url'),
-    util = require('./util');
-
-module.exports = {
-    _loadTileJSON: function(_) {
-        if (typeof _ === 'string') {
-            _ = format_url.tileJSON(_, this.options && this.options.accessToken);
-            request(_, L.bind(function(err, json) {
-                if (err) {
-                    util.log('could not load TileJSON at ' + _);
-                    this.fire('error', {error: err});
-                } else if (json) {
-                    this._setTileJSON(json);
-                    this.fire('ready');
-                }
-            }, this));
-        } else if (_ && typeof _ === 'object') {
-            this._setTileJSON(_);
-        }
-    }
-};
-
-},{"./format_url":10,"./request":25,"./util":30}],21:[function(require,module,exports){
-'use strict';
-
-var tileLayer = require('./tile_layer').tileLayer,
-    featureLayer = require('./feature_layer').featureLayer,
-    gridLayer = require('./grid_layer').gridLayer,
-    gridControl = require('./grid_control').gridControl,
-    infoControl = require('./info_control').infoControl,
-    shareControl = require('./share_control').shareControl,
-    legendControl = require('./legend_control').legendControl,
-    mapboxLogoControl = require('./mapbox_logo').mapboxLogoControl,
-    feedback = require('./feedback');
-
-function withAccessToken(options, accessToken) {
-    if (!accessToken || options.accessToken)
-        return options;
-    return L.extend({accessToken: accessToken}, options);
-}
-
-var LMap = L.Map.extend({
-    includes: [require('./load_tilejson')],
-
-    options: {
-        tileLayer: {},
-        featureLayer: {},
-        gridLayer: {},
-        legendControl: {},
-        gridControl: {},
-        infoControl: false,
-        shareControl: false,
-        sanitizer: require('sanitize-caja')
-    },
-
-    _tilejson: {},
-
-    initialize: function(element, _, options) {
-
-        L.Map.prototype.initialize.call(this, element,
-            L.extend({}, L.Map.prototype.options, options));
-
-        // Disable the default 'Leaflet' text
-        if (this.attributionControl) {
-            this.attributionControl.setPrefix('');
-
-            var compact = this.options.attributionControl.compact;
-            // Set a compact display if map container width is < 640 or
-            // compact is set to `true` in attributionControl options.
-            if (compact || (compact !== false && this._container.offsetWidth <= 640)) {
-                L.DomUtil.addClass(this.attributionControl._container, 'leaflet-compact-attribution');
-            }
-
-            if (compact === undefined) {
-                this.on('resize', function() {
-                    if (this._container.offsetWidth > 640) {
-                        L.DomUtil.removeClass(this.attributionControl._container, 'leaflet-compact-attribution');
-                    } else {
-                        L.DomUtil.addClass(this.attributionControl._container, 'leaflet-compact-attribution');
-                    }
-                });
-            }
-        }
-
-        if (this.options.tileLayer) {
-            this.tileLayer = tileLayer(undefined,
-                withAccessToken(this.options.tileLayer, this.options.accessToken));
-            this.addLayer(this.tileLayer);
-        }
-
-        if (this.options.featureLayer) {
-            this.featureLayer = featureLayer(undefined,
-                withAccessToken(this.options.featureLayer, this.options.accessToken));
-            this.addLayer(this.featureLayer);
-        }
-
-        if (this.options.gridLayer) {
-            this.gridLayer = gridLayer(undefined,
-                withAccessToken(this.options.gridLayer, this.options.accessToken));
-            this.addLayer(this.gridLayer);
-        }
-
-        if (this.options.gridLayer && this.options.gridControl) {
-            this.gridControl = gridControl(this.gridLayer, this.options.gridControl);
-            this.addControl(this.gridControl);
-        }
-
-        if (this.options.infoControl) {
-            this.infoControl = infoControl(this.options.infoControl);
-            this.addControl(this.infoControl);
-        }
-
-        if (this.options.legendControl) {
-            this.legendControl = legendControl(this.options.legendControl);
-            this.addControl(this.legendControl);
-        }
-
-        if (this.options.shareControl) {
-            this.shareControl = shareControl(undefined,
-                withAccessToken(this.options.shareControl, this.options.accessToken));
-            this.addControl(this.shareControl);
-        }
-
-        this._mapboxLogoControl = mapboxLogoControl(this.options.mapboxLogoControl);
-        this.addControl(this._mapboxLogoControl);
-
-        this._loadTileJSON(_);
-
-        this.on('layeradd', this._onLayerAdd, this)
-            .on('layerremove', this._onLayerRemove, this)
-            .on('moveend', this._updateMapFeedbackLink, this);
-
-        this.whenReady(function () {
-            feedback.on('change', this._updateMapFeedbackLink, this);
-        });
-
-        this.on('unload', function () {
-            feedback.off('change', this._updateMapFeedbackLink, this);
-        });
-    },
-
-    // use a javascript object of tilejson data to configure this layer
-    _setTileJSON: function(_) {
-        this._tilejson = _;
-        this._initialize(_);
-        return this;
-    },
-
-    getTileJSON: function() {
-        return this._tilejson;
-    },
-
-    _initialize: function(json) {
-        if (this.tileLayer) {
-            this.tileLayer._setTileJSON(json);
-            this._updateLayer(this.tileLayer);
-        }
-
-        if (this.featureLayer && !this.featureLayer.getGeoJSON() && json.data && json.data[0]) {
-            this.featureLayer.loadURL(json.data[0]);
-        }
-
-        if (this.gridLayer) {
-            this.gridLayer._setTileJSON(json);
-            this._updateLayer(this.gridLayer);
-        }
-
-        if (this.infoControl && json.attribution) {
-            this.infoControl.addInfo(this.options.sanitizer(json.attribution));
-            this._updateMapFeedbackLink();
-        }
-
-        if (this.legendControl && json.legend) {
-            this.legendControl.addLegend(json.legend);
-        }
-
-        if (this.shareControl) {
-            this.shareControl._setTileJSON(json);
-        }
-
-        this._mapboxLogoControl._setTileJSON(json);
-
-        if (!this._loaded && json.center) {
-            var zoom = this.getZoom() !== undefined ? this.getZoom() : json.center[2],
-                center = L.latLng(json.center[1], json.center[0]);
-
-            this.setView(center, zoom);
-        }
-    },
-
-    _updateMapFeedbackLink: function() {
-        if (!this._controlContainer.getElementsByClassName) return;
-        var link = this._controlContainer.getElementsByClassName('mapbox-improve-map');
-        if (link.length && this._loaded) {
-            var center = this.getCenter().wrap();
-            var tilejson = this._tilejson || {};
-            var id = tilejson.id || '';
-
-            var hash = '#' + id + '/' +
-                center.lng.toFixed(3) + '/' +
-                center.lat.toFixed(3) + '/' +
-                this.getZoom();
-
-            for (var key in feedback.data) {
-                hash += '/' + key + '=' + feedback.data[key];
-            }
-
-            for (var i = 0; i < link.length; i++) {
-                link[i].hash = hash;
-            }
-        }
-    },
-
-    _onLayerAdd: function(e) {
-        if ('on' in e.layer) {
-            e.layer.on('ready', this._onLayerReady, this);
-        }
-        window.setTimeout(L.bind(this._updateMapFeedbackLink, this), 0); // Update after attribution control resets the HTML.
-    },
-
-    _onLayerRemove: function(e) {
-        if ('on' in e.layer) {
-            e.layer.off('ready', this._onLayerReady, this);
-        }
-        window.setTimeout(L.bind(this._updateMapFeedbackLink, this), 0); // Update after attribution control resets the HTML.
-    },
-
-    _onLayerReady: function(e) {
-        this._updateLayer(e.target);
-    },
-
-    _updateLayer: function(layer) {
-        if (!layer.options) return;
-
-        if (this.infoControl && this._loaded) {
-            this.infoControl.addInfo(layer.options.infoControl);
-        }
-
-        if (this.attributionControl && this._loaded && layer.getAttribution) {
-            this.attributionControl.addAttribution(layer.getAttribution());
-        }
-
-        if (!(L.stamp(layer) in this._zoomBoundLayers) &&
-                (layer.options.maxZoom || layer.options.minZoom)) {
-            this._zoomBoundLayers[L.stamp(layer)] = layer;
-        }
-
-        this._updateMapFeedbackLink();
-        this._updateZoomLevels();
-    }
-});
-
-module.exports.Map = LMap;
-
-module.exports.map = function(element, _, options) {
-    return new LMap(element, _, options);
-};
-
-},{"./feature_layer":8,"./feedback":9,"./grid_control":14,"./grid_layer":15,"./info_control":17,"./legend_control":19,"./load_tilejson":20,"./mapbox_logo":23,"./share_control":26,"./tile_layer":29,"sanitize-caja":32}],22:[function(require,module,exports){
-'use strict';
-
-var geocoderControl = require('./geocoder_control'),
-    gridControl = require('./grid_control'),
-    featureLayer = require('./feature_layer'),
-    legendControl = require('./legend_control'),
-    shareControl = require('./share_control'),
-    tileLayer = require('./tile_layer'),
-    infoControl = require('./info_control'),
-    map = require('./map'),
-    gridLayer = require('./grid_layer'),
-    styleLayer = require('./style_layer');
-
-L.mapbox = module.exports = {
-    VERSION: require('../package.json').version,
-    geocoder: require('./geocoder'),
-    marker: require('./marker'),
-    simplestyle: require('./simplestyle'),
-    tileLayer: tileLayer.tileLayer,
-    TileLayer: tileLayer.TileLayer,
-    styleLayer: styleLayer.styleLayer,
-    StyleLayer: styleLayer.StyleLayer,
-    infoControl: infoControl.infoControl,
-    InfoControl: infoControl.InfoControl,
-    shareControl: shareControl.shareControl,
-    ShareControl: shareControl.ShareControl,
-    legendControl: legendControl.legendControl,
-    LegendControl: legendControl.LegendControl,
-    geocoderControl: geocoderControl.geocoderControl,
-    GeocoderControl: geocoderControl.GeocoderControl,
-    gridControl: gridControl.gridControl,
-    GridControl: gridControl.GridControl,
-    gridLayer: gridLayer.gridLayer,
-    GridLayer: gridLayer.GridLayer,
-    featureLayer: featureLayer.featureLayer,
-    FeatureLayer: featureLayer.FeatureLayer,
-    map: map.map,
-    Map: map.Map,
-    config: require('./config'),
-    sanitize: require('sanitize-caja'),
-    template: require('mustache').to_html,
-    feedback: require('./feedback')
-};
-
-
-// Hardcode image path, because Leaflet's autodetection
-// fails, because mapbox.js is not named leaflet.js
-window.L.Icon.Default.imagePath =
-    // Detect bad-news protocols like file:// and hardcode
-    // to https if they're detected.
-    ((document.location.protocol === 'https:' ||
-    document.location.protocol === 'http:') ? '' : 'https:') +
-    '//api.tiles.mapbox.com/mapbox.js/' + 'v' +
-    require('../package.json').version + '/images';
-
-},{"../package.json":6,"./config":7,"./feature_layer":8,"./feedback":9,"./geocoder":11,"./geocoder_control":12,"./grid_control":14,"./grid_layer":15,"./info_control":17,"./legend_control":19,"./map":21,"./marker":24,"./share_control":26,"./simplestyle":27,"./style_layer":28,"./tile_layer":29,"mustache":31,"sanitize-caja":32}],23:[function(require,module,exports){
-'use strict';
-
-var MapboxLogoControl = L.Control.extend({
-
-    options: {
-        position: 'bottomleft'
-    },
-
-    initialize: function(options) {
-        L.setOptions(this, options);
-    },
-
-    onAdd: function() {
-        this._container = L.DomUtil.create('div', 'mapbox-logo');
-        return this._container;
-    },
-
-    _setTileJSON: function(json) {
-        // Check if account referenced by the accessToken
-        // is asscociated with the Mapbox Logo
-        // as determined by mapbox-maps.
-        if (json.mapbox_logo) {
-            L.DomUtil.addClass(this._container, 'mapbox-logo-true');
-        }
-    }
-});
-
-module.exports.MapboxLogoControl = MapboxLogoControl;
-
-module.exports.mapboxLogoControl = function(options) {
-    return new MapboxLogoControl(options);
-};
-
-},{}],24:[function(require,module,exports){
-'use strict';
-
-var format_url = require('./format_url'),
-    util = require('./util'),
-    sanitize = require('sanitize-caja');
-
-// mapbox-related markers functionality
-// provide an icon from mapbox's simple-style spec and hosted markers
-// service
-function icon(fp, options) {
-    fp = fp || {};
-
-    var sizes = {
-            small: [20, 50],
-            medium: [30, 70],
-            large: [35, 90]
-        },
-        size = fp['marker-size'] || 'medium',
-        symbol = ('marker-symbol' in fp && fp['marker-symbol'] !== '') ? '-' + fp['marker-symbol'] : '',
-        color = (fp['marker-color'] || '7e7e7e').replace('#', '');
-
-    return L.icon({
-        iconUrl: format_url('/v4/marker/' +
-            'pin-' + size.charAt(0) + symbol + '+' + color +
-            // detect and use retina markers, which are x2 resolution
-            (L.Browser.retina ? '@2x' : '') + '.png', options && options.accessToken),
-        iconSize: sizes[size],
-        iconAnchor: [sizes[size][0] / 2, sizes[size][1] / 2],
-        popupAnchor: [0, -sizes[size][1] / 2]
-    });
-}
-
-// a factory that provides markers for Leaflet from Mapbox's
-// [simple-style specification](https://github.com/mapbox/simplestyle-spec)
-// and [Markers API](http://mapbox.com/developers/api/#markers).
-function style(f, latlon, options) {
-    return L.marker(latlon, {
-        icon: icon(f.properties, options),
-        title: util.strip_tags(
-            sanitize((f.properties && f.properties.title) || ''))
-    });
-}
-
-// Sanitize and format properties of a GeoJSON Feature object in order
-// to form the HTML string used as the argument for `L.createPopup`
-function createPopup(f, sanitizer) {
-    if (!f || !f.properties) return '';
-    var popup = '';
-
-    if (f.properties.title) {
-        popup += '<div class="marker-title">' + f.properties.title + '</div>';
-    }
-
-    if (f.properties.description) {
-        popup += '<div class="marker-description">' + f.properties.description + '</div>';
-    }
-
-    return (sanitizer || sanitize)(popup);
-}
-
-module.exports = {
-    icon: icon,
-    style: style,
-    createPopup: createPopup
-};
-
-},{"./format_url":10,"./util":30,"sanitize-caja":32}],25:[function(require,module,exports){
-'use strict';
-
-var corslite = require('corslite'),
-    strict = require('./util').strict,
-    config = require('./config');
-
-var protocol = /^(https?:)?(?=\/\/(.|api)\.tiles\.mapbox\.com\/)/;
-
-module.exports = function(url, callback) {
-    strict(url, 'string');
-    strict(callback, 'function');
-
-    url = url.replace(protocol, function(match, protocol) {
-        if (!('withCredentials' in new window.XMLHttpRequest())) {
-            // XDomainRequest in use; doesn't support cross-protocol requests
-            return document.location.protocol;
-        } else if (protocol === 'https:' || document.location.protocol === 'https:' || config.FORCE_HTTPS) {
-            return 'https:';
-        } else {
-            return 'http:';
-        }
-    });
-
-    function onload(err, resp) {
-        if (!err && resp) {
-            resp = JSON.parse(resp.responseText);
-        }
-        callback(err, resp);
-    }
-
-    return corslite(url, onload);
-};
-
-},{"./config":7,"./util":30,"corslite":1}],26:[function(require,module,exports){
-'use strict';
-
-var format_url = require('./format_url');
-
-var ShareControl = L.Control.extend({
-    includes: [require('./load_tilejson')],
-
-    options: {
-        position: 'topleft',
-        url: ''
-    },
-
-    initialize: function(_, options) {
-        L.setOptions(this, options);
-        this._loadTileJSON(_);
-    },
-
-    _setTileJSON: function(json) {
-        this._tilejson = json;
-    },
-
-    onAdd: function(map) {
-        this._map = map;
-
-        var container = L.DomUtil.create('div', 'leaflet-control-mapbox-share leaflet-bar');
-        var link = L.DomUtil.create('a', 'mapbox-share mapbox-icon mapbox-icon-share', container);
-        link.href = '#';
-
-        this._modal = L.DomUtil.create('div', 'mapbox-modal', this._map._container);
-        this._mask = L.DomUtil.create('div', 'mapbox-modal-mask', this._modal);
-        this._content = L.DomUtil.create('div', 'mapbox-modal-content', this._modal);
-
-        L.DomEvent.addListener(link, 'click', this._shareClick, this);
-        L.DomEvent.disableClickPropagation(container);
-
-        this._map.on('mousedown', this._clickOut, this);
-
-        return container;
-    },
-
-    _clickOut: function(e) {
-        if (this._sharing) {
-            L.DomEvent.preventDefault(e);
-            L.DomUtil.removeClass(this._modal, 'active');
-            this._content.innerHTML = '';
-            this._sharing = null;
-            return;
-        }
-    },
-
-    _shareClick: function(e) {
-        L.DomEvent.stop(e);
-        if (this._sharing) return this._clickOut(e);
-
-        var tilejson = this._tilejson || this._map._tilejson || {},
-            url = encodeURIComponent(this.options.url || tilejson.webpage || window.location),
-            name = encodeURIComponent(tilejson.name),
-            image = format_url('/v4/' + tilejson.id + '/' + this._map.getCenter().lng + ',' + this._map.getCenter().lat + ',' + this._map.getZoom() + '/600x600.png', this.options.accessToken),
-            embed = format_url('/v4/' + tilejson.id + '.html', this.options.accessToken),
-            twitterURL = '//twitter.com/intent/tweet?status=' + name + ' ' + url,
-            facebookURL = '//www.facebook.com/sharer.php?u=' + url + '&t=' + name,
-            pinterestURL = '//www.pinterest.com/pin/create/button/?url=' + url + '&media=' + image + '&description=' + name,
-            embedValue = '<iframe width="100%" height="500px" frameBorder="0" src="' + embed + '"></iframe>',
-            embedLabel = 'Copy and paste this <strong>HTML code</strong> into documents to embed this map on web pages.';
-
-        function createShareButton(buttonClass, href, socialMediaName) {
-            var elem = document.createElement('a');
-            elem.setAttribute('class', buttonClass);
-            elem.setAttribute('href', href);
-            elem.setAttribute('target', '_blank');
-            socialMediaName = document.createTextNode(socialMediaName);
-            elem.appendChild(socialMediaName);
-
-            return elem;
-        }
-
-        L.DomUtil.addClass(this._modal, 'active');
-
-        this._sharing = L.DomUtil.create('div', 'mapbox-modal-body', this._content);
-
-        var twitterButton = createShareButton('mapbox-button mapbox-button-icon mapbox-icon-twitter', twitterURL, 'Twitter');
-        var facebookButton = createShareButton('mapbox-button mapbox-button-icon mapbox-icon-facebook', facebookURL, 'Facebook');
-        var pinterestButton = createShareButton('mapbox-button mapbox-button-icon mapbox-icon-pinterest', pinterestURL, 'Pinterest');
-
-        var shareHeader = document.createElement('h3');
-        var shareText = document.createTextNode('Share this map');
-        shareHeader.appendChild(shareText);
-
-        var shareButtons = document.createElement('div');
-        shareButtons.setAttribute('class', 'mapbox-share-buttons');
-        shareButtons.appendChild(facebookButton);
-        shareButtons.appendChild(twitterButton);
-        shareButtons.appendChild(pinterestButton);
-
-        this._sharing.appendChild(shareHeader);
-        this._sharing.appendChild(shareButtons);
-
-        var input = L.DomUtil.create('input', 'mapbox-embed', this._sharing);
-        input.type = 'text';
-        input.value = embedValue;
-
-        var label = L.DomUtil.create('label', 'mapbox-embed-description', this._sharing);
-        label.innerHTML = embedLabel;
-
-        var close = L.DomUtil.create('a', 'leaflet-popup-close-button', this._sharing);
-        close.href = '#';
-
-        L.DomEvent.disableClickPropagation(this._sharing);
-        L.DomEvent.addListener(close, 'click', this._clickOut, this);
-        L.DomEvent.addListener(input, 'click', function(e) {
-            e.target.focus();
-            e.target.select();
-        });
-    }
-});
-
-module.exports.ShareControl = ShareControl;
-
-module.exports.shareControl = function(_, options) {
-    return new ShareControl(_, options);
-};
-
-},{"./format_url":10,"./load_tilejson":20}],27:[function(require,module,exports){
-'use strict';
-
-// an implementation of the simplestyle spec for polygon and linestring features
-// https://github.com/mapbox/simplestyle-spec
-var defaults = {
-    stroke: '#555555',
-    'stroke-width': 2,
-    'stroke-opacity': 1,
-    fill: '#555555',
-    'fill-opacity': 0.5
-};
-
-var mapping = [
-    ['stroke', 'color'],
-    ['stroke-width', 'weight'],
-    ['stroke-opacity', 'opacity'],
-    ['fill', 'fillColor'],
-    ['fill-opacity', 'fillOpacity']
-];
-
-function fallback(a, b) {
-    var c = {};
-    for (var k in b) {
-        if (a[k] === undefined) c[k] = b[k];
-        else c[k] = a[k];
-    }
-    return c;
-}
-
-function remap(a) {
-    var d = {};
-    for (var i = 0; i < mapping.length; i++) {
-        d[mapping[i][1]] = a[mapping[i][0]];
-    }
-    return d;
-}
-
-function style(feature) {
-    return remap(fallback(feature.properties || {}, defaults));
-}
-
-module.exports = {
-    style: style,
-    defaults: defaults
-};
-
-},{}],28:[function(require,module,exports){
-'use strict';
-
-var util = require('./util');
-var format_url = require('./format_url');
-var request = require('./request');
-
-var StyleLayer = L.TileLayer.extend({
-
-    options: {
-        sanitizer: require('sanitize-caja')
-    },
-
-    initialize: function(_, options) {
-        L.TileLayer.prototype.initialize.call(this, undefined, options);
-
-        this.options.tiles = this._formatTileURL(_);
-        this.options.tileSize = 512;
-        this.options.zoomOffset = -1;
-        this.options.tms = false;
-
-        this._getAttribution(_);
-    },
-
-    _getAttribution: function(_) {
-        var styleURL = format_url.style(_, this.options && this.options.accessToken);
-        request(styleURL, L.bind(function(err, style) {
-            if (err) {
-                util.log('could not load Mapbox style at ' + styleURL);
-                this.fire('error', {error: err});
-            }
-            var sources = [];
-            for (var id in style.sources) {
-                var source = style.sources[id].url.split('mapbox://')[1];
-                sources.push(source);
-            }
-            request(format_url.tileJSON(sources.join(), this.options.accessToken), L.bind(function(err, json) {
-                if (err) {
-                    util.log('could not load TileJSON at ' + _);
-                    this.fire('error', {error: err});
-                } else if (json) {
-                    util.strict(json, 'object');
-
-                    this.options.attribution = this.options.sanitizer(json.attribution);
-
-                    this._tilejson = json;
-                    this.fire('ready');
-                }
-            }, this));
-        }, this));
-    },
-
-    // disable the setUrl function, which is not available on mapbox tilelayers
-    setUrl: null,
-
-    _formatTileURL: function(style) {
-        var retina = L.Browser.retina ? '@2x' : '';
-        if (typeof style === 'string') {
-            if (style.indexOf('mapbox://styles/') === -1) {
-                util.log('Incorrectly formatted Mapbox style at ' + style);
-                this.fire('error');
-            }
-            var ownerIDStyle = style.split('mapbox://styles/')[1];
-            return format_url('/styles/v1/' + ownerIDStyle + '/tiles/{z}/{x}/{y}' + retina, this.options.accessToken);
-        } else if (typeof style === 'object') {
-            return format_url('/styles/v1/' + style.owner + '/' + style.id + '/tiles/{z}/{x}/{y}' + retina, this.options.accessToken);
-        }
-    },
-
-    // this is an exception to mapbox.js naming rules because it's called
-    // by `L.map`
-    getTileUrl: function(tilePoint) {
-        var templated = L.Util.template(this.options.tiles, tilePoint);
-        return templated;
-    }
-});
-
-module.exports.StyleLayer = StyleLayer;
-
-module.exports.styleLayer = function(_, options) {
-    return new StyleLayer(_, options);
-};
-
-},{"./format_url":10,"./request":25,"./util":30,"sanitize-caja":32}],29:[function(require,module,exports){
-'use strict';
-
-var util = require('./util');
-var formatPattern = /\.((?:png|jpg)\d*)(?=$|\?)/;
-
-var TileLayer = L.TileLayer.extend({
-    includes: [require('./load_tilejson')],
-
-    options: {
-        sanitizer: require('sanitize-caja')
-    },
-
-    // http://mapbox.com/developers/api/#image_quality
-    formats: [
-        'png', 'jpg',
-        // PNG
-        'png32', 'png64', 'png128', 'png256',
-        // JPG
-        'jpg70', 'jpg80', 'jpg90'],
-
-    scalePrefix: '@2x.',
-
-    initialize: function(_, options) {
-        L.TileLayer.prototype.initialize.call(this, undefined, options);
-
-        this._tilejson = {};
-
-        if (options && options.format) {
-            util.strict_oneof(options.format, this.formats);
-        }
-
-        this._loadTileJSON(_);
-    },
-
-    setFormat: function(_) {
-        util.strict(_, 'string');
-        this.options.format = _;
-        this.redraw();
-        return this;
-    },
-
-    // disable the setUrl function, which is not available on mapbox tilelayers
-    setUrl: null,
-
-    _setTileJSON: function(json) {
-        util.strict(json, 'object');
-
-        this.options.format = this.options.format ||
-            json.tiles[0].match(formatPattern)[1];
-
-        L.extend(this.options, {
-            tiles: json.tiles,
-            attribution: this.options.sanitizer(json.attribution),
-            minZoom: json.minzoom || 0,
-            maxZoom: json.maxzoom || 18,
-            tms: json.scheme === 'tms',
-            bounds: json.bounds && util.lbounds(json.bounds)
-        });
-
-        this._tilejson = json;
-        this.redraw();
-        return this;
-    },
-
-    getTileJSON: function() {
-        return this._tilejson;
-    },
-
-    // this is an exception to mapbox.js naming rules because it's called
-    // by `L.map`
-    getTileUrl: function(tilePoint) {
-        var tiles = this.options.tiles,
-            index = Math.floor(Math.abs(tilePoint.x + tilePoint.y) % tiles.length),
-            url = tiles[index];
-
-        var templated = L.Util.template(url, tilePoint);
-        if (!templated) {
-            return templated;
-        } else {
-            return templated.replace(formatPattern,
-                (L.Browser.retina ? this.scalePrefix : '.') + this.options.format);
-        }
-    },
-
-    // TileJSON.TileLayers are added to the map immediately, so that they get
-    // the desired z-index, but do not update until the TileJSON has been loaded.
-    _update: function() {
-        if (this.options.tiles) {
-            L.TileLayer.prototype._update.call(this);
-        }
-    }
-});
-
-module.exports.TileLayer = TileLayer;
-
-module.exports.tileLayer = function(_, options) {
-    return new TileLayer(_, options);
-};
-
-},{"./load_tilejson":20,"./util":30,"sanitize-caja":32}],30:[function(require,module,exports){
-'use strict';
-
-function contains(item, list) {
-    if (!list || !list.length) return false;
-    for (var i = 0; i < list.length; i++) {
-        if (list[i] === item) return true;
-    }
-    return false;
-}
-
-module.exports = {
-    idUrl: function(_, t) {
-        if (_.indexOf('/') === -1) t.loadID(_);
-        else t.loadURL(_);
-    },
-    log: function(_) {
-        if (typeof console === 'object' &&
-            typeof console.error === 'function') {
-            console.error(_);
-        }
-    },
-    strict: function(_, type) {
-        if (typeof _ !== type) {
-            throw new Error('Invalid argument: ' + type + ' expected');
-        }
-    },
-    strict_instance: function(_, klass, name) {
-        if (!(_ instanceof klass)) {
-            throw new Error('Invalid argument: ' + name + ' expected');
-        }
-    },
-    strict_oneof: function(_, values) {
-        if (!contains(_, values)) {
-            throw new Error('Invalid argument: ' + _ + ' given, valid values are ' +
-                values.join(', '));
-        }
-    },
-    strip_tags: function(_) {
-        return _.replace(/<[^<]+>/g, '');
-    },
-    lbounds: function(_) {
-        // leaflet-compatible bounds, since leaflet does not do geojson
-        return new L.LatLngBounds([[_[1], _[0]], [_[3], _[2]]]);
-    }
-};
-
-},{}],31:[function(require,module,exports){
 /*!
  * mustache.js - Logic-less {{mustache}} templates with JavaScript
  * http://github.com/janl/mustache.js
@@ -38760,7 +36406,7 @@ module.exports = {
 
 }));
 
-},{}],32:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 var html_sanitize = require('./sanitizer-bundle.js');
 
 module.exports = function(_) {
@@ -38780,7 +36426,7 @@ function cleanUrl(url) {
 
 function cleanId(id) { return id; }
 
-},{"./sanitizer-bundle.js":33}],33:[function(require,module,exports){
+},{"./sanitizer-bundle.js":8}],8:[function(require,module,exports){
 
 // Copyright (C) 2010 Google Inc.
 //
@@ -41229,6 +38875,2328 @@ if (typeof module !== 'undefined') {
     module.exports = html_sanitize;
 }
 
+},{}],9:[function(require,module,exports){
+module.exports={
+  "author": {
+    "name": "Mapbox"
+  },
+  "name": "mapbox.js",
+  "description": "mapbox javascript api",
+  "version": "2.4.0",
+  "homepage": "http://mapbox.com/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mapbox/mapbox.js.git"
+  },
+  "main": "src/index.js",
+  "dependencies": {
+    "corslite": "0.0.6",
+    "isarray": "0.0.1",
+    "leaflet": "0.7.7",
+    "mustache": "2.2.1",
+    "sanitize-caja": "0.1.3"
+  },
+  "scripts": {
+    "test": "eslint --no-eslintrc -c .eslintrc src && mocha-phantomjs test/index.html"
+  },
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "clean-css": "~2.0.7",
+    "eslint": "^0.23.0",
+    "expect.js": "0.3.1",
+    "happen": "0.1.3",
+    "leaflet-fullscreen": "0.0.4",
+    "leaflet-hash": "0.2.1",
+    "marked": "~0.3.0",
+    "minifyify": "^6.1.0",
+    "minimist": "0.0.5",
+    "mocha": "2.4.5",
+    "mocha-phantomjs": "4.0.2",
+    "sinon": "1.10.2"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  },
+  "gitHead": "60c85505a0c99805a94c9ea9262412c43c9e971a",
+  "bugs": {
+    "url": "https://github.com/mapbox/mapbox.js/issues"
+  },
+  "_id": "mapbox.js@2.4.0",
+  "_shasum": "c43b084a5dd71334c83ee1df28fa67443d73c29c",
+  "_from": "mapbox.js@latest",
+  "_npmVersion": "3.7.3",
+  "_nodeVersion": "5.9.1",
+  "_npmUser": {
+    "name": "tmcw",
+    "email": "tom@macwright.org"
+  },
+  "maintainers": [
+    {
+      "name": "1ec5",
+      "email": "mxn@1ec5.org"
+    },
+    {
+      "name": "aaronlidman",
+      "email": "aaronlidman@gmail.com"
+    },
+    {
+      "name": "ajashton",
+      "email": "aj.ashton@gmail.com"
+    },
+    {
+      "name": "alulsh",
+      "email": "ulsh@mapbox.com"
+    },
+    {
+      "name": "ansis",
+      "email": "ansis.brammanis@gmail.com"
+    },
+    {
+      "name": "apendleton",
+      "email": "andrew@mapbox.com"
+    },
+    {
+      "name": "bergwerkgis",
+      "email": "wb@bergwerk-gis.at"
+    },
+    {
+      "name": "bhousel",
+      "email": "bryan@mapbox.com"
+    },
+    {
+      "name": "bsudekum",
+      "email": "bobby@mapbox.com"
+    },
+    {
+      "name": "camilleanne",
+      "email": "camille@mapbox.com"
+    },
+    {
+      "name": "dnomadb",
+      "email": "damon@mapbox.com"
+    },
+    {
+      "name": "dthompson",
+      "email": "dthompson@gmail.com"
+    },
+    {
+      "name": "emilymcafee",
+      "email": "emily@mapbox.com"
+    },
+    {
+      "name": "flippmoke",
+      "email": "flippmoke@gmail.com"
+    },
+    {
+      "name": "freenerd",
+      "email": "spam@freenerd.de"
+    },
+    {
+      "name": "gretacb",
+      "email": "carol@mapbox.com"
+    },
+    {
+      "name": "ian29",
+      "email": "ian.villeda@gmail.com"
+    },
+    {
+      "name": "ianshward",
+      "email": "ian@mapbox.com"
+    },
+    {
+      "name": "ingalls",
+      "email": "nicholas.ingalls@gmail.com"
+    },
+    {
+      "name": "jfirebaugh",
+      "email": "john.firebaugh@gmail.com"
+    },
+    {
+      "name": "jrpruit1",
+      "email": "jake@jakepruitt.com"
+    },
+    {
+      "name": "karenzshea",
+      "email": "karen@mapbox.com"
+    },
+    {
+      "name": "kelvinabrokwa",
+      "email": "kelvinabrokwa@gmail.com"
+    },
+    {
+      "name": "kkaefer",
+      "email": "kkaefer@gmail.com"
+    },
+    {
+      "name": "lbud",
+      "email": "lauren@mapbox.com"
+    },
+    {
+      "name": "lucaswoj",
+      "email": "lucas@lucaswoj.com"
+    },
+    {
+      "name": "lxbarth",
+      "email": "alex@mapbox.com"
+    },
+    {
+      "name": "lyzidiamond",
+      "email": "lyzi@mapbox.com"
+    },
+    {
+      "name": "mapbox-admin",
+      "email": "accounts@mapbox.com"
+    },
+    {
+      "name": "mateov",
+      "email": "matt@mapbox.com"
+    },
+    {
+      "name": "mcwhittemore",
+      "email": "mcwhittemore@gmail.com"
+    },
+    {
+      "name": "miccolis",
+      "email": "jeff@miccolis.net"
+    },
+    {
+      "name": "mikemorris",
+      "email": "michael.patrick.morris@gmail.com"
+    },
+    {
+      "name": "morganherlocker",
+      "email": "morgan.herlocker@gmail.com"
+    },
+    {
+      "name": "mourner",
+      "email": "agafonkin@gmail.com"
+    },
+    {
+      "name": "mtirwin",
+      "email": "irwin@mapbox.com"
+    },
+    {
+      "name": "nickidlugash",
+      "email": "nicki@mapbox.com"
+    },
+    {
+      "name": "rclark",
+      "email": "ryan.clark.j@gmail.com"
+    },
+    {
+      "name": "samanbb",
+      "email": "saman@mapbox.com"
+    },
+    {
+      "name": "sbma44",
+      "email": "tlee@mapbox.com"
+    },
+    {
+      "name": "scothis",
+      "email": "scothis@gmail.com"
+    },
+    {
+      "name": "sgillies",
+      "email": "sean@mapbox.com"
+    },
+    {
+      "name": "springmeyer",
+      "email": "dane@mapbox.com"
+    },
+    {
+      "name": "themarex",
+      "email": "patrick@mapbox.com"
+    },
+    {
+      "name": "tmcw",
+      "email": "tom@macwright.org"
+    },
+    {
+      "name": "tristen",
+      "email": "tristen.brown@gmail.com"
+    },
+    {
+      "name": "willwhite",
+      "email": "will@mapbox.com"
+    },
+    {
+      "name": "yhahn",
+      "email": "young@mapbox.com"
+    }
+  ],
+  "dist": {
+    "shasum": "c43b084a5dd71334c83ee1df28fa67443d73c29c",
+    "tarball": "https://registry.npmjs.org/mapbox.js/-/mapbox.js-2.4.0.tgz"
+  },
+  "_npmOperationalInternal": {
+    "host": "packages-16-east.internal.npmjs.com",
+    "tmp": "tmp/mapbox.js-2.4.0.tgz_1459367631719_0.44528863835148513"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/mapbox.js/-/mapbox.js-2.4.0.tgz"
+}
+
+},{}],10:[function(require,module,exports){
+'use strict';
+
+module.exports = {
+    HTTP_URL: 'http://a.tiles.mapbox.com/v4',
+    HTTPS_URL: 'https://a.tiles.mapbox.com/v4',
+    FORCE_HTTPS: false,
+    REQUIRE_ACCESS_TOKEN: true
+};
+
+},{}],11:[function(require,module,exports){
+'use strict';
+
+var util = require('./util'),
+    format_url = require('./format_url'),
+    request = require('./request'),
+    marker = require('./marker'),
+    simplestyle = require('./simplestyle');
+
+// # featureLayer
+//
+// A layer of features, loaded from Mapbox or else. Adds the ability
+// to reset features, filter them, and load them from a GeoJSON URL.
+var FeatureLayer = L.FeatureGroup.extend({
+    options: {
+        filter: function() { return true; },
+        sanitizer: require('sanitize-caja'),
+        style: simplestyle.style,
+        popupOptions: { closeButton: false }
+    },
+
+    initialize: function(_, options) {
+        L.setOptions(this, options);
+
+        this._layers = {};
+
+        if (typeof _ === 'string') {
+            util.idUrl(_, this);
+        // javascript object of TileJSON data
+        } else if (_ && typeof _ === 'object') {
+            this.setGeoJSON(_);
+        }
+    },
+
+    setGeoJSON: function(_) {
+        this._geojson = _;
+        this.clearLayers();
+        this._initialize(_);
+        return this;
+    },
+
+    getGeoJSON: function() {
+        return this._geojson;
+    },
+
+    loadURL: function(url) {
+        if (this._request && 'abort' in this._request) this._request.abort();
+        this._request = request(url, L.bind(function(err, json) {
+            this._request = null;
+            if (err && err.type !== 'abort') {
+                util.log('could not load features at ' + url);
+                this.fire('error', {error: err});
+            } else if (json) {
+                this.setGeoJSON(json);
+                this.fire('ready');
+            }
+        }, this));
+        return this;
+    },
+
+    loadID: function(id) {
+        return this.loadURL(format_url('/v4/' + id + '/features.json', this.options.accessToken));
+    },
+
+    setFilter: function(_) {
+        this.options.filter = _;
+        if (this._geojson) {
+            this.clearLayers();
+            this._initialize(this._geojson);
+        }
+        return this;
+    },
+
+    getFilter: function() {
+        return this.options.filter;
+    },
+
+    _initialize: function(json) {
+        var features = L.Util.isArray(json) ? json : json.features,
+            i, len;
+
+        if (features) {
+            for (i = 0, len = features.length; i < len; i++) {
+                // Only add this if geometry or geometries are set and not null
+                if (features[i].geometries || features[i].geometry || features[i].features) {
+                    this._initialize(features[i]);
+                }
+            }
+        } else if (this.options.filter(json)) {
+
+            var opts = {accessToken: this.options.accessToken},
+                pointToLayer = this.options.pointToLayer || function(feature, latlon) {
+                  return marker.style(feature, latlon, opts);
+                },
+                layer = L.GeoJSON.geometryToLayer(json, pointToLayer),
+                popupHtml = marker.createPopup(json, this.options.sanitizer),
+                style = this.options.style,
+                defaultStyle = style === simplestyle.style;
+
+            if (style && 'setStyle' in layer &&
+                // if the style method is the simplestyle default, then
+                // never style L.Circle or L.CircleMarker because
+                // simplestyle has no rules over them, only over geometry
+                // primitives directly from GeoJSON
+                (!(defaultStyle && (layer instanceof L.Circle ||
+                  layer instanceof L.CircleMarker)))) {
+                if (typeof style === 'function') {
+                    style = style(json);
+                }
+                layer.setStyle(style);
+            }
+
+            layer.feature = json;
+
+            if (popupHtml) {
+                layer.bindPopup(popupHtml, this.options.popupOptions);
+            }
+
+            this.addLayer(layer);
+        }
+    }
+});
+
+module.exports.FeatureLayer = FeatureLayer;
+
+module.exports.featureLayer = function(_, options) {
+    return new FeatureLayer(_, options);
+};
+
+},{"./format_url":13,"./marker":27,"./request":28,"./simplestyle":30,"./util":33,"sanitize-caja":7}],12:[function(require,module,exports){
+'use strict';
+
+var Feedback = L.Class.extend({
+    includes: L.Mixin.Events,
+    data: {},
+    record: function(data) {
+        L.extend(this.data, data);
+        this.fire('change');
+    }
+});
+
+module.exports = new Feedback();
+
+},{}],13:[function(require,module,exports){
+'use strict';
+
+var config = require('./config'),
+    version = require('../package.json').version;
+
+module.exports = function(path, accessToken) {
+    accessToken = accessToken || L.mapbox.accessToken;
+
+    if (!accessToken && config.REQUIRE_ACCESS_TOKEN) {
+        throw new Error('An API access token is required to use Mapbox.js. ' +
+            'See https://www.mapbox.com/mapbox.js/api/v' + version + '/api-access-tokens/');
+    }
+
+    var url = (document.location.protocol === 'https:' || config.FORCE_HTTPS) ? config.HTTPS_URL : config.HTTP_URL;
+    url = url.replace(/\/v4$/, '');
+    url += path;
+
+    if (config.REQUIRE_ACCESS_TOKEN) {
+        if (accessToken[0] === 's') {
+            throw new Error('Use a public access token (pk.*) with Mapbox.js, not a secret access token (sk.*). ' +
+                'See https://www.mapbox.com/mapbox.js/api/v' + version + '/api-access-tokens/');
+        }
+
+        url += url.indexOf('?') !== -1 ? '&access_token=' : '?access_token=';
+        url += accessToken;
+    }
+
+    return url;
+};
+
+module.exports.tileJSON = function(urlOrMapID, accessToken) {
+
+    if (urlOrMapID.indexOf('mapbox://styles') === 0) {
+        throw new Error('Styles created with Mapbox Studio need to be used with ' +
+            'L.mapbox.styleLayer, not L.mapbox.tileLayer');
+    }
+
+    if (urlOrMapID.indexOf('/') !== -1)
+        return urlOrMapID;
+
+    var url = module.exports('/v4/' + urlOrMapID + '.json', accessToken);
+
+    // TileJSON requests need a secure flag appended to their URLs so
+    // that the server knows to send SSL-ified resource references.
+    if (url.indexOf('https') === 0)
+        url += '&secure';
+
+    return url;
+};
+
+
+module.exports.style = function(styleURL, accessToken) {
+    if (styleURL.indexOf('mapbox://styles/') === -1) throw new Error('Incorrectly formatted Mapbox style at ' + styleURL);
+
+    var ownerIDStyle = styleURL.split('mapbox://styles/')[1];
+    var url = module.exports('/styles/v1/' + ownerIDStyle, accessToken)
+        .replace('http://', 'https://');
+
+    return url;
+};
+
+},{"../package.json":9,"./config":10}],14:[function(require,module,exports){
+'use strict';
+
+var isArray = require('isarray'),
+    util = require('./util'),
+    format_url = require('./format_url'),
+    feedback = require('./feedback'),
+    request = require('./request');
+
+// Low-level geocoding interface - wraps specific API calls and their
+// return values.
+module.exports = function(url, options) {
+    if (!options) options = {};
+    var geocoder = {};
+
+    util.strict(url, 'string');
+
+    if (url.indexOf('/') === -1) {
+        url = format_url('/geocoding/v5/' + url + '/{query}.json', options.accessToken, 5);
+    }
+
+    function roundTo(latLng, precision) {
+        var mult = Math.pow(10, precision);
+        latLng.lat = Math.round(latLng.lat * mult) / mult;
+        latLng.lng = Math.round(latLng.lng * mult) / mult;
+        return latLng;
+    }
+
+    geocoder.getURL = function() {
+        return url;
+    };
+
+    geocoder.queryURL = function(_) {
+        var isObject = !(isArray(_) || typeof _ === 'string'),
+            query = isObject ? _.query : _;
+
+        if (isArray(query)) {
+            var parts = [];
+            for (var i = 0; i < query.length; i++) {
+                parts[i] = encodeURIComponent(query[i]);
+            }
+            query = parts.join(';');
+        } else {
+            query = encodeURIComponent(query);
+        }
+
+        feedback.record({ geocoding: query });
+
+        var url = L.Util.template(geocoder.getURL(), {query: query});
+
+        if (isObject) {
+            if (_.types) {
+                if (isArray(_.types)) {
+                    url += '&types=' + _.types.join();
+                } else {
+                    url += '&types=' + _.types;
+                }
+            }
+
+            if (_.country) {
+                if (isArray(_.country)) {
+                    url += '&country=' + _.country.join();
+                } else {
+                    url += '&country=' + _.country;
+                }
+            }
+
+            if (_.proximity) {
+                var proximity = roundTo(L.latLng(_.proximity), 3);
+                url += '&proximity=' + proximity.lng + ',' + proximity.lat;
+            }
+
+            if (typeof _.autocomplete === 'boolean') {
+                url += '&autocomplete=' + _.autocomplete;
+            }
+        }
+
+        return url;
+    };
+
+    geocoder.query = function(_, callback) {
+        util.strict(callback, 'function');
+
+        request(geocoder.queryURL(_), function(err, json) {
+            if (json && (json.length || json.features)) {
+                var res = {
+                    results: json
+                };
+                if (json.features && json.features.length) {
+                    res.latlng = [
+                        json.features[0].center[1],
+                        json.features[0].center[0]];
+
+                    if (json.features[0].bbox) {
+                        res.bounds = json.features[0].bbox;
+                        res.lbounds = util.lbounds(res.bounds);
+                    }
+                }
+                callback(null, res);
+            } else callback(err || true);
+        });
+
+        return geocoder;
+    };
+
+    // a reverse geocode:
+    //
+    //  geocoder.reverseQuery([80, 20])
+    geocoder.reverseQuery = function(_, callback) {
+        var q = '';
+
+        // sort through different ways people represent lat and lon pairs
+        function normalize(x) {
+            var latLng;
+            if (x.lat !== undefined && x.lng !== undefined) {
+                latLng = L.latLng(x.lat, x.lng);
+            } else if (x.lat !== undefined && x.lon !== undefined) {
+                latLng = L.latLng(x.lat, x.lon);
+            } else {
+                latLng = L.latLng(x[1], x[0]);
+            }
+            latLng = roundTo(latLng, 5);
+            return latLng.lng + ',' + latLng.lat;
+        }
+
+        if (_.length && _[0].length) {
+            for (var i = 0, pts = []; i < _.length; i++) {
+                pts.push(normalize(_[i]));
+            }
+            q = pts.join(';');
+        } else {
+            q = normalize(_);
+        }
+
+        request(geocoder.queryURL(q), function(err, json) {
+            callback(err, json);
+        });
+
+        return geocoder;
+    };
+
+    return geocoder;
+};
+
+},{"./feedback":12,"./format_url":13,"./request":28,"./util":33,"isarray":4}],15:[function(require,module,exports){
+'use strict';
+
+var geocoder = require('./geocoder'),
+    util = require('./util');
+
+var GeocoderControl = L.Control.extend({
+    includes: L.Mixin.Events,
+
+    options: {
+        proximity: true,
+        position: 'topleft',
+        pointZoom: 16,
+        keepOpen: false,
+        autocomplete: false,
+        queryOptions: {}
+    },
+
+    initialize: function(_, options) {
+        L.Util.setOptions(this, options);
+        this.setURL(_);
+        this._updateSubmit = L.bind(this._updateSubmit, this);
+        this._updateAutocomplete = L.bind(this._updateAutocomplete, this);
+        this._chooseResult = L.bind(this._chooseResult, this);
+    },
+
+    setURL: function(_) {
+        this.geocoder = geocoder(_, {
+            accessToken: this.options.accessToken
+        });
+        return this;
+    },
+
+    getURL: function() {
+        return this.geocoder.getURL();
+    },
+
+    setID: function(_) {
+        return this.setURL(_);
+    },
+
+    setTileJSON: function(_) {
+        return this.setURL(_.geocoder);
+    },
+
+    _toggle: function(e) {
+        if (e) L.DomEvent.stop(e);
+        if (L.DomUtil.hasClass(this._container, 'active')) {
+            L.DomUtil.removeClass(this._container, 'active');
+            this._results.innerHTML = '';
+            this._input.blur();
+        } else {
+            L.DomUtil.addClass(this._container, 'active');
+            this._input.focus();
+            this._input.select();
+        }
+    },
+
+    _closeIfOpen: function() {
+        if (L.DomUtil.hasClass(this._container, 'active') &&
+            !this.options.keepOpen) {
+            L.DomUtil.removeClass(this._container, 'active');
+            this._results.innerHTML = '';
+            this._input.blur();
+        }
+    },
+
+    onAdd: function(map) {
+
+        var container = L.DomUtil.create('div', 'leaflet-control-mapbox-geocoder leaflet-bar leaflet-control'),
+            link = L.DomUtil.create('a', 'leaflet-control-mapbox-geocoder-toggle mapbox-icon mapbox-icon-geocoder', container),
+            results = L.DomUtil.create('div', 'leaflet-control-mapbox-geocoder-results', container),
+            wrap = L.DomUtil.create('div', 'leaflet-control-mapbox-geocoder-wrap', container),
+            form = L.DomUtil.create('form', 'leaflet-control-mapbox-geocoder-form', wrap),
+            input = L.DomUtil.create('input', '', form);
+
+        link.href = '#';
+        link.innerHTML = '&nbsp;';
+
+        input.type = 'text';
+        input.setAttribute('placeholder', 'Search');
+
+        L.DomEvent.addListener(form, 'submit', this._geocode, this);
+        L.DomEvent.addListener(input, 'keyup', this._autocomplete, this);
+        L.DomEvent.disableClickPropagation(container);
+
+        this._map = map;
+        this._results = results;
+        this._input = input;
+        this._form = form;
+
+        if (this.options.keepOpen) {
+            L.DomUtil.addClass(container, 'active');
+        } else {
+            this._map.on('click', this._closeIfOpen, this);
+            L.DomEvent.addListener(link, 'click', this._toggle, this);
+        }
+
+        return container;
+    },
+
+    _updateSubmit: function(err, resp) {
+        L.DomUtil.removeClass(this._container, 'searching');
+        this._results.innerHTML = '';
+        if (err || !resp) {
+            this.fire('error', {error: err});
+        } else {
+            var features = [];
+            if (resp.results && resp.results.features) {
+                features = resp.results.features;
+            }
+            if (features.length === 1) {
+                this.fire('autoselect', { feature: features[0] });
+                this.fire('found', {results: resp.results});
+                this._chooseResult(features[0]);
+                this._closeIfOpen();
+            } else if (features.length > 1) {
+                this.fire('found', {results: resp.results});
+                this._displayResults(features);
+            } else {
+                this.fire('notfound');
+                this._displayResults(features);
+            }
+        }
+    },
+
+    _updateAutocomplete: function(err, resp) {
+        this._results.innerHTML = '';
+        if (err || !resp) {
+            this.fire('error', {error: err});
+        } else {
+            var features = [];
+            if (resp.results && resp.results.features) {
+                features = resp.results.features;
+            }
+            if (features.length) {
+                this.fire('found', {results: resp.results});
+            } else {
+                this.fire('notfound');
+            }
+            this._displayResults(features);
+        }
+    },
+
+    _displayResults: function(features) {
+        for (var i = 0, l = Math.min(features.length, 5); i < l; i++) {
+            var feature = features[i];
+            var name = feature.place_name;
+            if (!name.length) continue;
+
+            var r = L.DomUtil.create('a', '', this._results);
+            var text = ('innerText' in r) ? 'innerText' : 'textContent';
+            r[text] = name;
+            r.setAttribute('title', name);
+            r.href = '#';
+
+            (L.bind(function(feature) {
+                L.DomEvent.addListener(r, 'click', function(e) {
+                    this._chooseResult(feature);
+                    L.DomEvent.stop(e);
+                    this.fire('select', { feature: feature });
+                }, this);
+            }, this))(feature);
+        }
+        if (features.length > 5) {
+            var outof = L.DomUtil.create('span', '', this._results);
+            outof.innerHTML = 'Top 5 of ' + features.length + '  results';
+        }
+    },
+
+    _chooseResult: function(result) {
+        if (result.bbox) {
+            this._map.fitBounds(util.lbounds(result.bbox));
+        } else if (result.center) {
+            this._map.setView([result.center[1], result.center[0]], (this._map.getZoom() === undefined) ?
+                this.options.pointZoom :
+                Math.max(this._map.getZoom(), this.options.pointZoom));
+        }
+    },
+
+    _geocode: function(e) {
+        L.DomEvent.preventDefault(e);
+        if (this._input.value === '') return this._updateSubmit();
+        L.DomUtil.addClass(this._container, 'searching');
+        this.geocoder.query(L.Util.extend({
+            query: this._input.value,
+            proximity: this.options.proximity ? this._map.getCenter() : false
+        }, this.options.queryOptions), this._updateSubmit);
+    },
+
+    _autocomplete: function() {
+        if (!this.options.autocomplete) return;
+        if (this._input.value === '') return this._updateAutocomplete();
+        this.geocoder.query(L.Util.extend({
+            query: this._input.value,
+            proximity: this.options.proximity ? this._map.getCenter() : false
+        }, this.options.queryOptions), this._updateAutocomplete);
+    }
+});
+
+module.exports.GeocoderControl = GeocoderControl;
+
+module.exports.geocoderControl = function(_, options) {
+    return new GeocoderControl(_, options);
+};
+
+},{"./geocoder":14,"./util":33}],16:[function(require,module,exports){
+'use strict';
+
+function utfDecode(c) {
+    if (c >= 93) c--;
+    if (c >= 35) c--;
+    return c - 32;
+}
+
+module.exports = function(data) {
+    return function(x, y) {
+        if (!data) return;
+        var idx = utfDecode(data.grid[y].charCodeAt(x)),
+            key = data.keys[idx];
+        return data.data[key];
+    };
+};
+
+},{}],17:[function(require,module,exports){
+'use strict';
+
+var util = require('./util'),
+    Mustache = require('mustache');
+
+var GridControl = L.Control.extend({
+
+    options: {
+        pinnable: true,
+        follow: false,
+        sanitizer: require('sanitize-caja'),
+        touchTeaser: true,
+        location: true
+    },
+
+    _currentContent: '',
+
+    // pinned means that this control is on a feature and the user has likely
+    // clicked. pinned will not become false unless the user clicks off
+    // of the feature onto another or clicks x
+    _pinned: false,
+
+    initialize: function(_, options) {
+        L.Util.setOptions(this, options);
+        util.strict_instance(_, L.Class, 'L.mapbox.gridLayer');
+        this._layer = _;
+    },
+
+    setTemplate: function(template) {
+        util.strict(template, 'string');
+        this.options.template = template;
+        return this;
+    },
+
+    _template: function(format, data) {
+        if (!data) return;
+        var template = this.options.template || this._layer.getTileJSON().template;
+        if (template) {
+            var d = {};
+            d['__' + format + '__'] = true;
+            return this.options.sanitizer(
+                Mustache.to_html(template, L.extend(d, data)));
+        }
+    },
+
+    // change the content of the tooltip HTML if it has changed, otherwise
+    // noop
+    _show: function(content, o) {
+        if (content === this._currentContent) return;
+
+        this._currentContent = content;
+
+        if (this.options.follow) {
+            this._popup.setContent(content)
+                .setLatLng(o.latLng);
+            if (this._map._popup !== this._popup) this._popup.openOn(this._map);
+        } else {
+            this._container.style.display = 'block';
+            this._contentWrapper.innerHTML = content;
+        }
+    },
+
+    hide: function() {
+        this._pinned = false;
+        this._currentContent = '';
+
+        this._map.closePopup();
+        this._container.style.display = 'none';
+        this._contentWrapper.innerHTML = '';
+
+        L.DomUtil.removeClass(this._container, 'closable');
+
+        return this;
+    },
+
+    _mouseover: function(o) {
+        if (o.data) {
+            L.DomUtil.addClass(this._map._container, 'map-clickable');
+        } else {
+            L.DomUtil.removeClass(this._map._container, 'map-clickable');
+        }
+
+        if (this._pinned) return;
+
+        var content = this._template('teaser', o.data);
+        if (content) {
+            this._show(content, o);
+        } else {
+            this.hide();
+        }
+    },
+
+    _mousemove: function(o) {
+        if (this._pinned) return;
+        if (!this.options.follow) return;
+
+        this._popup.setLatLng(o.latLng);
+    },
+
+    _navigateTo: function(url) {
+        window.top.location.href = url;
+    },
+
+    _click: function(o) {
+
+        var location_formatted = this._template('location', o.data);
+        if (this.options.location && location_formatted &&
+            location_formatted.search(/^https?:/) === 0) {
+            return this._navigateTo(this._template('location', o.data));
+        }
+
+        if (!this.options.pinnable) return;
+
+        var content = this._template('full', o.data);
+
+        if (!content && this.options.touchTeaser && L.Browser.touch) {
+            content = this._template('teaser', o.data);
+        }
+
+        if (content) {
+            L.DomUtil.addClass(this._container, 'closable');
+            this._pinned = true;
+            this._show(content, o);
+        } else if (this._pinned) {
+            L.DomUtil.removeClass(this._container, 'closable');
+            this._pinned = false;
+            this.hide();
+        }
+    },
+
+    _onPopupClose: function() {
+        this._currentContent = null;
+        this._pinned = false;
+    },
+
+    _createClosebutton: function(container, fn) {
+        var link = L.DomUtil.create('a', 'close', container);
+
+        link.innerHTML = 'close';
+        link.href = '#';
+        link.title = 'close';
+
+        L.DomEvent
+            .on(link, 'click', L.DomEvent.stopPropagation)
+            .on(link, 'mousedown', L.DomEvent.stopPropagation)
+            .on(link, 'dblclick', L.DomEvent.stopPropagation)
+            .on(link, 'click', L.DomEvent.preventDefault)
+            .on(link, 'click', fn, this);
+
+        return link;
+    },
+
+    onAdd: function(map) {
+        this._map = map;
+
+        var className = 'leaflet-control-grid map-tooltip',
+            container = L.DomUtil.create('div', className),
+            contentWrapper = L.DomUtil.create('div', 'map-tooltip-content');
+
+        // hide the container element initially
+        container.style.display = 'none';
+        this._createClosebutton(container, this.hide);
+        container.appendChild(contentWrapper);
+
+        this._contentWrapper = contentWrapper;
+        this._popup = new L.Popup({ autoPan: false, closeOnClick: false });
+
+        map.on('popupclose', this._onPopupClose, this);
+
+        L.DomEvent
+            .disableClickPropagation(container)
+            // allow people to scroll tooltips with mousewheel
+            .addListener(container, 'mousewheel', L.DomEvent.stopPropagation);
+
+        this._layer
+            .on('mouseover', this._mouseover, this)
+            .on('mousemove', this._mousemove, this)
+            .on('click', this._click, this);
+
+        return container;
+    },
+
+    onRemove: function (map) {
+
+        map.off('popupclose', this._onPopupClose, this);
+
+        this._layer
+            .off('mouseover', this._mouseover, this)
+            .off('mousemove', this._mousemove, this)
+            .off('click', this._click, this);
+    }
+});
+
+module.exports.GridControl = GridControl;
+
+module.exports.gridControl = function(_, options) {
+    return new GridControl(_, options);
+};
+
+},{"./util":33,"mustache":6,"sanitize-caja":7}],18:[function(require,module,exports){
+'use strict';
+
+var util = require('./util'),
+    request = require('./request'),
+    grid = require('./grid');
+
+// forked from danzel/L.UTFGrid
+var GridLayer = L.Class.extend({
+    includes: [L.Mixin.Events, require('./load_tilejson')],
+
+    options: {
+        template: function() { return ''; }
+    },
+
+    _mouseOn: null,
+    _tilejson: {},
+    _cache: {},
+
+    initialize: function(_, options) {
+        L.Util.setOptions(this, options);
+        this._loadTileJSON(_);
+    },
+
+    _setTileJSON: function(json) {
+        util.strict(json, 'object');
+
+        L.extend(this.options, {
+            grids: json.grids,
+            minZoom: json.minzoom,
+            maxZoom: json.maxzoom,
+            bounds: json.bounds && util.lbounds(json.bounds)
+        });
+
+        this._tilejson = json;
+        this._cache = {};
+        this._update();
+
+        return this;
+    },
+
+    getTileJSON: function() {
+        return this._tilejson;
+    },
+
+    active: function() {
+        return !!(this._map && this.options.grids && this.options.grids.length);
+    },
+
+    addTo: function (map) {
+        map.addLayer(this);
+        return this;
+    },
+
+    onAdd: function(map) {
+        this._map = map;
+        this._update();
+
+        this._map
+            .on('click', this._click, this)
+            .on('mousemove', this._move, this)
+            .on('moveend', this._update, this);
+    },
+
+    onRemove: function() {
+        this._map
+            .off('click', this._click, this)
+            .off('mousemove', this._move, this)
+            .off('moveend', this._update, this);
+    },
+
+    getData: function(latlng, callback) {
+        if (!this.active()) return;
+
+        var map = this._map,
+            point = map.project(latlng.wrap()),
+            tileSize = 256,
+            resolution = 4,
+            x = Math.floor(point.x / tileSize),
+            y = Math.floor(point.y / tileSize),
+            max = map.options.crs.scale(map.getZoom()) / tileSize;
+
+        x = (x + max) % max;
+        y = (y + max) % max;
+
+        this._getTile(map.getZoom(), x, y, function(grid) {
+            var gridX = Math.floor((point.x - (x * tileSize)) / resolution),
+                gridY = Math.floor((point.y - (y * tileSize)) / resolution);
+
+            callback(grid(gridX, gridY));
+        });
+
+        return this;
+    },
+
+    _click: function(e) {
+        this.getData(e.latlng, L.bind(function(data) {
+            this.fire('click', {
+                latLng: e.latlng,
+                data: data
+            });
+        }, this));
+    },
+
+    _move: function(e) {
+        this.getData(e.latlng, L.bind(function(data) {
+            if (data !== this._mouseOn) {
+                if (this._mouseOn) {
+                    this.fire('mouseout', {
+                        latLng: e.latlng,
+                        data: this._mouseOn
+                    });
+                }
+
+                this.fire('mouseover', {
+                    latLng: e.latlng,
+                    data: data
+                });
+
+                this._mouseOn = data;
+            } else {
+                this.fire('mousemove', {
+                    latLng: e.latlng,
+                    data: data
+                });
+            }
+        }, this));
+    },
+
+    _getTileURL: function(tilePoint) {
+        var urls = this.options.grids,
+            index = (tilePoint.x + tilePoint.y) % urls.length,
+            url = urls[index];
+
+        return L.Util.template(url, tilePoint);
+    },
+
+    // Load up all required json grid files
+    _update: function() {
+        if (!this.active()) return;
+
+        var bounds = this._map.getPixelBounds(),
+            z = this._map.getZoom(),
+            tileSize = 256;
+
+        if (z > this.options.maxZoom || z < this.options.minZoom) return;
+
+        var tileBounds = L.bounds(
+                bounds.min.divideBy(tileSize)._floor(),
+                bounds.max.divideBy(tileSize)._floor()),
+            max = this._map.options.crs.scale(z) / tileSize;
+
+        for (var x = tileBounds.min.x; x <= tileBounds.max.x; x++) {
+            for (var y = tileBounds.min.y; y <= tileBounds.max.y; y++) {
+                // x wrapped
+                this._getTile(z, ((x % max) + max) % max, ((y % max) + max) % max);
+            }
+        }
+    },
+
+    _getTile: function(z, x, y, callback) {
+        var key = z + '_' + x + '_' + y,
+            tilePoint = L.point(x, y);
+
+        tilePoint.z = z;
+
+        if (!this._tileShouldBeLoaded(tilePoint)) {
+            return;
+        }
+
+        if (key in this._cache) {
+            if (!callback) return;
+
+            if (typeof this._cache[key] === 'function') {
+                callback(this._cache[key]); // Already loaded
+            } else {
+                this._cache[key].push(callback); // Pending
+            }
+
+            return;
+        }
+
+        this._cache[key] = [];
+
+        if (callback) {
+            this._cache[key].push(callback);
+        }
+
+        request(this._getTileURL(tilePoint), L.bind(function(err, json) {
+            var callbacks = this._cache[key];
+            this._cache[key] = grid(json);
+            for (var i = 0; i < callbacks.length; ++i) {
+                callbacks[i](this._cache[key]);
+            }
+        }, this));
+    },
+
+    _tileShouldBeLoaded: function(tilePoint) {
+        if (tilePoint.z > this.options.maxZoom || tilePoint.z < this.options.minZoom) {
+            return false;
+        }
+
+        if (this.options.bounds) {
+            var tileSize = 256,
+                nwPoint = tilePoint.multiplyBy(tileSize),
+                sePoint = nwPoint.add(new L.Point(tileSize, tileSize)),
+                nw = this._map.unproject(nwPoint),
+                se = this._map.unproject(sePoint),
+                bounds = new L.LatLngBounds([nw, se]);
+
+            if (!this.options.bounds.intersects(bounds)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+});
+
+module.exports.GridLayer = GridLayer;
+
+module.exports.gridLayer = function(_, options) {
+    return new GridLayer(_, options);
+};
+
+},{"./grid":16,"./load_tilejson":23,"./request":28,"./util":33}],19:[function(require,module,exports){
+'use strict';
+
+var leaflet = require('./leaflet');
+
+require('./mapbox');
+
+module.exports = leaflet;
+
+},{"./leaflet":21,"./mapbox":25}],20:[function(require,module,exports){
+'use strict';
+
+var InfoControl = L.Control.extend({
+    options: {
+        position: 'bottomright',
+        sanitizer: require('sanitize-caja')
+    },
+
+    initialize: function(options) {
+        L.setOptions(this, options);
+        this._info = {};
+        console.warn('infoControl has been deprecated and will be removed in mapbox.js v3.0.0. Use the default attribution control instead, which is now responsive.');
+    },
+
+    onAdd: function(map) {
+        this._container = L.DomUtil.create('div', 'mapbox-control-info mapbox-small');
+        this._content = L.DomUtil.create('div', 'map-info-container', this._container);
+
+        var link = L.DomUtil.create('a', 'mapbox-info-toggle mapbox-icon mapbox-icon-info', this._container);
+        link.href = '#';
+
+        L.DomEvent.addListener(link, 'click', this._showInfo, this);
+        L.DomEvent.disableClickPropagation(this._container);
+
+        for (var i in map._layers) {
+            if (map._layers[i].getAttribution) {
+                this.addInfo(map._layers[i].getAttribution());
+            }
+        }
+
+        map
+            .on('layeradd', this._onLayerAdd, this)
+            .on('layerremove', this._onLayerRemove, this);
+
+        this._update();
+        return this._container;
+    },
+
+    onRemove: function(map) {
+        map
+            .off('layeradd', this._onLayerAdd, this)
+            .off('layerremove', this._onLayerRemove, this);
+    },
+
+    addInfo: function(text) {
+        if (!text) return this;
+        if (!this._info[text]) this._info[text] = 0;
+        this._info[text] = true;
+        return this._update();
+    },
+
+    removeInfo: function (text) {
+        if (!text) return this;
+        if (this._info[text]) this._info[text] = false;
+        return this._update();
+    },
+
+    _showInfo: function(e) {
+        L.DomEvent.preventDefault(e);
+        if (this._active === true) return this._hidecontent();
+
+        L.DomUtil.addClass(this._container, 'active');
+        this._active = true;
+        this._update();
+    },
+
+    _hidecontent: function() {
+        this._content.innerHTML = '';
+        this._active = false;
+        L.DomUtil.removeClass(this._container, 'active');
+        return;
+    },
+
+    _update: function() {
+        if (!this._map) { return this; }
+        this._content.innerHTML = '';
+        var hide = 'none';
+        var info = [];
+
+        for (var i in this._info) {
+            if (this._info.hasOwnProperty(i) && this._info[i]) {
+                info.push(this.options.sanitizer(i));
+                hide = 'block';
+            }
+        }
+
+        this._content.innerHTML += info.join(' | ');
+
+        // If there are no results in _info then hide this.
+        this._container.style.display = hide;
+        return this;
+    },
+
+    _onLayerAdd: function(e) {
+        if (e.layer.getAttribution && e.layer.getAttribution()) {
+            this.addInfo(e.layer.getAttribution());
+        } else if ('on' in e.layer && e.layer.getAttribution) {
+            e.layer.on('ready', L.bind(function() {
+                this.addInfo(e.layer.getAttribution());
+            }, this));
+        }
+    },
+
+    _onLayerRemove: function (e) {
+        if (e.layer.getAttribution) {
+            this.removeInfo(e.layer.getAttribution());
+        }
+    }
+});
+
+module.exports.InfoControl = InfoControl;
+
+module.exports.infoControl = function(options) {
+    return new InfoControl(options);
+};
+
+},{"sanitize-caja":7}],21:[function(require,module,exports){
+module.exports = window.L = require('leaflet/dist/leaflet-src');
+
+},{"leaflet/dist/leaflet-src":5}],22:[function(require,module,exports){
+'use strict';
+
+var LegendControl = L.Control.extend({
+
+    options: {
+        position: 'bottomright',
+        sanitizer: require('sanitize-caja')
+    },
+
+    initialize: function(options) {
+        L.setOptions(this, options);
+        this._legends = {};
+    },
+
+    onAdd: function() {
+        this._container = L.DomUtil.create('div', 'map-legends wax-legends');
+        L.DomEvent.disableClickPropagation(this._container);
+
+        this._update();
+
+        return this._container;
+    },
+
+    addLegend: function(text) {
+        if (!text) { return this; }
+
+        if (!this._legends[text]) {
+            this._legends[text] = 0;
+        }
+
+        this._legends[text]++;
+        return this._update();
+    },
+
+    removeLegend: function(text) {
+        if (!text) { return this; }
+        if (this._legends[text]) this._legends[text]--;
+        return this._update();
+    },
+
+    _update: function() {
+        if (!this._map) { return this; }
+
+        this._container.innerHTML = '';
+        var hide = 'none';
+
+        for (var i in this._legends) {
+            if (this._legends.hasOwnProperty(i) && this._legends[i]) {
+                var div = L.DomUtil.create('div', 'map-legend wax-legend', this._container);
+                div.innerHTML = this.options.sanitizer(i);
+                hide = 'block';
+            }
+        }
+
+        // hide the control entirely unless there is at least one legend;
+        // otherwise there will be a small grey blemish on the map.
+        this._container.style.display = hide;
+
+        return this;
+    }
+});
+
+module.exports.LegendControl = LegendControl;
+
+module.exports.legendControl = function(options) {
+    return new LegendControl(options);
+};
+
+},{"sanitize-caja":7}],23:[function(require,module,exports){
+'use strict';
+
+var request = require('./request'),
+    format_url = require('./format_url'),
+    util = require('./util');
+
+module.exports = {
+    _loadTileJSON: function(_) {
+        if (typeof _ === 'string') {
+            _ = format_url.tileJSON(_, this.options && this.options.accessToken);
+            request(_, L.bind(function(err, json) {
+                if (err) {
+                    util.log('could not load TileJSON at ' + _);
+                    this.fire('error', {error: err});
+                } else if (json) {
+                    this._setTileJSON(json);
+                    this.fire('ready');
+                }
+            }, this));
+        } else if (_ && typeof _ === 'object') {
+            this._setTileJSON(_);
+        }
+    }
+};
+
+},{"./format_url":13,"./request":28,"./util":33}],24:[function(require,module,exports){
+'use strict';
+
+var tileLayer = require('./tile_layer').tileLayer,
+    featureLayer = require('./feature_layer').featureLayer,
+    gridLayer = require('./grid_layer').gridLayer,
+    gridControl = require('./grid_control').gridControl,
+    infoControl = require('./info_control').infoControl,
+    shareControl = require('./share_control').shareControl,
+    legendControl = require('./legend_control').legendControl,
+    mapboxLogoControl = require('./mapbox_logo').mapboxLogoControl,
+    feedback = require('./feedback');
+
+function withAccessToken(options, accessToken) {
+    if (!accessToken || options.accessToken)
+        return options;
+    return L.extend({accessToken: accessToken}, options);
+}
+
+var LMap = L.Map.extend({
+    includes: [require('./load_tilejson')],
+
+    options: {
+        tileLayer: {},
+        featureLayer: {},
+        gridLayer: {},
+        legendControl: {},
+        gridControl: {},
+        infoControl: false,
+        shareControl: false,
+        sanitizer: require('sanitize-caja')
+    },
+
+    _tilejson: {},
+
+    initialize: function(element, _, options) {
+
+        L.Map.prototype.initialize.call(this, element,
+            L.extend({}, L.Map.prototype.options, options));
+
+        // Disable the default 'Leaflet' text
+        if (this.attributionControl) {
+            this.attributionControl.setPrefix('');
+
+            var compact = this.options.attributionControl.compact;
+            // Set a compact display if map container width is < 640 or
+            // compact is set to `true` in attributionControl options.
+            if (compact || (compact !== false && this._container.offsetWidth <= 640)) {
+                L.DomUtil.addClass(this.attributionControl._container, 'leaflet-compact-attribution');
+            }
+
+            if (compact === undefined) {
+                this.on('resize', function() {
+                    if (this._container.offsetWidth > 640) {
+                        L.DomUtil.removeClass(this.attributionControl._container, 'leaflet-compact-attribution');
+                    } else {
+                        L.DomUtil.addClass(this.attributionControl._container, 'leaflet-compact-attribution');
+                    }
+                });
+            }
+        }
+
+        if (this.options.tileLayer) {
+            this.tileLayer = tileLayer(undefined,
+                withAccessToken(this.options.tileLayer, this.options.accessToken));
+            this.addLayer(this.tileLayer);
+        }
+
+        if (this.options.featureLayer) {
+            this.featureLayer = featureLayer(undefined,
+                withAccessToken(this.options.featureLayer, this.options.accessToken));
+            this.addLayer(this.featureLayer);
+        }
+
+        if (this.options.gridLayer) {
+            this.gridLayer = gridLayer(undefined,
+                withAccessToken(this.options.gridLayer, this.options.accessToken));
+            this.addLayer(this.gridLayer);
+        }
+
+        if (this.options.gridLayer && this.options.gridControl) {
+            this.gridControl = gridControl(this.gridLayer, this.options.gridControl);
+            this.addControl(this.gridControl);
+        }
+
+        if (this.options.infoControl) {
+            this.infoControl = infoControl(this.options.infoControl);
+            this.addControl(this.infoControl);
+        }
+
+        if (this.options.legendControl) {
+            this.legendControl = legendControl(this.options.legendControl);
+            this.addControl(this.legendControl);
+        }
+
+        if (this.options.shareControl) {
+            this.shareControl = shareControl(undefined,
+                withAccessToken(this.options.shareControl, this.options.accessToken));
+            this.addControl(this.shareControl);
+        }
+
+        this._mapboxLogoControl = mapboxLogoControl(this.options.mapboxLogoControl);
+        this.addControl(this._mapboxLogoControl);
+
+        this._loadTileJSON(_);
+
+        this.on('layeradd', this._onLayerAdd, this)
+            .on('layerremove', this._onLayerRemove, this)
+            .on('moveend', this._updateMapFeedbackLink, this);
+
+        this.whenReady(function () {
+            feedback.on('change', this._updateMapFeedbackLink, this);
+        });
+
+        this.on('unload', function () {
+            feedback.off('change', this._updateMapFeedbackLink, this);
+        });
+    },
+
+    // use a javascript object of tilejson data to configure this layer
+    _setTileJSON: function(_) {
+        this._tilejson = _;
+        this._initialize(_);
+        return this;
+    },
+
+    getTileJSON: function() {
+        return this._tilejson;
+    },
+
+    _initialize: function(json) {
+        if (this.tileLayer) {
+            this.tileLayer._setTileJSON(json);
+            this._updateLayer(this.tileLayer);
+        }
+
+        if (this.featureLayer && !this.featureLayer.getGeoJSON() && json.data && json.data[0]) {
+            this.featureLayer.loadURL(json.data[0]);
+        }
+
+        if (this.gridLayer) {
+            this.gridLayer._setTileJSON(json);
+            this._updateLayer(this.gridLayer);
+        }
+
+        if (this.infoControl && json.attribution) {
+            this.infoControl.addInfo(this.options.sanitizer(json.attribution));
+            this._updateMapFeedbackLink();
+        }
+
+        if (this.legendControl && json.legend) {
+            this.legendControl.addLegend(json.legend);
+        }
+
+        if (this.shareControl) {
+            this.shareControl._setTileJSON(json);
+        }
+
+        this._mapboxLogoControl._setTileJSON(json);
+
+        if (!this._loaded && json.center) {
+            var zoom = this.getZoom() !== undefined ? this.getZoom() : json.center[2],
+                center = L.latLng(json.center[1], json.center[0]);
+
+            this.setView(center, zoom);
+        }
+    },
+
+    _updateMapFeedbackLink: function() {
+        if (!this._controlContainer.getElementsByClassName) return;
+        var link = this._controlContainer.getElementsByClassName('mapbox-improve-map');
+        if (link.length && this._loaded) {
+            var center = this.getCenter().wrap();
+            var tilejson = this._tilejson || {};
+            var id = tilejson.id || '';
+
+            var hash = '#' + id + '/' +
+                center.lng.toFixed(3) + '/' +
+                center.lat.toFixed(3) + '/' +
+                this.getZoom();
+
+            for (var key in feedback.data) {
+                hash += '/' + key + '=' + feedback.data[key];
+            }
+
+            for (var i = 0; i < link.length; i++) {
+                link[i].hash = hash;
+            }
+        }
+    },
+
+    _onLayerAdd: function(e) {
+        if ('on' in e.layer) {
+            e.layer.on('ready', this._onLayerReady, this);
+        }
+        window.setTimeout(L.bind(this._updateMapFeedbackLink, this), 0); // Update after attribution control resets the HTML.
+    },
+
+    _onLayerRemove: function(e) {
+        if ('on' in e.layer) {
+            e.layer.off('ready', this._onLayerReady, this);
+        }
+        window.setTimeout(L.bind(this._updateMapFeedbackLink, this), 0); // Update after attribution control resets the HTML.
+    },
+
+    _onLayerReady: function(e) {
+        this._updateLayer(e.target);
+    },
+
+    _updateLayer: function(layer) {
+        if (!layer.options) return;
+
+        if (this.infoControl && this._loaded) {
+            this.infoControl.addInfo(layer.options.infoControl);
+        }
+
+        if (this.attributionControl && this._loaded && layer.getAttribution) {
+            this.attributionControl.addAttribution(layer.getAttribution());
+        }
+
+        if (!(L.stamp(layer) in this._zoomBoundLayers) &&
+                (layer.options.maxZoom || layer.options.minZoom)) {
+            this._zoomBoundLayers[L.stamp(layer)] = layer;
+        }
+
+        this._updateMapFeedbackLink();
+        this._updateZoomLevels();
+    }
+});
+
+module.exports.Map = LMap;
+
+module.exports.map = function(element, _, options) {
+    return new LMap(element, _, options);
+};
+
+},{"./feature_layer":11,"./feedback":12,"./grid_control":17,"./grid_layer":18,"./info_control":20,"./legend_control":22,"./load_tilejson":23,"./mapbox_logo":26,"./share_control":29,"./tile_layer":32,"sanitize-caja":7}],25:[function(require,module,exports){
+'use strict';
+
+var geocoderControl = require('./geocoder_control'),
+    gridControl = require('./grid_control'),
+    featureLayer = require('./feature_layer'),
+    legendControl = require('./legend_control'),
+    shareControl = require('./share_control'),
+    tileLayer = require('./tile_layer'),
+    infoControl = require('./info_control'),
+    map = require('./map'),
+    gridLayer = require('./grid_layer'),
+    styleLayer = require('./style_layer');
+
+L.mapbox = module.exports = {
+    VERSION: require('../package.json').version,
+    geocoder: require('./geocoder'),
+    marker: require('./marker'),
+    simplestyle: require('./simplestyle'),
+    tileLayer: tileLayer.tileLayer,
+    TileLayer: tileLayer.TileLayer,
+    styleLayer: styleLayer.styleLayer,
+    StyleLayer: styleLayer.StyleLayer,
+    infoControl: infoControl.infoControl,
+    InfoControl: infoControl.InfoControl,
+    shareControl: shareControl.shareControl,
+    ShareControl: shareControl.ShareControl,
+    legendControl: legendControl.legendControl,
+    LegendControl: legendControl.LegendControl,
+    geocoderControl: geocoderControl.geocoderControl,
+    GeocoderControl: geocoderControl.GeocoderControl,
+    gridControl: gridControl.gridControl,
+    GridControl: gridControl.GridControl,
+    gridLayer: gridLayer.gridLayer,
+    GridLayer: gridLayer.GridLayer,
+    featureLayer: featureLayer.featureLayer,
+    FeatureLayer: featureLayer.FeatureLayer,
+    map: map.map,
+    Map: map.Map,
+    config: require('./config'),
+    sanitize: require('sanitize-caja'),
+    template: require('mustache').to_html,
+    feedback: require('./feedback')
+};
+
+
+// Hardcode image path, because Leaflet's autodetection
+// fails, because mapbox.js is not named leaflet.js
+window.L.Icon.Default.imagePath =
+    // Detect bad-news protocols like file:// and hardcode
+    // to https if they're detected.
+    ((document.location.protocol === 'https:' ||
+    document.location.protocol === 'http:') ? '' : 'https:') +
+    '//api.tiles.mapbox.com/mapbox.js/' + 'v' +
+    require('../package.json').version + '/images';
+
+},{"../package.json":9,"./config":10,"./feature_layer":11,"./feedback":12,"./geocoder":14,"./geocoder_control":15,"./grid_control":17,"./grid_layer":18,"./info_control":20,"./legend_control":22,"./map":24,"./marker":27,"./share_control":29,"./simplestyle":30,"./style_layer":31,"./tile_layer":32,"mustache":6,"sanitize-caja":7}],26:[function(require,module,exports){
+'use strict';
+
+var MapboxLogoControl = L.Control.extend({
+
+    options: {
+        position: 'bottomleft'
+    },
+
+    initialize: function(options) {
+        L.setOptions(this, options);
+    },
+
+    onAdd: function() {
+        this._container = L.DomUtil.create('div', 'mapbox-logo');
+        return this._container;
+    },
+
+    _setTileJSON: function(json) {
+        // Check if account referenced by the accessToken
+        // is asscociated with the Mapbox Logo
+        // as determined by mapbox-maps.
+        if (json.mapbox_logo) {
+            L.DomUtil.addClass(this._container, 'mapbox-logo-true');
+        }
+    }
+});
+
+module.exports.MapboxLogoControl = MapboxLogoControl;
+
+module.exports.mapboxLogoControl = function(options) {
+    return new MapboxLogoControl(options);
+};
+
+},{}],27:[function(require,module,exports){
+'use strict';
+
+var format_url = require('./format_url'),
+    util = require('./util'),
+    sanitize = require('sanitize-caja');
+
+// mapbox-related markers functionality
+// provide an icon from mapbox's simple-style spec and hosted markers
+// service
+function icon(fp, options) {
+    fp = fp || {};
+
+    var sizes = {
+            small: [20, 50],
+            medium: [30, 70],
+            large: [35, 90]
+        },
+        size = fp['marker-size'] || 'medium',
+        symbol = ('marker-symbol' in fp && fp['marker-symbol'] !== '') ? '-' + fp['marker-symbol'] : '',
+        color = (fp['marker-color'] || '7e7e7e').replace('#', '');
+
+    return L.icon({
+        iconUrl: format_url('/v4/marker/' +
+            'pin-' + size.charAt(0) + symbol + '+' + color +
+            // detect and use retina markers, which are x2 resolution
+            (L.Browser.retina ? '@2x' : '') + '.png', options && options.accessToken),
+        iconSize: sizes[size],
+        iconAnchor: [sizes[size][0] / 2, sizes[size][1] / 2],
+        popupAnchor: [0, -sizes[size][1] / 2]
+    });
+}
+
+// a factory that provides markers for Leaflet from Mapbox's
+// [simple-style specification](https://github.com/mapbox/simplestyle-spec)
+// and [Markers API](http://mapbox.com/developers/api/#markers).
+function style(f, latlon, options) {
+    return L.marker(latlon, {
+        icon: icon(f.properties, options),
+        title: util.strip_tags(
+            sanitize((f.properties && f.properties.title) || ''))
+    });
+}
+
+// Sanitize and format properties of a GeoJSON Feature object in order
+// to form the HTML string used as the argument for `L.createPopup`
+function createPopup(f, sanitizer) {
+    if (!f || !f.properties) return '';
+    var popup = '';
+
+    if (f.properties.title) {
+        popup += '<div class="marker-title">' + f.properties.title + '</div>';
+    }
+
+    if (f.properties.description) {
+        popup += '<div class="marker-description">' + f.properties.description + '</div>';
+    }
+
+    return (sanitizer || sanitize)(popup);
+}
+
+module.exports = {
+    icon: icon,
+    style: style,
+    createPopup: createPopup
+};
+
+},{"./format_url":13,"./util":33,"sanitize-caja":7}],28:[function(require,module,exports){
+'use strict';
+
+var corslite = require('corslite'),
+    strict = require('./util').strict,
+    config = require('./config');
+
+var protocol = /^(https?:)?(?=\/\/(.|api)\.tiles\.mapbox\.com\/)/;
+
+module.exports = function(url, callback) {
+    strict(url, 'string');
+    strict(callback, 'function');
+
+    url = url.replace(protocol, function(match, protocol) {
+        if (!('withCredentials' in new window.XMLHttpRequest())) {
+            // XDomainRequest in use; doesn't support cross-protocol requests
+            return document.location.protocol;
+        } else if (protocol === 'https:' || document.location.protocol === 'https:' || config.FORCE_HTTPS) {
+            return 'https:';
+        } else {
+            return 'http:';
+        }
+    });
+
+    function onload(err, resp) {
+        if (!err && resp) {
+            resp = JSON.parse(resp.responseText);
+        }
+        callback(err, resp);
+    }
+
+    return corslite(url, onload);
+};
+
+},{"./config":10,"./util":33,"corslite":3}],29:[function(require,module,exports){
+'use strict';
+
+var format_url = require('./format_url');
+
+var ShareControl = L.Control.extend({
+    includes: [require('./load_tilejson')],
+
+    options: {
+        position: 'topleft',
+        url: ''
+    },
+
+    initialize: function(_, options) {
+        L.setOptions(this, options);
+        this._loadTileJSON(_);
+    },
+
+    _setTileJSON: function(json) {
+        this._tilejson = json;
+    },
+
+    onAdd: function(map) {
+        this._map = map;
+
+        var container = L.DomUtil.create('div', 'leaflet-control-mapbox-share leaflet-bar');
+        var link = L.DomUtil.create('a', 'mapbox-share mapbox-icon mapbox-icon-share', container);
+        link.href = '#';
+
+        this._modal = L.DomUtil.create('div', 'mapbox-modal', this._map._container);
+        this._mask = L.DomUtil.create('div', 'mapbox-modal-mask', this._modal);
+        this._content = L.DomUtil.create('div', 'mapbox-modal-content', this._modal);
+
+        L.DomEvent.addListener(link, 'click', this._shareClick, this);
+        L.DomEvent.disableClickPropagation(container);
+
+        this._map.on('mousedown', this._clickOut, this);
+
+        return container;
+    },
+
+    _clickOut: function(e) {
+        if (this._sharing) {
+            L.DomEvent.preventDefault(e);
+            L.DomUtil.removeClass(this._modal, 'active');
+            this._content.innerHTML = '';
+            this._sharing = null;
+            return;
+        }
+    },
+
+    _shareClick: function(e) {
+        L.DomEvent.stop(e);
+        if (this._sharing) return this._clickOut(e);
+
+        var tilejson = this._tilejson || this._map._tilejson || {},
+            url = encodeURIComponent(this.options.url || tilejson.webpage || window.location),
+            name = encodeURIComponent(tilejson.name),
+            image = format_url('/v4/' + tilejson.id + '/' + this._map.getCenter().lng + ',' + this._map.getCenter().lat + ',' + this._map.getZoom() + '/600x600.png', this.options.accessToken),
+            embed = format_url('/v4/' + tilejson.id + '.html', this.options.accessToken),
+            twitterURL = '//twitter.com/intent/tweet?status=' + name + ' ' + url,
+            facebookURL = '//www.facebook.com/sharer.php?u=' + url + '&t=' + name,
+            pinterestURL = '//www.pinterest.com/pin/create/button/?url=' + url + '&media=' + image + '&description=' + name,
+            embedValue = '<iframe width="100%" height="500px" frameBorder="0" src="' + embed + '"></iframe>',
+            embedLabel = 'Copy and paste this <strong>HTML code</strong> into documents to embed this map on web pages.';
+
+        function createShareButton(buttonClass, href, socialMediaName) {
+            var elem = document.createElement('a');
+            elem.setAttribute('class', buttonClass);
+            elem.setAttribute('href', href);
+            elem.setAttribute('target', '_blank');
+            socialMediaName = document.createTextNode(socialMediaName);
+            elem.appendChild(socialMediaName);
+
+            return elem;
+        }
+
+        L.DomUtil.addClass(this._modal, 'active');
+
+        this._sharing = L.DomUtil.create('div', 'mapbox-modal-body', this._content);
+
+        var twitterButton = createShareButton('mapbox-button mapbox-button-icon mapbox-icon-twitter', twitterURL, 'Twitter');
+        var facebookButton = createShareButton('mapbox-button mapbox-button-icon mapbox-icon-facebook', facebookURL, 'Facebook');
+        var pinterestButton = createShareButton('mapbox-button mapbox-button-icon mapbox-icon-pinterest', pinterestURL, 'Pinterest');
+
+        var shareHeader = document.createElement('h3');
+        var shareText = document.createTextNode('Share this map');
+        shareHeader.appendChild(shareText);
+
+        var shareButtons = document.createElement('div');
+        shareButtons.setAttribute('class', 'mapbox-share-buttons');
+        shareButtons.appendChild(facebookButton);
+        shareButtons.appendChild(twitterButton);
+        shareButtons.appendChild(pinterestButton);
+
+        this._sharing.appendChild(shareHeader);
+        this._sharing.appendChild(shareButtons);
+
+        var input = L.DomUtil.create('input', 'mapbox-embed', this._sharing);
+        input.type = 'text';
+        input.value = embedValue;
+
+        var label = L.DomUtil.create('label', 'mapbox-embed-description', this._sharing);
+        label.innerHTML = embedLabel;
+
+        var close = L.DomUtil.create('a', 'leaflet-popup-close-button', this._sharing);
+        close.href = '#';
+
+        L.DomEvent.disableClickPropagation(this._sharing);
+        L.DomEvent.addListener(close, 'click', this._clickOut, this);
+        L.DomEvent.addListener(input, 'click', function(e) {
+            e.target.focus();
+            e.target.select();
+        });
+    }
+});
+
+module.exports.ShareControl = ShareControl;
+
+module.exports.shareControl = function(_, options) {
+    return new ShareControl(_, options);
+};
+
+},{"./format_url":13,"./load_tilejson":23}],30:[function(require,module,exports){
+'use strict';
+
+// an implementation of the simplestyle spec for polygon and linestring features
+// https://github.com/mapbox/simplestyle-spec
+var defaults = {
+    stroke: '#555555',
+    'stroke-width': 2,
+    'stroke-opacity': 1,
+    fill: '#555555',
+    'fill-opacity': 0.5
+};
+
+var mapping = [
+    ['stroke', 'color'],
+    ['stroke-width', 'weight'],
+    ['stroke-opacity', 'opacity'],
+    ['fill', 'fillColor'],
+    ['fill-opacity', 'fillOpacity']
+];
+
+function fallback(a, b) {
+    var c = {};
+    for (var k in b) {
+        if (a[k] === undefined) c[k] = b[k];
+        else c[k] = a[k];
+    }
+    return c;
+}
+
+function remap(a) {
+    var d = {};
+    for (var i = 0; i < mapping.length; i++) {
+        d[mapping[i][1]] = a[mapping[i][0]];
+    }
+    return d;
+}
+
+function style(feature) {
+    return remap(fallback(feature.properties || {}, defaults));
+}
+
+module.exports = {
+    style: style,
+    defaults: defaults
+};
+
+},{}],31:[function(require,module,exports){
+'use strict';
+
+var util = require('./util');
+var format_url = require('./format_url');
+var request = require('./request');
+
+var StyleLayer = L.TileLayer.extend({
+
+    options: {
+        sanitizer: require('sanitize-caja')
+    },
+
+    initialize: function(_, options) {
+        L.TileLayer.prototype.initialize.call(this, undefined, options);
+
+        this.options.tiles = this._formatTileURL(_);
+        this.options.tileSize = 512;
+        this.options.zoomOffset = -1;
+        this.options.tms = false;
+
+        this._getAttribution(_);
+    },
+
+    _getAttribution: function(_) {
+        var styleURL = format_url.style(_, this.options && this.options.accessToken);
+        request(styleURL, L.bind(function(err, style) {
+            if (err) {
+                util.log('could not load Mapbox style at ' + styleURL);
+                this.fire('error', {error: err});
+            }
+            var sources = [];
+            for (var id in style.sources) {
+                var source = style.sources[id].url.split('mapbox://')[1];
+                sources.push(source);
+            }
+            request(format_url.tileJSON(sources.join(), this.options.accessToken), L.bind(function(err, json) {
+                if (err) {
+                    util.log('could not load TileJSON at ' + _);
+                    this.fire('error', {error: err});
+                } else if (json) {
+                    util.strict(json, 'object');
+
+                    this.options.attribution = this.options.sanitizer(json.attribution);
+
+                    this._tilejson = json;
+                    this.fire('ready');
+                }
+            }, this));
+        }, this));
+    },
+
+    // disable the setUrl function, which is not available on mapbox tilelayers
+    setUrl: null,
+
+    _formatTileURL: function(style) {
+        var retina = L.Browser.retina ? '@2x' : '';
+        if (typeof style === 'string') {
+            if (style.indexOf('mapbox://styles/') === -1) {
+                util.log('Incorrectly formatted Mapbox style at ' + style);
+                this.fire('error');
+            }
+            var ownerIDStyle = style.split('mapbox://styles/')[1];
+            return format_url('/styles/v1/' + ownerIDStyle + '/tiles/{z}/{x}/{y}' + retina, this.options.accessToken);
+        } else if (typeof style === 'object') {
+            return format_url('/styles/v1/' + style.owner + '/' + style.id + '/tiles/{z}/{x}/{y}' + retina, this.options.accessToken);
+        }
+    },
+
+    // this is an exception to mapbox.js naming rules because it's called
+    // by `L.map`
+    getTileUrl: function(tilePoint) {
+        var templated = L.Util.template(this.options.tiles, tilePoint);
+        return templated;
+    }
+});
+
+module.exports.StyleLayer = StyleLayer;
+
+module.exports.styleLayer = function(_, options) {
+    return new StyleLayer(_, options);
+};
+
+},{"./format_url":13,"./request":28,"./util":33,"sanitize-caja":7}],32:[function(require,module,exports){
+'use strict';
+
+var util = require('./util');
+var formatPattern = /\.((?:png|jpg)\d*)(?=$|\?)/;
+
+var TileLayer = L.TileLayer.extend({
+    includes: [require('./load_tilejson')],
+
+    options: {
+        sanitizer: require('sanitize-caja')
+    },
+
+    // http://mapbox.com/developers/api/#image_quality
+    formats: [
+        'png', 'jpg',
+        // PNG
+        'png32', 'png64', 'png128', 'png256',
+        // JPG
+        'jpg70', 'jpg80', 'jpg90'],
+
+    scalePrefix: '@2x.',
+
+    initialize: function(_, options) {
+        L.TileLayer.prototype.initialize.call(this, undefined, options);
+
+        this._tilejson = {};
+
+        if (options && options.format) {
+            util.strict_oneof(options.format, this.formats);
+        }
+
+        this._loadTileJSON(_);
+    },
+
+    setFormat: function(_) {
+        util.strict(_, 'string');
+        this.options.format = _;
+        this.redraw();
+        return this;
+    },
+
+    // disable the setUrl function, which is not available on mapbox tilelayers
+    setUrl: null,
+
+    _setTileJSON: function(json) {
+        util.strict(json, 'object');
+
+        this.options.format = this.options.format ||
+            json.tiles[0].match(formatPattern)[1];
+
+        L.extend(this.options, {
+            tiles: json.tiles,
+            attribution: this.options.sanitizer(json.attribution),
+            minZoom: json.minzoom || 0,
+            maxZoom: json.maxzoom || 18,
+            tms: json.scheme === 'tms',
+            bounds: json.bounds && util.lbounds(json.bounds)
+        });
+
+        this._tilejson = json;
+        this.redraw();
+        return this;
+    },
+
+    getTileJSON: function() {
+        return this._tilejson;
+    },
+
+    // this is an exception to mapbox.js naming rules because it's called
+    // by `L.map`
+    getTileUrl: function(tilePoint) {
+        var tiles = this.options.tiles,
+            index = Math.floor(Math.abs(tilePoint.x + tilePoint.y) % tiles.length),
+            url = tiles[index];
+
+        var templated = L.Util.template(url, tilePoint);
+        if (!templated) {
+            return templated;
+        } else {
+            return templated.replace(formatPattern,
+                (L.Browser.retina ? this.scalePrefix : '.') + this.options.format);
+        }
+    },
+
+    // TileJSON.TileLayers are added to the map immediately, so that they get
+    // the desired z-index, but do not update until the TileJSON has been loaded.
+    _update: function() {
+        if (this.options.tiles) {
+            L.TileLayer.prototype._update.call(this);
+        }
+    }
+});
+
+module.exports.TileLayer = TileLayer;
+
+module.exports.tileLayer = function(_, options) {
+    return new TileLayer(_, options);
+};
+
+},{"./load_tilejson":23,"./util":33,"sanitize-caja":7}],33:[function(require,module,exports){
+'use strict';
+
+function contains(item, list) {
+    if (!list || !list.length) return false;
+    for (var i = 0; i < list.length; i++) {
+        if (list[i] === item) return true;
+    }
+    return false;
+}
+
+module.exports = {
+    idUrl: function(_, t) {
+        if (_.indexOf('/') === -1) t.loadID(_);
+        else t.loadURL(_);
+    },
+    log: function(_) {
+        if (typeof console === 'object' &&
+            typeof console.error === 'function') {
+            console.error(_);
+        }
+    },
+    strict: function(_, type) {
+        if (typeof _ !== type) {
+            throw new Error('Invalid argument: ' + type + ' expected');
+        }
+    },
+    strict_instance: function(_, klass, name) {
+        if (!(_ instanceof klass)) {
+            throw new Error('Invalid argument: ' + name + ' expected');
+        }
+    },
+    strict_oneof: function(_, values) {
+        if (!contains(_, values)) {
+            throw new Error('Invalid argument: ' + _ + ' given, valid values are ' +
+                values.join(', '));
+        }
+    },
+    strip_tags: function(_) {
+        return _.replace(/<[^<]+>/g, '');
+    },
+    lbounds: function(_) {
+        // leaflet-compatible bounds, since leaflet does not do geojson
+        return new L.LatLngBounds([[_[1], _[0]], [_[3], _[2]]]);
+    }
+};
+
 },{}],34:[function(require,module,exports){
 window.WL_STATE = {};
 
@@ -41489,7 +41457,7 @@ function buildChart(){
 }
 
 
-},{"../utils/eventManager":41,"d3":2}],36:[function(require,module,exports){
+},{"../utils/eventManager":41,"d3":1}],36:[function(require,module,exports){
 'use strict';
 
 // ===================================================================================
@@ -41685,7 +41653,7 @@ function buildChart(){
 }
 
 
-},{"../utils/eventManager":41,"d3":2}],37:[function(require,module,exports){
+},{"../utils/eventManager":41,"d3":1}],37:[function(require,module,exports){
 'use strict';
 
 var eventManager = require('../utils/eventManager');
@@ -41739,7 +41707,7 @@ module.exports = {
 	}
 }
 
-},{"../utils/eventManager":41,"../utils/urlParameter":42,"jquery":4}],38:[function(require,module,exports){
+},{"../utils/eventManager":41,"../utils/urlParameter":42,"jquery":2}],38:[function(require,module,exports){
 'use strict';
 
 var $ = require("jquery");
@@ -41775,14 +41743,15 @@ function buildChart(){
         maxZoom: 19
     });
 
-    var map = L.map('map', {
+    var map = L.map('map__view', {
         layers: [CartoDB_Positron]
     }).setView([39.952583, -75.165222], 12);
 
     var markersLayer = new L.LayerGroup();
     map.addLayer(markersLayer);
 
-    var info = L.control();
+    var otherRequestsIcon = L.divIcon({className: 'map__round-icon'});
+    var yourRequestIcon = L.divIcon({className: 'map__round-icon-single'});
 
     // Figure out what the date was 7 days ago
     var weekAgo = new Date();
@@ -41820,15 +41789,23 @@ function buildChart(){
 
                     // add to map if lat and long are available
                     if ( this.lat && this.lon ) {
-                        var lat = Number(this.lat);
-                        var lon = Number(this.lon);
-                        var options = "<p><b>Case ID</b><br>" + this.service_request_id + "<br>";
-                            options += "<b>Request Type</b><br>" + this.service_name + "<br>";
-                            options += "<b>Agency Responsible</b><br>" + this.agency_responsible + "<br>";
-                            options += "<b>Address</b><br>" + this.address + "<br>";
-                            options += "<b>Status</b><br>" + this.status + "<br></p>";
-                        new L.marker([lat, lon])
+                        let lat = Number(this.lat);
+                        let lon = Number(this.lon);
+                        let options = "<p><b>Case ID</b><br>" + this.service_request_id + "<br>";
+                            options += "<b>Status</b><br>" + this.status + "<br>";
+                            options += "<b>Date Requested</b><br>" + this.requested_datetime + '<br>';
+                            options += "<b>Expected Resolution Date</b><br>" + this.expected_datetime + '<br>';
+                            options += "<b>Address</b><br>" + this.address + "<br></p>";
+                        let typeInfo = "<h2 class='sidebar__title sidebar__title--sub'>On the Map</h2>";
+                            typeInfo += "<p>Type of Request<br>" + this.service_name + '</p>';
+                            typeInfo += "<p>Agency Responsible<br>" + this.agency_responsible + "</p>";
+                            typeInfo += "<p>The requests shown have been opened within the last week</p>"
+                        // let sidebarOptions = "";
+                        new L.marker([lat, lon], {icon: yourRequestIcon})
                         .addTo( markersLayer ).bindPopup(options);
+                        
+                        $('.sidebar__response').empty().append(options);
+                        $('.sidebar__response-type').empty().append(typeInfo);
                         map.setView([lat, lon],16, {animate: true});
                     } else {
                         console.log("incomplete geographic info");
@@ -41837,7 +41814,7 @@ function buildChart(){
                     // add issues with same request type to map
                     if ( this.service_name ) {
                         var service = this.service_name;
-                        getRelatedRequests(service);
+                        getRelatedRequests(service, id);
                     } else {
                         console.log("can't get service type");
                     }
@@ -41850,7 +41827,7 @@ function buildChart(){
     }
 
     // get 311 data based on service name for the last 7 days
-    var getRelatedRequests = function getRelatedRequests(service) {
+    var getRelatedRequests = function getRelatedRequests(service, id) {
         $.ajax({
             url: "https://data.phila.gov/resource/4t9v-rppq.json",
             type: "GET",
@@ -41862,14 +41839,15 @@ function buildChart(){
                 $.each(data, function(key, obj) {
                     // add to map if lat and long are available
                     if ( this.lat && this.lon ) {
+                        if ( this.service_request_id == id ) {
+                            return;
+                        }
                         var lat = Number(this.lat);
                         var lon = Number(this.lon);
                         var options = "<p><b>Case ID</b><br>" + this.service_request_id + "<br>";
-                            options += "<b>Request Type</b><br>" + this.service_name + "<br>";
-                            options += "<b>Agency Responsible</b><br>" + this.agency_responsible + "<br>";
                             options += "<b>Address</b><br>" + this.address + "<br>";
                             options += "<b>Status</b><br>" + this.status + "<br></p>";
-                        new L.marker([lat, lon])
+                        new L.marker([lat, lon], {icon: otherRequestsIcon})
                         .addTo( markersLayer ).bindPopup(options);
                     } else {
                         console.log("incomplete geographic info");
@@ -41881,25 +41859,10 @@ function buildChart(){
             }
         });
     }
-
-    // info.onAdd = function (map) {
-    //     this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-    //     this.update();
-    //     return this._div;
-    // };
-
-    // // method to update the control based on feature properties passed
-    // info.update = function (neighborhoods) {
-    //     this._div.innerHTML = '<h3>Neighborhood Facts</h3>' + (neighborhoods ? '<h4>Name</h4>' +
-    //         '<b>' + neighborhoods.listname + '</b><br /><br /><h4>Area</h4>' + neighborhoods.shape_area : 'Hover over a neighborhood</p>');
-    // };
-
-    // info.addTo(map);
-    
 }
 
 
-},{"../utils/eventManager":41,"jquery":4,"mapbox.js":16}],39:[function(require,module,exports){
+},{"../utils/eventManager":41,"jquery":2,"mapbox.js":19}],39:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -41998,7 +41961,7 @@ function buildChart(){
 }
 
 
-},{"../utils/eventManager":41,"d3":2}],40:[function(require,module,exports){
+},{"../utils/eventManager":41,"d3":1}],40:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -42142,7 +42105,7 @@ module.exports = {
 		});
 	}
 }
-},{"d3":2}],41:[function(require,module,exports){
+},{"d3":1}],41:[function(require,module,exports){
 'use strict';
 
 /* The Event Manager
