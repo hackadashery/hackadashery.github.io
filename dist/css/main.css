@@ -261,6 +261,12 @@ textarea {
   margin: 0;
   /* 2 */ }
 
+button {
+  line-height: 1;
+  border: 0;
+  background: transparent;
+  padding: 0; }
+
 /**
  * Restore the font weight unset by the previous rule.
  */

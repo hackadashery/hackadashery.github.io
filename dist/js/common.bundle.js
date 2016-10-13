@@ -42175,7 +42175,8 @@ module.exports = {
 function runSearch(){
 	console.log('running search');
 	api.getIssueById('10895664').then(function(data){
-		console.log('got issue by id!', data);
+		var res = data;
+		eventManager.fire('get_issue_by_id_returned', { owner: 'searchform', data: res });
 	});
 }
 },{"../utils/eventManager":43,"../utils/urlParameter":44,"./api":35,"jquery":4}],43:[function(require,module,exports){
