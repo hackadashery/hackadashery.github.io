@@ -14,23 +14,10 @@ html {
   background: #eaedf2;
   color: #323a45; }
 
-.nav-button {
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: white;
-  color: #5d6d80;
-  text-transform: uppercase;
-  font-weight: 700;
-  padding: 0.5rem 0.9375rem;
-  cursor: pointer;
-  border: 0; }
-  .nav-button + .nav-button {
-    border-top: 1px solid #eee; }
-  .nav-button:hover {
-    color: #323a45; }
-
 /*! normalize.css v4.1.1 | MIT License | github.com/necolas/normalize.css */
+*, *:before, *:after {
+  box-sizing: border-box; }
+
 /**
  * 1. Change the default font family in all browsers (opinionated).
  * 2. Prevent adjustments of font size after orientation changes in IE and iOS.
@@ -160,8 +147,27 @@ dfn {
  * `article` contexts in Chrome, Firefox, and Safari.
  */
 h1 {
-  font-size: 2em;
-  margin: 0.67em 0; }
+  font-size: 2.625rem; }
+
+h1, h2 {
+  line-height: 4rem;
+  margin: 0; }
+
+h3, h4 {
+  line-height: 2rem;
+  margin-bottom: 1rem; }
+
+h5, h6 {
+  line-height: 0;
+  margin-bottom: 0; }
+
+h2, h3, h4, h5, h6, p {
+  margin-top: 0; }
+
+p {
+  font-size: 1rem;
+  line-height: 2rem;
+  margin-bottom: 1rem; }
 
 /**
  * Add the correct background and color in IE 9-.
@@ -400,12 +406,34 @@ textarea {
 LAYOUTS
 These create the structurs within which components will live
 */
-.main-columns {
-  display: -ms-flexbox;
-  display: flex; }
-  .main-columns__col {
-    -ms-flex-positive: 1;
-        flex-grow: 1; }
+.main-nav__section {
+  padding: 0 0.625rem 2rem 0.625rem; }
+
+.main-nav__section-title {
+  text-align: center;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 1rem;
+  line-height: 2rem; }
+
+.main-nav__button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: white;
+  color: #5d6d80;
+  text-transform: uppercase;
+  font-weight: 200;
+  font-size: 0.875rem;
+  line-height: 2rem;
+  padding: 0 0.625rem;
+  cursor: pointer;
+  border: 0; }
+  .main-nav__button + .main-nav__button {
+    border-top: 1px solid #eee;
+    margin-top: -1px; }
+  .main-nav__button:hover {
+    color: #323a45; }
 
 .main {
   display: -ms-flexbox;
@@ -422,6 +450,8 @@ These create the structurs within which components will live
   .main__body {
     -ms-flex-positive: 1;
         flex-grow: 1; }
+  .main__section {
+    padding: 0 0.625rem 2rem 0.625rem; }
 
 /* .splitter is a layout class to make it easy to put things next to each other */
 .splitter {
@@ -665,6 +695,31 @@ BEM land
 .requests-linechart__axis text {
   fill: #fff; }
 
+.search-form {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
+  -ms-flex-pack: center;
+      justify-content: center; }
+  .search-form__label {
+    display: block;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #323a45;
+    margin-top: -1px;
+    position: relative; }
+  .search-form__label-text {
+    display: block;
+    font-size: 0.875rem;
+    line-height: 1rem; }
+  .search-form__input {
+    display: block;
+    width: 100%;
+    line-height: 2rem;
+    background: transparent;
+    border: 0;
+    padding: 0 0.625rem; }
+
 .tabs {
   display: -ms-flexbox;
   display: flex; }
@@ -672,10 +727,10 @@ BEM land
     -ms-flex-positive: 1;
         flex-grow: 1;
     position: relative;
-    height: 2.5rem; }
+    height: 2rem; }
   .tabs__tab {
     position: absolute;
-    top: 0.625rem;
+    top: 0px;
     left: 1px;
     right: 1px;
     bottom: 0;
@@ -683,7 +738,7 @@ BEM land
     cursor: pointer;
     transition: all 0.2s ease; }
     .tabs__tab:hover, .tabs__tab:active, .tabs__tab.active {
-      top: 0;
+      top: -10px;
       background: #f27835; }
   .tabs__tab-text {
     position: absolute;

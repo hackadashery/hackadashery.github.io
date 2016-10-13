@@ -1,0 +1,38 @@
+.main-nav {
+
+	&__section {
+		padding: 0 rem($hPad) rem($vUnit) rem($hPad);
+
+	}
+		&__section-title {
+			text-align: center;
+			font-weight: bold;
+			text-transform: uppercase;
+			font-size: rem(16);
+			line-height: rem($vUnit);
+		}
+
+		&__button {
+			display: block;
+			width: 100%;
+			text-align: left;
+			background: white;
+			color: $gray-5;
+			text-transform: uppercase;
+			font-weight: 200;
+			font-size: rem(14);
+			line-height: rem($vUnit);
+			padding: 0 rem($hPad);
+			cursor: pointer;
+
+			border: 0;
+			+ .main-nav__button {
+				border-top: 1px solid #eee;
+				margin-top: -1px;
+			}
+
+			&:hover {
+				color: $gray-3;
+			}
+		}
+}

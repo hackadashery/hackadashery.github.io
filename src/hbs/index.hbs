@@ -38,40 +38,73 @@
 	<div class="main js-main">
 		<div class="main__sidebar">
 			
-			<nav>
-				<button class="nav-button js-nav-button" data-section="welcome">Welcome</button>
-				<button class="nav-button js-nav-button" data-section="linebasic">Grey Linechart</button>
-				<button class="nav-button js-nav-button" data-section="bluebar">Blue barchart</button>
-				<button class="nav-button js-nav-button" data-section="burnrate">Burnrate</button>
-				<button class="nav-button js-nav-button" data-section="map">Map</button>
+			<nav class="main-nav">
+				<section class="main-nav__section">
+					<div class="main-nav__section-title">Issue details</div>
+					<button class="main-nav__button js-nav-button" data-section="search">Search</button>
+					<button class="main-nav__button js-nav-button" data-section="map">Map</button>
+				</section>
+
+				<section class="main-nav__section">
+					<div class="main-nav__section-title">Explore</div>
+					<button class="main-nav__button js-nav-button" data-section="linebasic">Grey Linechart</button>
+					<button class="main-nav__button js-nav-button" data-section="bluebar">Blue barchart</button>
+					<button class="main-nav__button js-nav-button" data-section="burnrate">Burnrate</button>
+				</section>
 			</nav>
 
 		</div>
 		<div class="main__body">
 
-			<section id="welcome" class="js-nav-section">
-				<h2>Hello!</h2>
-				<h6>Some kind of lead in / this is what this is chat here...</h6>
+			<section id="search" class="main__section js-nav-section">
+				<div class="tabs">
+					<div class="tabs__tab-col">
+						<div class="tabs__tab">
+							<div class="tabs__tab-text">Tab example</div>
+						</div>
+					</div>
+					<div class="tabs__tab-col">
+						<div class="tabs__tab">
+							<div class="tabs__tab-text">Tab example 2</div>
+						</div>
+					</div>
+				</div>
+			
+				<h3>Hello!</h3>
+				<p>Some kind of lead in / this is what this is chat here...</p>
+
+				<div class="search-form">
+					<label class="search-form__label">
+						<span class="search-form__label-text">Issue number</span> <input type="text" class="search-form__input">
+					</label>
+					<label class="search-form__label">
+						<span class="search-form__label-text">Date submitted</span> <input type="text" class="search-form__input">
+					</label>
+					<label class="search-form__label">
+						<span class="search-form__label-text">Zip</span> <input type="text" class="search-form__input">
+					</label>
+				</div>
+
 			</section>
 			
-			<section id="linebasic" class="js-nav-section">
+			<section id="linebasic" class="main__section js-nav-section">
 				{{> timespan_tabs }}
 				<div class="requests-linechart"></div>
 			</section>
 
-			<section id="bluebar" class="js-nav-section">
+			<section id="bluebar" class="main__section js-nav-section">
 				{{> timespan_tabs }}
 				<svg id="requests-barchart" class="requests-barchart"></svg>
 			</section>
 
-			<section id="burnrate" class="js-nav-section">
+			<section id="burnrate" class="main__section js-nav-section">
 				<div class="toolbar">
 					Dept picker | Timespan
 				</div>
 				<svg id="burnchart" class="burnchart"></svg>
 			</section>
 
-			<section id="map" class="js-nav-section">
+			<section id="map" class="main__section js-nav-section">
 				<div class="map__toolbar">
 				  <label for="map__request">Enter request ID</label>
 				  <input type="text" id="map__request" class="map__request" />

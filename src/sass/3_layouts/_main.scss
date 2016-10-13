@@ -16,4 +16,7 @@
 	&__body {
 		flex-grow: 1;
 	}
+		&__section {
+			padding: 0 rem($hPad) rem($vUnit) rem($hPad);
+		}
 }

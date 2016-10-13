@@ -36,8 +36,8 @@ module.exports = {
 		if (loadChart) {
 			runNavigation(loadChart);
 		} else {
-			//load the welcome screen
-			runNavigation('welcome');
+			//load the search screen
+			runNavigation('search');
 		}
 		$('.js-main').addClass('js-loaded');
 

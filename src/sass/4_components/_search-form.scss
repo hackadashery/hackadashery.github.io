@@ -1,0 +1,27 @@
+.search-form {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	
+	&__label {
+		display: block;
+		margin-bottom: rem($vUnit);
+		border-bottom: 1px solid $gray-3;
+		margin-top: -1px;
+		position: relative;
+	}
+		&__label-text {
+			display: block;
+			font-size: rem(14);
+			line-height: rem($vUnit / 2);
+		}
+		&__input {
+			display: block;
+			width: 100%;
+			line-height: rem($vUnit);
+			background: transparent;
+			border: 0;
+			padding: 0 rem($hPad);
+		}
+
+}

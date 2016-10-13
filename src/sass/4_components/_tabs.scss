@@ -3,12 +3,12 @@
 	&__tab-col {
 		flex-grow: 1;
 		position: relative;
-		height: rem(40);
+		height: rem($vUnit);
 	}
 
 		&__tab {
 			position: absolute;
-			top: rem(10);
+			top: 0px;
 			left: 1px;
 			right: 1px;
 			bottom: 0;
@@ -19,7 +19,7 @@
 			&:hover,
 			&:active,
 			&.active {
-				top: 0;
+				top: -10px;
 				background: #f27835;
 			}
 		}
