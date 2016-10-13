@@ -10,8 +10,14 @@
 		transform: translate(0, 0px);
 	}
 
+	&__title {
+		width: rem(250);
+		padding-left: rem($hPad);
+		text-align: center;
+	}
+
 	&__sidebar {
-		width: rem(300);
+		width: rem(250);
 	}
 	&__body {
 		flex-grow: 1;

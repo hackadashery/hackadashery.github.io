@@ -430,7 +430,7 @@ These create the structurs within which components will live
   cursor: pointer;
   border: 0; }
   .main-nav__button + .main-nav__button {
-    border-top: 1px solid #eee;
+    border-top: 1px solid #eaedf2;
     margin-top: -1px; }
   .main-nav__button:hover {
     color: #323a45; }
@@ -445,8 +445,12 @@ These create the structurs within which components will live
   .main.js-loaded {
     opacity: 1;
     transform: translate(0, 0px); }
+  .main__title {
+    width: 15.625rem;
+    padding-left: 0.625rem;
+    text-align: center; }
   .main__sidebar {
-    width: 18.75rem; }
+    width: 15.625rem; }
   .main__body {
     -ms-flex-positive: 1;
         flex-grow: 1; }
@@ -701,16 +705,23 @@ BEM land
   -ms-flex-direction: column;
       flex-direction: column;
   -ms-flex-pack: center;
-      justify-content: center; }
+      justify-content: center;
+  -ms-flex-align: start;
+      align-items: flex-start;
+  width: 100%;
+  max-width: 400px; }
+  .search-form__row {
+    margin-bottom: 2rem;
+    width: 100%; }
   .search-form__label {
     display: block;
-    margin-bottom: 2rem;
     border-bottom: 1px solid #323a45;
     margin-top: -1px;
-    position: relative; }
+    position: relative;
+    margin-bottom: 2rem; }
   .search-form__label-text {
     display: block;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     line-height: 1rem; }
   .search-form__input {
     display: block;
@@ -719,6 +730,16 @@ BEM land
     background: transparent;
     border: 0;
     padding: 0 0.625rem; }
+  .search-form__button {
+    display: inline-block;
+    padding: 0 0.625rem;
+    border-radius: 16px;
+    background: white;
+    border: 1px solid #5d6d80;
+    line-height: 2rem;
+    cursor: pointer;
+    -ms-flex-item-align: end;
+        align-self: flex-end; }
 
 .tabs {
   display: -ms-flexbox;

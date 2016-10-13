@@ -2,17 +2,25 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+	align-items: flex-start;
+	width: 100%;
+	max-width: 400px;
+
+	&__row {
+		margin-bottom: rem($vUnit);
+		width: 100%;
+	}
 	
 	&__label {
 		display: block;
-		margin-bottom: rem($vUnit);
 		border-bottom: 1px solid $gray-3;
 		margin-top: -1px;
 		position: relative;
+		margin-bottom: rem($vUnit);
 	}
 		&__label-text {
 			display: block;
-			font-size: rem(14);
+			font-size: rem(12);
 			line-height: rem($vUnit / 2);
 		}
 		&__input {
@@ -24,4 +32,14 @@
 			padding: 0 rem($hPad);
 		}
 
+	&__button {
+		display: inline-block;
+		padding: 0 rem($hPad);
+		border-radius: #{$vUnit / 2}px;
+		background: white;
+		border: 1px solid $rule-color;
+		line-height: rem($vUnit);
+		cursor: pointer;
+		align-self: flex-end;
+	}
 }

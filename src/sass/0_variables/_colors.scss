@@ -1,3 +1,5 @@
+//------------ Color Defenitions
+
 $white: #fff;
 $gray-e: #eaedf2;
 $gray-d: #dae0e8;
@@ -5,3 +7,10 @@ $gray-b: #bec7cc;
 $gray-9: #9ea6b2;
 $gray-5: #5d6d80;
 $gray-3: #323a45;
+
+
+//------------ Common color assignments
+
+$rule-color: $gray-5; //borders hr lines
+$text-color: $gray-3;
+$background-color: $gray-e;

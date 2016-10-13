@@ -41238,9 +41238,22 @@ require('./components/requests-linechart').init();
 require('./components/burn').init();
 require('./components/map').init();
 
+require('./components/search-form').init();
+
 //Load this last - the events fired from here will kick things off so if you set up a subsciber after this has run you might miss out on something!
 require('./components/main-nav').init();
-},{"./components/burn":35,"./components/line-basic":36,"./components/main-nav":37,"./components/map":38,"./components/requests-barchart":39,"./components/requests-linechart":40}],35:[function(require,module,exports){
+},{"./components/burn":36,"./components/line-basic":37,"./components/main-nav":38,"./components/map":39,"./components/requests-barchart":40,"./components/requests-linechart":41,"./components/search-form":42}],35:[function(require,module,exports){
+'use strict';
+
+var eventManager = require('../utils/eventManager');
+var $ = require('jquery');
+
+module.exports = {
+	getIssueById(id){
+		return $.get( "https://data.phila.gov/resource/4t9v-rppq.json?service_request_id=" + id);
+	}
+}
+},{"../utils/eventManager":43,"jquery":4}],36:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -41489,7 +41502,7 @@ function buildChart(){
 }
 
 
-},{"../utils/eventManager":41,"d3":2}],36:[function(require,module,exports){
+},{"../utils/eventManager":43,"d3":2}],37:[function(require,module,exports){
 'use strict';
 
 // ===================================================================================
@@ -41685,7 +41698,7 @@ function buildChart(){
 }
 
 
-},{"../utils/eventManager":41,"d3":2}],37:[function(require,module,exports){
+},{"../utils/eventManager":43,"d3":2}],38:[function(require,module,exports){
 'use strict';
 
 var eventManager = require('../utils/eventManager');
@@ -41739,7 +41752,7 @@ module.exports = {
 	}
 }
 
-},{"../utils/eventManager":41,"../utils/urlParameter":42,"jquery":4}],38:[function(require,module,exports){
+},{"../utils/eventManager":43,"../utils/urlParameter":44,"jquery":4}],39:[function(require,module,exports){
 'use strict';
 
 var $ = require("jquery");
@@ -41894,7 +41907,7 @@ function buildChart(){
 }
 
 
-},{"../utils/eventManager":41,"jquery":4,"mapbox.js":16}],39:[function(require,module,exports){
+},{"../utils/eventManager":43,"jquery":4,"mapbox.js":16}],40:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -41993,7 +42006,7 @@ function buildChart(){
 }
 
 
-},{"../utils/eventManager":41,"d3":2}],40:[function(require,module,exports){
+},{"../utils/eventManager":43,"d3":2}],41:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -42137,7 +42150,35 @@ module.exports = {
 		});
 	}
 }
-},{"d3":2}],41:[function(require,module,exports){
+},{"d3":2}],42:[function(require,module,exports){
+'use strict';
+
+var eventManager = require('../utils/eventManager');
+var urlParameter = require('../utils/urlParameter');
+var $ = require('jquery');
+var api = require('./api');
+
+module.exports = {
+	init(){
+		//start listening!
+		$('.js-search-form').on('keypress', function(e){
+			if (e.keyCode == 13) {
+				runSearch();
+			}
+		});
+		$('.js-search-submit').on('click', function(e){
+			runSearch();
+		});
+	}
+}
+
+function runSearch(){
+	console.log('running search');
+	api.getIssueById('10895664').then(function(data){
+		console.log('got issue by id!', data);
+	});
+}
+},{"../utils/eventManager":43,"../utils/urlParameter":44,"./api":35,"jquery":4}],43:[function(require,module,exports){
 'use strict';
 
 /* The Event Manager
@@ -42188,7 +42229,7 @@ module.exports = {
 		}
 	}
 }
-},{}],42:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 'use strict';
 
 /* A URL parameter reader
