@@ -1,6 +1,7 @@
 //------------ Color Defenitions
 
-$
+$hacka_blue: #14b9d6;
+$hacka_range: #f27835;
 
 $white: #fff;
 $gray-e: #eaedf2;
@@ -15,5 +16,6 @@ $gray-3: #323a45;
 
 $rule-color: $gray-5; //borders hr lines
 $text-color: $gray-3;
-$link-color:
+$link-color: $hacka_blue;
+$link-hover-color: $hacka_range;
 $background-color: $gray-e;

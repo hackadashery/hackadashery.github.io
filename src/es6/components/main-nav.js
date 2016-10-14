@@ -37,9 +37,8 @@ module.exports = {
 			runNavigation(loadChart);
 		} else {
 			//load the search screen
-			runNavigation('search');
+			runNavigation('map');
 		}
-		$('.js-main').addClass('js-loaded');
 
 		//listen to the buttons for they shall speak to you
 		$('.js-nav-button').on('click', function(){		

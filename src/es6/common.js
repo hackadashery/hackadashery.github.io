@@ -10,3 +10,7 @@ require('./components/search-form').init();
 
 //Load this last - the events fired from here will kick things off so if you set up a subsciber after this has run you might miss out on something!
 require('./components/main-nav').init();
+
+var $ = require('jquery');
+$('.js-main').addClass('js-loaded');
+$('.js-header').addClass('js-loaded');

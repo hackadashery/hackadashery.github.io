@@ -12,7 +12,7 @@
 			left: 1px;
 			right: 1px;
 			bottom: 0;
-			background: #14b9d6;
+			background: $hacka_blue;
 			cursor: pointer;
 			transition: all 0.2s ease;
 
@@ -20,7 +20,7 @@
 			&:active,
 			&.active {
 				top: -10px;
-				background: #f27835;
+				background: $hacka_range;
 			}
 		}
 

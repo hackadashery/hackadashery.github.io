@@ -1,9 +1,11 @@
-.main {
+.header {
 	display: flex;
+	align-items: flex-end;
 	width: 100%;
-	transform: translate(0, -20px);
+	transform: translate(0, -10px);
 	opacity: 0;
 	transition: opacity 0.5s ease, transform 0.5s ease;
+	border-bottom: 1px solid $hacka_blue;
 
 	&.js-loaded {
 		opacity: 1;
@@ -12,12 +14,10 @@
 
 	&__sidebar {
 		width: rem(250);
-		padding-top: rem($vUnit);
+		text-align: center;
+		padding-left: rem($hPad);
 	}
 	&__body {
 		flex-grow: 1;
 	}
-		&__section {
-			padding: 0 rem($hPad) rem($vUnit) rem($hPad);
-		}
 }

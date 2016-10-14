@@ -1,0 +1,12 @@
+.view {
+	display: flex;
+	width: 100%;
+
+	&__sidebar {
+		width: rem(250);
+		padding-top: rem($vUnit);
+	}
+	&__body {
+		flex-grow: 1;
+	}
+}

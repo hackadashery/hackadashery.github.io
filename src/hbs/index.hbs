@@ -33,86 +33,53 @@
 		</defs>
 	</svg>
 
-	<h1 class="main__title">Philly 311</h1>
-
-	<div class="main js-main">
-		<div class="main__sidebar">
-			
-			<nav class="main-nav">
-				<section class="main-nav__section">
-					<button class="main-nav__button js-nav-button" data-section="search">Search</button>
-				</section>
-				<section class="main-nav__section">
-					<div class="main-nav__section-title">Issue details</div>
-					<button class="main-nav__button js-nav-button" data-section="map">Map</button>
-				</section>
-
-				<section class="main-nav__section">
-					<div class="main-nav__section-title">311 Stats</div>
-					<button class="main-nav__button js-nav-button" data-section="linebasic">Grey Linechart</button>
-					<button class="main-nav__button js-nav-button" data-section="bluebar">Blue barchart</button>
-					<button class="main-nav__button js-nav-button" data-section="burnrate">Burnrate</button>
-				</section>
-			</nav>
-
+	<div class="header js-header">
+		<div class="header__sidebar">
+			<h1 class="header__title">Philly 311</h1>
 		</div>
-		<div class="main__body">
-
-			<section id="search" class="main__section js-nav-section">
-				<!--
-				<div class="tabs">
-					<div class="tabs__tab-col">
-						<div class="tabs__tab">
-							<div class="tabs__tab-text">Tab example</div>
-						</div>
-					</div>
-					<div class="tabs__tab-col">
-						<div class="tabs__tab">
-							<div class="tabs__tab-text">Tab example 2</div>
-						</div>
+		<div class="header__body">
+			<div class="tabs">
+				<div class="tabs__tab-col">
+					<div class="tabs__tab">
+						<div class="tabs__tab-text js-nav-button" data-section="search">Search</div>
 					</div>
 				</div>
-				-->
-			
-				<p>Search for a request, or <button>let us pick a random one for you</button>.</p>
+				<div class="tabs__tab-col">
+					<div class="tabs__tab">
+						<div class="tabs__tab-text js-nav-button" data-section="explore">Explore</div>
+					</div>
+				</div>
+				<div class="tabs__tab-col">
+					<div class="tabs__tab">
+						<div class="tabs__tab-text js-nav-button" data-section="about">About</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
+	<div class="main js-main">
+
+		<section id="search" class="view js-nav-section">
+			<div class="view__sidebar">
+				
 				<div class="search-form js-search-form">
 					<div class="search-form__row">
 						<label class="search-form__label">
-							<span class="search-form__label-text">Issue number</span> <input type="text" class="search-form__input js-search-issue-id">
-						</label>
-					</div>
-					<div class="search-form__row">
-						<label class="search-form__label">
-							<span class="search-form__label-text">Date submitted</span> <input type="text" class="search-form__input">
-						</label>
-						<label class="search-form__label">
-							<span class="search-form__label-text">Zip</span> <input type="text" class="search-form__input">
+							<span class="search-form__label-text">Enter Request ID</span> <input type="text" class="search-form__input js-search-request-id">
 						</label>
 					</div>
 					<button class="search-form__button js-search-submit">Search</button>
 				</div>
 
-			</section>
-			
-			<section id="linebasic" class="main__section js-nav-section">
-				{{> timespan_tabs }}
-				<div class="requests-linechart"></div>
-			</section>
-
-			<section id="bluebar" class="main__section js-nav-section">
-				{{> timespan_tabs }}
-				<svg id="requests-barchart" class="requests-barchart"></svg>
-			</section>
-
-			<section id="burnrate" class="main__section js-nav-section">
-				<div class="toolbar">
-					Dept picker | Timespan
+				<div class="request-details">	
+					<div class="js-request-details"></div>
+					<div class="js-request-type"></div>
 				</div>
-				<svg id="burnchart" class="burnchart"></svg>
-			</section>
 
-			<section id="map" class="main__section js-nav-section">
+			</div>
+			<div class="view__body">
+				
 				<div class="map__toolbar">
 				  <label for="map__request">Enter request ID</label>
 				  <input type="text" id="map__request" class="map__request" />
@@ -128,9 +95,50 @@
 				  	<div class="sidebar__response-type"></div>
 				  </div>
 				</div>
-			</section>
 
-		</div>
+			</div>
+
+		</section>
+
+		<section class="view js-nav-section" id="explore">
+			<div class="view__sidebar">
+
+				<nav class="nav">
+					<section class="nav__section">
+						<div class="nav__section-title">311 Stats</div>
+						<button class="nav__button js-nav-button" data-section="linebasic">Grey Linechart</button>
+						<button class="nav__button js-nav-button" data-section="bluebar">Blue barchart</button>
+						<button class="nav__button js-nav-button" data-section="burnrate">Burnrate</button>
+					</section>
+				</nav>
+				
+			</div>
+			<div class="view__body">
+				
+				<section id="linebasic" class="main__section js-nav-section">
+					{{> timespan_tabs }}
+					<div class="requests-linechart"></div>
+				</section>
+
+				<section id="bluebar" class="main__section js-nav-section">
+					{{> timespan_tabs }}
+					<svg id="requests-barchart" class="requests-barchart"></svg>
+				</section>
+
+				<section id="burnrate" class="main__section js-nav-section">
+					<div class="toolbar">
+						Dept picker | Timespan
+					</div>
+					<svg id="burnchart" class="burnchart"></svg>
+				</section>
+				
+			</div>
+		</section>
+
+		<section class="view js-nav-section" id="about">
+			<h1>About Hackadashery</h1>
+		</section>
+
 	</div>
 </body>
 

@@ -296,6 +296,11 @@ button {
   background: transparent;
   padding: 0;
   color: $link-color;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  &:hover {
+    color: $link-hover-color;
+  }
 }
 
 /**

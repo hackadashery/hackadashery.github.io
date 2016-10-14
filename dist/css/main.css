@@ -265,7 +265,12 @@ button {
   line-height: 1;
   border: 0;
   background: transparent;
-  padding: 0; }
+  padding: 0;
+  color: #14b9d6;
+  cursor: pointer;
+  transition: color 0.2s ease; }
+  button:hover {
+    color: #f27835; }
 
 /**
  * Restore the font weight unset by the previous rule.
@@ -412,17 +417,57 @@ textarea {
 LAYOUTS
 These create the structurs within which components will live
 */
-.main-nav__section {
+.header {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: end;
+      align-items: flex-end;
+  width: 100%;
+  transform: translate(0, -10px);
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  border-bottom: 1px solid #14b9d6; }
+  .header.js-loaded {
+    opacity: 1;
+    transform: translate(0, 0px); }
+  .header__sidebar {
+    width: 15.625rem;
+    text-align: center;
+    padding-left: 0.625rem; }
+  .header__body {
+    -ms-flex-positive: 1;
+        flex-grow: 1; }
+
+.main {
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  transform: translate(0, -20px);
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.5s ease; }
+  .main.js-loaded {
+    opacity: 1;
+    transform: translate(0, 0px); }
+  .main__sidebar {
+    width: 15.625rem;
+    padding-top: 2rem; }
+  .main__body {
+    -ms-flex-positive: 1;
+        flex-grow: 1; }
+  .main__section {
+    padding: 0 0.625rem 2rem 0.625rem; }
+
+.nav__section {
   padding: 0 0.625rem 2rem 0.625rem; }
 
-.main-nav__section-title {
+.nav__section-title {
   text-align: center;
   font-weight: bold;
   text-transform: uppercase;
   font-size: 1rem;
   line-height: 2rem; }
 
-.main-nav__button {
+.nav__button {
   display: block;
   width: 100%;
   text-align: left;
@@ -435,33 +480,11 @@ These create the structurs within which components will live
   padding: 0 0.625rem;
   cursor: pointer;
   border: 0; }
-  .main-nav__button + .main-nav__button {
+  .nav__button + .main-nav__button {
     border-top: 1px solid #eaedf2;
     margin-top: -1px; }
-  .main-nav__button:hover {
+  .nav__button:hover {
     color: #323a45; }
-
-.main {
-  display: -ms-flexbox;
-  display: flex;
-  width: 100%;
-  transform: translate(0, -10px);
-  opacity: 0;
-  transition: opacity 0.5s ease, transform 0.5s ease; }
-  .main.js-loaded {
-    opacity: 1;
-    transform: translate(0, 0px); }
-  .main__title {
-    width: 15.625rem;
-    padding-left: 0.625rem;
-    text-align: center; }
-  .main__sidebar {
-    width: 15.625rem; }
-  .main__body {
-    -ms-flex-positive: 1;
-        flex-grow: 1; }
-  .main__section {
-    padding: 0 0.625rem 2rem 0.625rem; }
 
 /* .splitter is a layout class to make it easy to put things next to each other */
 .splitter {
@@ -541,6 +564,17 @@ These create the structurs within which components will live
         vertical-align: middle;
         padding-left: 0.625rem;
         text-align: right; } }
+
+.view {
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%; }
+  .view__sidebar {
+    width: 15.625rem;
+    padding-top: 2rem; }
+  .view__body {
+    -ms-flex-positive: 1;
+        flex-grow: 1; }
 
 /*
 COMPONENTS

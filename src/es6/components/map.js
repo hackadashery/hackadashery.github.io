@@ -9,12 +9,12 @@ var chartIsBuilt = false;
 module.exports = {
     init: function(){
         eventManager.subscribe('section_opened', function(event){
-            if (event.data.section == 'map') {
+            if (event.data.section == 'search') {
                 buildChart();
             }
         });
         eventManager.subscribe('section_closed', function(event){
-            if (event.data.section == 'map') {
+            if (event.data.section == 'search') {
                 //unload the DOM elements
             }
         });
@@ -57,66 +57,112 @@ function buildChart(){
     + cleanDate((weekAgo.getMonth() + 1)) + '-' 
     + cleanDate((weekAgo.getDate()));
 
-    $('.js-id-request').off().on('click', function() {
-        event.preventDefault();
-        markersLayer.clearLayers();
-        var id = $('.map__request').val();
-        // 10646418
-        getRequest(id); 
-    });
+
+    //Hello! I've set up an api.js module that'll get requests (for now only by ID but in the future it'll hopefully be able to do more)
+    //I've also set up the search-form.js as it's own module which calls the api.js module. If you look below this commented code...
+
+    // $('.js-id-request').off().on('click', function() {
+    //     event.preventDefault();
+    //     markersLayer.clearLayers();
+    //     var id = $('.map__request').val();
+    //     // 10646418
+    //     getRequest(id); 
+    // });
 
     // get 311 data based on service request id
-    var getRequest = function getRequest(id) {
-        $.ajax({
-            url: "https://data.phila.gov/resource/4t9v-rppq.json",
-            type: "GET",
-            data: {
-              $where : "service_request_id=" + "'" + id + "'"
-            }, 
-            success: function(data){
-                console.log(data);
-                $.each(data, function(key, obj) {
+    // var getRequest = function getRequest(id) {
+    //     $.ajax({
+    //         url: "https://data.phila.gov/resource/4t9v-rppq.json",
+    //         type: "GET",
+    //         data: {
+    //           $where : "service_request_id=" + "'" + id + "'"
+    //         }, 
+    //         success: function(data){
+    //             console.log(data);
+    //             $.each(data, function(key, obj) {
 
-                    // add to map if lat and long are available
-                    if ( this.lat && this.lon ) {
-                        let lat = Number(this.lat);
-                        let lon = Number(this.lon);
-                        let options = "<p><b>Case ID</b><br>" + this.service_request_id + "<br>";
-                            options += "<b>Status</b><br>" + this.status + "<br>";
-                            options += "<b>Date Requested</b><br>" + this.requested_datetime + '<br>';
-                            options += "<b>Expected Resolution Date</b><br>" + this.expected_datetime + '<br>';
-                            options += "<b>Address</b><br>" + this.address + "<br></p>";
-                        let typeInfo = "<h2 class='sidebar__title sidebar__title--sub'>On the Map</h2>";
-                            typeInfo += "<p>Type of Request<br>" + this.service_name + '</p>';
-                            typeInfo += "<p>Agency Responsible<br>" + this.agency_responsible + "</p>";
-                            typeInfo += "<p>The requests shown have been opened within the last week</p>"
-                        // let sidebarOptions = "";
-                        new L.marker([lat, lon], {icon: yourRequestIcon})
-                        .addTo( markersLayer ).bindPopup(options);
+    //                 // add to map if lat and long are available
+    //                 if ( this.lat && this.lon ) {
+    //                     let lat = Number(this.lat);
+    //                     let lon = Number(this.lon);
+    //                     let options = "<p><b>Case ID</b><br>" + this.service_request_id + "<br>";
+    //                         options += "<b>Status</b><br>" + this.status + "<br>";
+    //                         options += "<b>Date Requested</b><br>" + this.requested_datetime + '<br>';
+    //                         options += "<b>Expected Resolution Date</b><br>" + this.expected_datetime + '<br>';
+    //                         options += "<b>Address</b><br>" + this.address + "<br></p>";
+    //                     let typeInfo = "<h2 class='sidebar__title sidebar__title--sub'>On the Map</h2>";
+    //                         typeInfo += "<p>Type of Request<br>" + this.service_name + '</p>';
+    //                         typeInfo += "<p>Agency Responsible<br>" + this.agency_responsible + "</p>";
+    //                         typeInfo += "<p>The requests shown have been opened within the last week</p>"
+    //                     // let sidebarOptions = "";
+    //                     new L.marker([lat, lon], {icon: yourRequestIcon})
+    //                     .addTo( markersLayer ).bindPopup(options);
                         
-                        $('.sidebar__response').empty().append(options);
-                        $('.sidebar__response-type').empty().append(typeInfo);
-                        map.setView([lat, lon],16, {animate: true});
-                    } else {
-                        console.log("incomplete geographic info");
-                    }
+    //                     $('.js-request-details').empty().append(options);
+    //                     $('.js-request-type').empty().append(typeInfo);
+    //                     map.setView([lat, lon],16, {animate: true});
+    //                 } else {
+    //                     console.log("incomplete geographic info");
+    //                 }
 
-                    // add issues with same request type to map
-                    if ( this.service_name ) {
-                        var service = this.service_name;
-                        getRelatedRequests(service, id);
-                    } else {
-                        console.log("can't get service type");
-                    }
-                });
-            },
-            error: function(){
-                console.log('error');
+    //                 // add issues with same request type to map
+    //                 if ( this.service_name ) {
+    //                     var service = this.service_name;
+    //                     getRelatedRequests(service, id);
+    //                 } else {
+    //                     console.log("can't get service type");
+    //                 }
+    //             });
+    //         },
+    //         error: function(){
+    //             console.log('error');
+    //         }
+    //     });
+    // }
+   
+   //this is the first time we get to use the event manager properly! The idea would be any module (map / chart / something else) would be able 
+   //to subscribe to this event (get_issue_by_id_returned) and be notified whenever a new request is searched for (or more accuratly, when a search for a request returns)
+   //It might actually be an idea to move the request details part into it's own module too and subscribe to this event there too.
+    eventManager.subscribe('get_issue_by_id_returned', function(event){
+        $.each(event.data, function(key, obj) {
+            markersLayer.clearLayers();
+
+            // add to map if lat and long are available
+            if ( this.lat && this.lon ) {
+                let lat = Number(this.lat);
+                let lon = Number(this.lon);
+                let options = "<p><b>Case ID</b><br>" + this.service_request_id + "<br>";
+                    options += "<b>Status</b><br>" + this.status + "<br>";
+                    options += "<b>Date Requested</b><br>" + this.requested_datetime + '<br>';
+                    options += "<b>Expected Resolution Date</b><br>" + this.expected_datetime + '<br>';
+                    options += "<b>Address</b><br>" + this.address + "<br></p>";
+                let typeInfo = "<h2 class='sidebar__title sidebar__title--sub'>On the Map</h2>";
+                    typeInfo += "<p>Type of Request<br>" + this.service_name + '</p>';
+                    typeInfo += "<p>Agency Responsible<br>" + this.agency_responsible + "</p>";
+                    typeInfo += "<p>The requests shown have been opened within the last week</p>"
+                // let sidebarOptions = "";
+                new L.marker([lat, lon], {icon: yourRequestIcon})
+                .addTo( markersLayer ).bindPopup(options);
+                
+                $('.js-request-details').empty().append(options);
+                $('.js-request-type').empty().append(typeInfo);
+                map.setView([lat, lon],16, {animate: true});
+            } else {
+                console.log("incomplete geographic info");
+            }
+
+            // add issues with same request type to map
+            if ( this.service_name ) {
+                var service = this.service_name;
+                getRelatedRequests(service, id);
+            } else {
+                console.log("can't get service type");
             }
         });
-    }
+    });
 
     // get 311 data based on service name for the last 7 days
+    // ohhhhh! You've beaten me to it! This would be perfect for the api.js module!
     var getRelatedRequests = function getRelatedRequests(service, id) {
         $.ajax({
             url: "https://data.phila.gov/resource/4t9v-rppq.json",
