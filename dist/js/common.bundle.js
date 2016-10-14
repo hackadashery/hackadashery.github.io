@@ -41742,7 +41742,7 @@ module.exports = {
 			runNavigation(loadChart);
 		} else {
 			//load the search screen
-			runNavigation('map');
+			runNavigation('search');
 		}
 
 		//listen to the buttons for they shall speak to you

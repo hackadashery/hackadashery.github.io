@@ -63,6 +63,15 @@
 		<section id="search" class="view js-nav-section">
 			<div class="view__sidebar">
 				
+			  <div class="xsidebar">
+			  	<h1 class="sidebar__title">Your Service Request</h1> 
+			  	<div class="sidebar__response">
+			  		<p>Enter your case ID to check the status of your request</p>
+			  	</div> 
+			  	<div class="sidebar__response-type"></div>
+			  </div>
+
+
 				<div class="search-form js-search-form">
 					<div class="search-form__row">
 						<label class="search-form__label">
@@ -72,6 +81,12 @@
 					<button class="search-form__button js-search-submit">Search</button>
 				</div>
 
+				<div class="map__toolbar">
+				  <label for="map__request">Enter request ID</label>
+				  <input type="text" id="map__request" class="map__request" />
+				  <input type="submit" class="btn js-id-request" value="Submit" />
+				</div>
+				
 				<div class="request-details">	
 					<div class="js-request-details"></div>
 					<div class="js-request-type"></div>
@@ -80,20 +95,8 @@
 			</div>
 			<div class="view__body">
 				
-				<div class="map__toolbar">
-				  <label for="map__request">Enter request ID</label>
-				  <input type="text" id="map__request" class="map__request" />
-				  <input type="submit" class="btn js-id-request" value="Submit" />
-				</div>
 				<div class="map">
 				  <div id="map__view" class="map__view"></div>
-				  <div class="sidebar">
-				  	<h1 class="sidebar__title">Your Service Request</h1> 
-				  	<div class="sidebar__response">
-				  		<p>Enter your case ID to check the status of your request</p>
-				  	</div> 
-				  	<div class="sidebar__response-type"></div>
-				  </div>
 				</div>
 
 			</div>
