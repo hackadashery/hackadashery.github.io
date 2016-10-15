@@ -5,7 +5,9 @@
 	transform: translate(0, -10px);
 	opacity: 0;
 	transition: opacity 0.5s ease, transform 0.5s ease;
-	border-bottom: 1px solid $hacka_blue;
+	background: $white;
+	// border-bottom: 1px solid $hacka_blue;
+	box-shadow: inset 0 1px 0 rgba(255,255,255,.15),0 1px 5px rgba(0,0,0,.075);
 
 	&.js-loaded {
 		opacity: 1;
@@ -14,7 +16,7 @@
 
 	&__sidebar {
 		width: rem(350);
-		text-align: center;
+		// text-align: center;  team wanted to see this stuff left-justified
 		padding-left: rem($hPad);
 	}
 	&__body {

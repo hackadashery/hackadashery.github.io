@@ -11,7 +11,7 @@ BASE
 The default styling for each html tag
 */
 html {
-  background: #eaedf2;
+  background: #f5fafb;
   color: #323a45; }
 
 /*! normalize.css v4.1.1 | MIT License | github.com/necolas/normalize.css */
@@ -433,13 +433,13 @@ These create the structurs within which components will live
   transform: translate(0, -10px);
   opacity: 0;
   transition: opacity 0.5s ease, transform 0.5s ease;
-  border-bottom: 1px solid #14b9d6; }
+  background: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 5px rgba(0, 0, 0, 0.075); }
   .header.js-loaded {
     opacity: 1;
     transform: translate(0, 0px); }
   .header__sidebar {
     width: 21.875rem;
-    text-align: center;
     padding-left: 0.625rem; }
   .header__body {
     -ms-flex-positive: 1;
@@ -460,7 +460,6 @@ These create the structurs within which components will live
   padding: 0 0.625rem 2rem 0.625rem; }
 
 .nav__section-title {
-  text-align: center;
   font-weight: bold;
   text-transform: uppercase;
   font-size: 1rem;
@@ -480,7 +479,7 @@ These create the structurs within which components will live
   cursor: pointer;
   border: 0; }
   .nav__button + .main-nav__button {
-    border-top: 1px solid #eaedf2;
+    border-top: 1px solid #f5fafb;
     margin-top: -1px; }
   .nav__button:hover {
     color: #323a45; }
@@ -570,7 +569,9 @@ These create the structurs within which components will live
   width: 100%; }
   .view__sidebar {
     width: 21.875rem;
-    padding-top: 1rem; }
+    height: calc(100vh - 64px);
+    padding-top: 1rem;
+    overflow: scroll; }
   .view__body {
     -ms-flex-positive: 1;
         flex-grow: 1; }
@@ -740,14 +741,43 @@ BEM land
   pointer-events: none; }
 
 .map {
-  height: 800px;
+  height: calc(100vh - 64px);
   width: 100%;
   background: rgba(255, 255, 255, 0.8); }
   .map__view {
+    position: relative;
     display: inline-block;
     width: 100%;
     height: 100%;
     vertical-align: top; }
+  .map__legend {
+    display: none;
+    z-index: 5;
+    position: absolute;
+    left: 0.625rem;
+    bottom: 0.625rem;
+    width: 25%;
+    min-width: 210px;
+    padding: 2rem 0.625rem;
+    background: #fff;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+    border-radius: 3px; }
+    .map__legend__item:last-child {
+      margin: 0; }
+    .map__legend.open {
+      display: block; }
+  .map__legend-item {
+    line-height: 1.5rem; }
+    .map__legend-item:before {
+      content: "";
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      margin: 0 1rem 0 0;
+      background: #f27835;
+      border-radius: 50%; }
+    .map__legend-item--related:before {
+      background: #14b9d6; }
   .map__round-icon {
     width: 15px !important;
     height: 15px !important;
@@ -861,18 +891,6 @@ BEM land
     .search-results__item--key {
       display: block;
       font-weight: 600; }
-  .search-results__legend-item {
-    line-height: 1.5rem; }
-    .search-results__legend-item:before {
-      content: "";
-      display: inline-block;
-      width: 15px;
-      height: 15px;
-      margin: 0 1rem 0 0;
-      background: #f27835;
-      border-radius: 50%; }
-    .search-results__legend-item--related:before {
-      background: #14b9d6; }
 
 .tabs {
   display: -ms-flexbox;
