@@ -1,0 +1,29 @@
+<div class="view__sidebar">
+
+	<nav class="nav">
+		<section class="nav__section">
+			<div class="nav__section-title">311 Stats</div>
+			<button class="nav__button js-nav-button" data-nav-href="linebasic" data-nav-group="explore">Grey Linechart</button>
+			<button class="nav__button js-nav-button" data-nav-href="bluebar" data-nav-group="explore">Blue barchart</button>
+			<button class="nav__button js-nav-button" data-nav-href="burnrate" data-nav-group="explore">Burnrate</button>
+		</section>
+	</nav>
+	
+</div>
+<div class="view__body">
+	
+	<section id="linebasic" class="explore__section js-nav-section" data-nav-group="explore">
+		<div class="requests-linechart"></div>
+	</section>
+
+	<section id="bluebar" class="explore__section js-nav-section" data-nav-group="explore">
+		<svg id="requests-barchart" class="requests-barchart"></svg>
+	</section>
+
+	<section id="burnrate" class="explore__section js-nav-section" data-nav-group="explore">
+		<div class="toolbar">
+			Dept picker | Timespan
+		</div>
+		<svg id="burnchart" class="burnchart"></svg>
+	</section>
+</div>

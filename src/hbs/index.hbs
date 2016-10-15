@@ -62,92 +62,15 @@
 	<div class="main js-main">
 
 		<section id="search" class="view js-nav-section" data-nav-group="main">
-			<div class="view__sidebar">
-
-				<div class="search-form js-search-form">
-					<label class="search-form__label">
-						<span class="search-form__label-text">Enter your case ID, eg 10895664</span> <input type="text" class="search-form__input js-search-request-id">
-					</label>
-
-					<div class="search-form__advanced-section js-search-advanced-section">
-						<label class="search-form__label">
-							<span class="search-form__label-text">Select a service type</span> 
-							<select type="text" class="search-form__input js-search-service-type">
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">4</option>
-							</select>
-						</label>
-					</div>
-
-					<div class="splitter">
-						<div class="splitter__left">
-							<button class="search-form__forgotten-expander js-expand-adv-search">Don't know your case ID?</button>
-						</div>
-						<div class="splitter__right">
-							<button class="search-form__button js-search-submit">Search</button>
-						</div>
-					</div>
-				</div>
-				
-				<div class="search-results request-details">  
-          <div class="search-results__details js-request-details"></div>
-          <div class="search-results__legend js-request-type"></div>
-        </div>
-
-			</div>
-			<div class="view__body">
-				
-				<div class="map">
-				  <div id="map__view" class="map__view"></div>
-				</div>
-
-			</div>
-
+			{{> map }}
 		</section>
 
 		<section class="view js-nav-section explore" id="explore" data-nav-group="main">
-			<div class="view__sidebar">
-
-				<nav class="nav">
-					<section class="nav__section">
-						<div class="nav__section-title">311 Stats</div>
-						<button class="nav__button js-nav-button" data-nav-href="linebasic" data-nav-group="explore">Grey Linechart</button>
-						<button class="nav__button js-nav-button" data-nav-href="bluebar" data-nav-group="explore">Blue barchart</button>
-						<button class="nav__button js-nav-button" data-nav-href="burnrate" data-nav-group="explore">Burnrate</button>
-					</section>
-				</nav>
-				
-			</div>
-			<div class="view__body">
-				
-				<section id="linebasic" class="explore__section js-nav-section" data-nav-group="explore">
-					{{> timespan_tabs }}
-					<div class="requests-linechart"></div>
-				</section>
-
-				<section id="bluebar" class="explore__section js-nav-section" data-nav-group="explore">
-					{{> timespan_tabs }}
-					<svg id="requests-barchart" class="requests-barchart"></svg>
-				</section>
-
-				<section id="burnrate" class="explore__section js-nav-section" data-nav-group="explore">
-					<div class="toolbar">
-						Dept picker | Timespan
-					</div>
-					<svg id="burnchart" class="burnchart"></svg>
-				</section>
-				
-			</div>
+			{{> explore }}
 		</section>
 
 		<section class="view js-nav-section about" id="about" data-nav-group="main">
-			<div class="about__content">
-				<h2 class="about__title">Hackadashery</h2>
-				<div class="about__description">
-					Some text about Hackadashery & 311 (for those of us who don't know), Code For Philly (and how to get involved), and also probably something to say that this is not an "official" app and that users should be thankful it's not an "official" app because that means that this is probably better.
-				</div>
-			</div>
+			{{> about }}
 		</section>
 
 	</div>
