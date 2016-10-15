@@ -658,6 +658,58 @@ BEM land
 .explore__section {
   padding-top: 1rem; }
 
+.general-search-form {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
+  -ms-flex-pack: center;
+      justify-content: center;
+  -ms-flex-align: start;
+      align-items: flex-start;
+  width: 100%;
+  max-width: 400px;
+  padding: 0 0.625rem 1rem; }
+  .general-search-form__expander-button {
+    width: 100%;
+    text-align: center;
+    font-size: 0.75rem; }
+  .general-search-form__expander-section {
+    display: none;
+    padding-top: 1rem;
+    width: 100%; }
+  .general-search-form__label {
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid #323a45;
+    margin-top: -1px;
+    position: relative;
+    margin-bottom: 2rem; }
+  .general-search-form__label-text {
+    display: block;
+    font-size: 0.75rem;
+    line-height: 1rem; }
+  .general-search-form__input {
+    display: block;
+    width: 100%;
+    line-height: 2rem;
+    background: transparent;
+    border: 0;
+    padding: 0 0.625rem; }
+  .general-search-form__advanced-section {
+    display: none; }
+  .general-search-form__button {
+    display: block;
+    margin-left: auto;
+    padding: 0 0.625rem;
+    border-radius: 16px;
+    background: white;
+    border: 1px solid #5d6d80;
+    line-height: 2rem;
+    cursor: pointer;
+    -ms-flex-item-align: end;
+        align-self: flex-end; }
+
 .line-basic__line {
   stroke: steelblue;
   stroke-width: 2;
@@ -754,50 +806,43 @@ BEM land
 .requests-linechart__axis text {
   fill: #fff; }
 
-.search-form {
+/* This is the only for the search by id input in the sidebar
+ *
+ */
+.search-by-id-wrap {
+  padding: 0 0.625rem; }
+
+.search-by-id {
+  margin-bottom: 2rem;
+  position: relative;
   display: -ms-flexbox;
   display: flex;
-  -ms-flex-direction: column;
-      flex-direction: column;
-  -ms-flex-pack: center;
-      justify-content: center;
-  -ms-flex-align: start;
-      align-items: flex-start;
+  border-bottom: 1px solid black;
   width: 100%;
-  max-width: 400px;
-  padding: 0 0.625rem 1rem; }
-  .search-form__label {
-    display: block;
+  padding-top: 1rem; }
+  .search-by-id__label {
+    position: absolute;
+    top: 0;
     width: 100%;
-    border-bottom: 1px solid #323a45;
-    margin-top: -1px;
-    position: relative;
-    margin-bottom: 2rem; }
-  .search-form__label-text {
-    display: block;
     font-size: 0.75rem;
     line-height: 1rem; }
-  .search-form__input {
-    display: block;
-    width: 100%;
+  .search-by-id__input {
     line-height: 2rem;
     background: transparent;
     border: 0;
-    padding: 0 0.625rem; }
-  .search-form__advanced-section {
-    display: none; }
-  .search-form__forgotten-expander {
-    font-size: 0.75rem; }
-  .search-form__button {
+    padding: 0 0.625rem;
+    width: 100%; }
+  .search-by-id__button {
     display: inline-block;
     padding: 0 0.625rem;
-    border-radius: 16px;
-    background: white;
-    border: 1px solid #5d6d80;
     line-height: 2rem;
-    cursor: pointer;
     -ms-flex-item-align: end;
         align-self: flex-end; }
+    .search-by-id__button svg {
+      fill: #14b9d6;
+      transition: fill 0.2s ease; }
+    .search-by-id__button:hover svg {
+      fill: #f27835; }
 
 .search-results {
   display: -ms-flexbox;

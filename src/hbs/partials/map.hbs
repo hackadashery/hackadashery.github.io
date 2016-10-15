@@ -1,28 +1,44 @@
 <div class="view__sidebar">
 
-	<div class="search-form js-search-form">
-		<label class="search-form__label">
-			<span class="search-form__label-text">Enter your case ID, eg 10895664</span> <input type="text" class="search-form__input js-search-request-id">
-		</label>
+	<!-- This has it's own JS component, search-by-id-form.js -->
+	<div class="search-by-id-wrap">
+		<div class="search-by-id js-search-by-id-form">
+			<label class="search-by-id__label">Search your case ID, eg 10895664</label> 
+			<input type="text" class="search-by-id__input js-search-by-id-input">
+			<button class="search-by-id__button js-search-by-id-button">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 8 8">
+					<path d="M3.5 0c-1.93 0-3.5 1.57-3.5 3.5s1.57 3.5 3.5 3.5c.59 0 1.17-.14 1.66-.41a1 1 0 0 0 .13.13l1 1a1.02 1.02 0 1 0 1.44-1.44l-1-1a1 1 0 0 0-.16-.13c.27-.49.44-1.06.44-1.66 0-1.93-1.57-3.5-3.5-3.5zm0 1c1.39 0 2.5 1.11 2.5 2.5 0 .66-.24 1.27-.66 1.72-.01.01-.02.02-.03.03a1 1 0 0 0-.13.13c-.44.4-1.04.63-1.69.63-1.39 0-2.5-1.11-2.5-2.5s1.11-2.5 2.5-2.5z"/>
+				</svg>
+			</button>
+		</div>
+	</div>
 
-		<div class="search-form__advanced-section js-search-advanced-section">
-			<label class="search-form__label">
-				<span class="search-form__label-text">Select a service type</span> 
-				<select type="text" class="search-form__input js-search-service-type">
+
+	<div class="general-search-form js-general-search">
+
+		<button class="general-search-form__expander-button js-general-search-form-toggle">Don't know your case ID?</button>
+
+		<div class="general-search-form__expander-section js-general-search-form">
+
+			<label class="general-search-form__label">
+				<span class="general-search-form__label-text">What type of service request was it?</span> 
+				<select type="text" class="general-search-form__input js-search-service-type">
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">4</option>
 				</select>
 			</label>
-		</div>
 
-		<div class="splitter">
-			<div class="splitter__left">
-				<button class="search-form__forgotten-expander js-expand-adv-search">Don't know your case ID?</button>
-			</div>
-			<div class="splitter__right">
-				<button class="search-form__button js-search-submit">Search</button>
-			</div>
+			<label class="general-search-form__label">
+				<span class="general-search-form__label-text">When did you make the request?</span> 
+				<select type="text" class="general-search-form__input js-search-service-type">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">4</option>
+				</select>
+			</label>
+		
+			<button class="general-search-form__button js-search-submit">Search</button>
 		</div>
 	</div>
 	

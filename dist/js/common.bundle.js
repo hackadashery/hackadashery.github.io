@@ -41238,7 +41238,8 @@ require('./components/requests-linechart').init();
 require('./components/burn').init();
 require('./components/map').init();
 
-require('./components/search-form').init();
+require('./components/search-by-id-form').init();
+require('./components/general-search-form').init();
 
 //Load this last - the events fired from here will kick things off so if you set up a subsciber after this has run you might miss out on something!
 require('./components/main-nav').init();
@@ -41246,7 +41247,7 @@ require('./components/main-nav').init();
 var $ = require('jquery');
 $('.js-main').addClass('js-loaded');
 $('.js-header').addClass('js-loaded');
-},{"./components/burn":36,"./components/line-basic":37,"./components/main-nav":38,"./components/map":39,"./components/requests-barchart":40,"./components/requests-linechart":41,"./components/search-form":42,"jquery":4}],35:[function(require,module,exports){
+},{"./components/burn":36,"./components/general-search-form":37,"./components/line-basic":38,"./components/main-nav":39,"./components/map":40,"./components/requests-barchart":41,"./components/requests-linechart":42,"./components/search-by-id-form":43,"jquery":4}],35:[function(require,module,exports){
 'use strict';
 
 var eventManager = require('../utils/eventManager');
@@ -41267,7 +41268,7 @@ module.exports = {
         });
 	}
 }
-},{"../utils/eventManager":43,"jquery":4}],36:[function(require,module,exports){
+},{"../utils/eventManager":44,"jquery":4}],36:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -41516,7 +41517,38 @@ function buildChart(){
 }
 
 
-},{"../utils/eventManager":43,"d3":2}],37:[function(require,module,exports){
+},{"../utils/eventManager":44,"d3":2}],37:[function(require,module,exports){
+'use strict';
+
+var eventManager = require('../utils/eventManager');
+var $ = require('jquery');
+var api = require('./api');
+
+module.exports = {
+	init(){
+		$('.js-general-search-form-toggle').on('click', function(e){
+			if ($(this).hasClass('isToggled')) {
+				$(this).removeClass('isToggled');
+				$(this).closest('.js-general-search').find('.js-general-search-form').slideUp();
+				$('.js-search-by-id-form').slideDown();
+				$(this).html('Don\'t know your case ID?');
+			} else {
+				$(this).addClass('isToggled');
+				$(this).closest('.js-general-search').find('.js-general-search-form').slideDown();
+				$('.js-search-by-id-form').slideUp();
+				$(this).html('Oh wait, yes I do know my case ID');
+			}
+		});
+	}
+}
+
+function runSearch(searchId){
+	api.getIssueById(searchId).then(function(data){
+		var res = data;
+		eventManager.fire('get_issue_by_id_returned', { owner: 'searchform', data: res });
+	});
+}
+},{"../utils/eventManager":44,"./api":35,"jquery":4}],38:[function(require,module,exports){
 'use strict';
 
 // ===================================================================================
@@ -41712,7 +41744,7 @@ function buildChart(){
 }
 
 
-},{"../utils/eventManager":43,"d3":2}],38:[function(require,module,exports){
+},{"../utils/eventManager":44,"d3":2}],39:[function(require,module,exports){
 'use strict';
 
 var eventManager = require('../utils/eventManager');
@@ -41771,7 +41803,7 @@ module.exports = {
 	}
 }
 
-},{"../utils/eventManager":43,"../utils/urlParameter":44,"jquery":4}],39:[function(require,module,exports){
+},{"../utils/eventManager":44,"../utils/urlParameter":45,"jquery":4}],40:[function(require,module,exports){
 'use strict';
 
 var $ = require("jquery");
@@ -41943,7 +41975,7 @@ function buildChart(){
 }
 
 
-},{"../utils/eventManager":43,"./api":35,"jquery":4,"mapbox.js":16}],40:[function(require,module,exports){
+},{"../utils/eventManager":44,"./api":35,"jquery":4,"mapbox.js":16}],41:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -42042,7 +42074,7 @@ function buildChart(){
 }
 
 
-},{"../utils/eventManager":43,"d3":2}],41:[function(require,module,exports){
+},{"../utils/eventManager":44,"d3":2}],42:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -42186,31 +42218,31 @@ module.exports = {
 		});
 	}
 }
-},{"d3":2}],42:[function(require,module,exports){
+},{"d3":2}],43:[function(require,module,exports){
 'use strict';
 
 var eventManager = require('../utils/eventManager');
-var urlParameter = require('../utils/urlParameter');
 var $ = require('jquery');
 var api = require('./api');
 
 module.exports = {
 	init(){
 		//start listening!
-		$('.js-search-form').on('keypress', function(e){
+		$('.js-search-by-id-form').on('keypress', function(e){
 			if (e.keyCode == 13) {
-				var searchId = $(this).find('.js-search-request-id').val();
+				var searchId = $(this).find('.js-search-by-id-input').val();
 				runSearch(searchId);
 			}
 		});
 
-		$('.js-expand-adv-search').on('click', function(e){
-			$(this).closest('.js-search-form').find('.js-search-advanced-section').slideToggle();
+		$('.js-search-by-id-button').on('click', function(e){
+			var searchId = $(this).closest('.js-search-by-id-form').find('.js-search-by-id-input').val();
+			runSearch(searchId);
 		});
 
-		$('.js-search-submit').on('click', function(e){
-			var searchId = $(this).closest('.js-search-form').find('.js-search-request-id').val();
-			runSearch(searchId);
+
+		$('.js-expand-adv-search').on('click', function(e){
+			$(this).closest('.js-search-by-id-form').find('.js-search-advanced-section').slideToggle();
 		});
 	}
 }
@@ -42221,7 +42253,7 @@ function runSearch(searchId){
 		eventManager.fire('get_issue_by_id_returned', { owner: 'searchform', data: res });
 	});
 }
-},{"../utils/eventManager":43,"../utils/urlParameter":44,"./api":35,"jquery":4}],43:[function(require,module,exports){
+},{"../utils/eventManager":44,"./api":35,"jquery":4}],44:[function(require,module,exports){
 'use strict';
 
 /* The Event Manager
@@ -42272,7 +42304,7 @@ module.exports = {
 		}
 	}
 }
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 'use strict';
 
 /* A URL parameter reader
