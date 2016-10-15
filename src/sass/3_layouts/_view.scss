@@ -4,7 +4,7 @@
 
 	&__sidebar {
 		width: rem(350);
-		padding-top: rem($vUnit);
+		padding-top: rem($vUnit / 2);
 	}
 	&__body {
 		flex-grow: 1;

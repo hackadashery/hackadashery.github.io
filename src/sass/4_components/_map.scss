@@ -33,31 +33,3 @@
     border-radius: 50%; 
   }
 }
-
-.btn
-{
-  display: inline-block;
-  padding: 5px;
-  color: white;
-  background: gray;
-}
-
-.sidebar
-{
-  display: inline-block;
-  width: 35.8%;
-  padding: 20px;
-  vertical-align: top;
-
-  &__title
-  {
-    font-size: 1.5rem;
-    color: #5d6d80;
-    text-transform: uppercase;
-
-    &--sub
-    {
-      font-size: 1.3rem; 
-    }
-  }
-}

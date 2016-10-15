@@ -62,29 +62,31 @@
 
 		<section id="search" class="view js-nav-section">
 			<div class="view__sidebar">
-				
-			  <div class="xsidebar">
-			  	<h1 class="sidebar__title">Your Service Request</h1> 
-			  	<div class="sidebar__response">
-			  		<p>Enter your case ID to check the status of your request</p>
-			  	</div> 
-			  	<div class="sidebar__response-type"></div>
-			  </div>
-
 
 				<div class="search-form js-search-form">
-					<div class="search-form__row">
+					<label class="search-form__label">
+						<span class="search-form__label-text">Enter your case ID, eg 10895664</span> <input type="text" class="search-form__input js-search-request-id">
+					</label>
+
+					<div class="search-form__advanced-section js-search-advanced-section">
 						<label class="search-form__label">
-							<span class="search-form__label-text">Enter Request ID</span> <input type="text" class="search-form__input js-search-request-id">
+							<span class="search-form__label-text">Select a service type</span> 
+							<select type="text" class="search-form__input js-search-service-type">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">4</option>
+							</select>
 						</label>
 					</div>
-					<button class="search-form__button js-search-submit">Search</button>
-				</div>
 
-				<div class="map__toolbar">
-				  <label for="map__request">Enter request ID</label>
-				  <input type="text" id="map__request" class="map__request" />
-				  <input type="submit" class="btn js-id-request" value="Submit" />
+					<div class="splitter">
+						<div class="splitter__left">
+							<button class="search-form__forgotten-expander js-expand-adv-search">Don't know your case ID?</button>
+						</div>
+						<div class="splitter__right">
+							<button class="search-form__button js-search-submit">Search</button>
+						</div>
+					</div>
 				</div>
 				
 				<div class="request-details">	

@@ -563,7 +563,7 @@ These create the structurs within which components will live
   width: 100%; }
   .view__sidebar {
     width: 21.875rem;
-    padding-top: 2rem; }
+    padding-top: 1rem; }
   .view__body {
     -ms-flex-positive: 1;
         flex-grow: 1; }
@@ -668,24 +668,6 @@ BEM land
     background: #f27835;
     border-radius: 50%; }
 
-.btn {
-  display: inline-block;
-  padding: 5px;
-  color: white;
-  background: gray; }
-
-.sidebar {
-  display: inline-block;
-  width: 35.8%;
-  padding: 20px;
-  vertical-align: top; }
-  .sidebar__title {
-    font-size: 1.5rem;
-    color: #5d6d80;
-    text-transform: uppercase; }
-    .sidebar__title--sub {
-      font-size: 1.3rem; }
-
 .requests-barchart {
   font-weight: 500;
   width: 100%; }
@@ -741,12 +723,11 @@ BEM land
   -ms-flex-align: start;
       align-items: flex-start;
   width: 100%;
-  max-width: 400px; }
-  .search-form__row {
-    margin-bottom: 2rem;
-    width: 100%; }
+  max-width: 400px;
+  padding: 0 0.625rem 1rem; }
   .search-form__label {
     display: block;
+    width: 100%;
     border-bottom: 1px solid #323a45;
     margin-top: -1px;
     position: relative;
@@ -762,6 +743,10 @@ BEM land
     background: transparent;
     border: 0;
     padding: 0 0.625rem; }
+  .search-form__advanced-section {
+    display: none; }
+  .search-form__forgotten-expander {
+    font-size: 0.75rem; }
   .search-form__button {
     display: inline-block;
     padding: 0 0.625rem;

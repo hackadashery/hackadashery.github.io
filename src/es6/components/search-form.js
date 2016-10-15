@@ -10,18 +10,24 @@ module.exports = {
 		//start listening!
 		$('.js-search-form').on('keypress', function(e){
 			if (e.keyCode == 13) {
-				runSearch();
+				var searchId = $(this).find('.js-search-request-id').val();
+				runSearch(searchId);
 			}
 		});
+
+		$('.js-expand-adv-search').on('click', function(e){
+			$(this).closest('.js-search-form').find('.js-search-advanced-section').slideToggle();
+		});
+
 		$('.js-search-submit').on('click', function(e){
-			runSearch();
+			var searchId = $(this).closest('.js-search-form').find('.js-search-request-id').val();
+			runSearch(searchId);
 		});
 	}
 }
 
-function runSearch(){
-	console.log('running search');
-	api.getIssueById('10895664').then(function(data){
+function runSearch(searchId){
+	api.getIssueById(searchId).then(function(data){
 		var res = data;
 		eventManager.fire('get_issue_by_id_returned', { owner: 'searchform', data: res });
 	});

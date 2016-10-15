@@ -5,14 +5,12 @@
 	align-items: flex-start;
 	width: 100%;
 	max-width: 400px;
+	padding: 0 rem($hPad) rem($vUnit / 2);
 
-	&__row {
-		margin-bottom: rem($vUnit);
-		width: 100%;
-	}
-	
+
 	&__label {
 		display: block;
+		width: 100%;
 		border-bottom: 1px solid $gray-3;
 		margin-top: -1px;
 		position: relative;
@@ -31,6 +29,15 @@
 			border: 0;
 			padding: 0 rem($hPad);
 		}
+
+	//hides / expands
+	&__advanced-section {
+		display: none;
+	}
+	
+	&__forgotten-expander {
+		font-size: rem(12);
+	}
 
 	&__button {
 		display: inline-block;
