@@ -4,7 +4,7 @@
 
 	&__sidebar {
 		width: rem(350);
-    height: calc(100vh - 65px); // 65px is height of header
+    height: calc(100vh - 64px); // 64px is height of header
 		padding-top: rem($vUnit / 2);
     overflow: scroll;
 	}
