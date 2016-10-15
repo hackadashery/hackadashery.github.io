@@ -38,6 +38,13 @@ body {
 
 /* HTML5 display definitions
    ========================================================================== */
+*::-moz-selection {
+  background: #f27835;
+  /* WebKit/Blink Browsers */ }
+*::selection {
+  background: #f27835;
+  /* WebKit/Blink Browsers */ }
+
 /**
  * Add the correct display in IE 9-.
  * 1. Add the correct display in Edge, IE, and Firefox.
@@ -648,6 +655,9 @@ BEM land
   .burnchart__hover-note {
     text-anchor: middle; }
 
+.explore__section {
+  padding-top: 1rem; }
+
 .line-basic__line {
   stroke: steelblue;
   stroke-width: 2;
@@ -809,9 +819,12 @@ BEM land
     .tabs__tab:hover, .tabs__tab:active, .tabs__tab.active {
       top: -10px;
       background: #f27835; }
+      .tabs__tab:hover .tabs__tab-text, .tabs__tab:active .tabs__tab-text, .tabs__tab.active .tabs__tab-text {
+        bottom: 10px; }
   .tabs__tab-text {
     position: absolute;
     bottom: 5px;
+    transition: bottom 0.3s ease;
     width: 100%;
     text-align: center;
     font-weight: bold;
