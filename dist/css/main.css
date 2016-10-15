@@ -572,6 +572,37 @@ These create the structurs within which components will live
 COMPONENTS
 BEM land
 */
+.about {
+  background: url("https://upload.wikimedia.org/wikipedia/commons/f/fd/Philadelphia_Aerial.JPG");
+  background-color: #12a5bf;
+  background-blend-mode: multiply;
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  position: relative; }
+  .about:before {
+    content: " ";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 20%;
+    background: linear-gradient(#14b9d6, rgba(18, 165, 191, 0)); }
+  .about__content {
+    position: relative;
+    z-index: 1;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 500px;
+    margin: 6rem auto; }
+  .about__title {
+    line-height: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid white;
+    margin-bottom: 2rem; }
+  .about__description {
+    line-height: 2rem;
+    font-size: 1.125rem; }
+
 .burnchart {
   width: 100%; }
   .burnchart__new-line {

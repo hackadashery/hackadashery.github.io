@@ -1,0 +1,38 @@
+.about {
+	background: url('https://upload.wikimedia.org/wikipedia/commons/f/fd/Philadelphia_Aerial.JPG');
+	background-color: darken($hacka_blue, 5%);
+	background-blend-mode: multiply;
+	background-size: cover;
+	background-position: center;
+	min-height: 100vh;
+	position: relative;
+
+	//fade in the hacka_blue
+	&:before {
+		content: " ";
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		height: 20%;
+		background: linear-gradient(rgba($hacka_blue, 1), rgba(darken($hacka_blue, 5%), 0));
+	}
+
+	&__content {
+		position: relative;
+		z-index: 1;
+		color: rgba(255,255,255,0.9);
+		max-width: 500px;
+		margin: rem($vUnit * 3) auto;
+	}
+		&__title {
+			line-height: rem($vUnit / 2);
+			padding-bottom: rem($vUnit / 2);
+			border-bottom: 1px solid white;
+			margin-bottom: rem($vUnit);
+		}
+		&__description {
+			line-height: rem($vUnit);
+			font-size: rem(18);
+		}
+}
