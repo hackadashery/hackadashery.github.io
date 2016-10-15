@@ -799,6 +799,36 @@ BEM land
     -ms-flex-item-align: end;
         align-self: flex-end; }
 
+.search-results {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
+  -ms-flex-pack: center;
+      justify-content: center;
+  -ms-flex-align: start;
+      align-items: flex-start;
+  width: 100%;
+  max-width: 400px;
+  padding: 0 0.625rem 1rem; }
+  .search-results__item {
+    line-height: 1.5rem; }
+    .search-results__item--key {
+      display: block;
+      font-weight: 600; }
+  .search-results__legend-item {
+    line-height: 1.5rem; }
+    .search-results__legend-item:before {
+      content: "";
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      margin: 0 1rem 0 0;
+      background: #f27835;
+      border-radius: 50%; }
+    .search-results__legend-item--related:before {
+      background: #14b9d6; }
+
 .tabs {
   display: -ms-flexbox;
   display: flex; }

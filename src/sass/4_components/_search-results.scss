@@ -1,0 +1,45 @@
+.search-results
+{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 400px;
+  padding: 0 rem($hPad) rem($vUnit / 2);
+
+  &__item 
+  {
+    line-height: rem(24); // I know I'm not using $vUnit...but it seemed big!
+
+    &--key 
+    {
+      display: block;
+      font-weight: 600;
+    }
+  }
+
+  &__legend-item
+  {
+    line-height: rem(24);
+
+    &:before
+    {
+      content: "";
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      margin: 0 rem($vUnit / 2) 0 0;
+      background: $hacka_range;
+      border-radius: 50%;
+    }
+
+    &--related
+    {
+      &:before
+      {
+        background: $hacka_blue;
+      }
+    }
+  }
+}
