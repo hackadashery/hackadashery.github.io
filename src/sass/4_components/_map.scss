@@ -1,15 +1,62 @@
 .map
 {
-  height: 800px;
+  height: calc(100vh - 65px); // height of header
   width: 100%;
   background: rgba(255,255,255,0.8);
 
   &__view
   {
+    position: relative;
     display: inline-block;
     width: 100%;
     height: 100%;
     vertical-align: top;
+  }
+
+  &__legend
+  {
+    display: none;
+    z-index: 5;
+    position: absolute;
+    left: rem($hPad);
+    bottom: rem($hPad);
+    width: 25%;
+    min-width: 210px;
+    padding: rem($vUnit) rem($hPad);
+    background: $white;
+    box-shadow: 1px 1px 1px rgba(0,0,0,.1);
+    border-radius: 3px;
+
+    &__item
+    {
+      &:last-child { margin: 0; }
+    }
+
+    &.open { display: block; } 
+  }
+
+  &__legend-item
+  {
+    line-height: rem(24);
+
+    &:before
+    {
+      content: "";
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      margin: 0 rem($vUnit / 2) 0 0;
+      background: $hacka_range;
+      border-radius: 50%;
+    }
+
+    &--related
+    {
+      &:before
+      {
+        background: $hacka_blue;
+      }
+    }
   }
 
   &__round-icon

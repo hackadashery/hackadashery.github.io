@@ -111,15 +111,15 @@ function buildChart(){
                     popUp += "<p class='search-results__item'><span class='search-results__item--key'>Expected Resolution Date</span>" + expected_date + "</p>";
                     popUp += "<p class='search-results__item'><span class='search-results__item--key'>Address</span>" + this.address + "</p>";
 
-                let typeInfo = "<h3 class='search-results__title'>On the Map</h3>";
-                    typeInfo += "<p class='search-results__legend-item'>Your search request</p>";
-                    typeInfo += "<p class='search-results__legend-item search-results__legend-item--related'>Other " + this.service_name + " requests opened within the last seven days</p>";
+                let typeInfo = "<h3 class='map__title'>Recent 311 Requests</h3>";
+                    typeInfo += "<p class='map__legend-item'>Your 311 request</p>";
+                    typeInfo += "<p class='map__legend-item map__legend-item--related'>Other " + this.service_name + " requests opened within the last seven days</p>";
 
                 new L.marker([lat, lon], {icon: yourRequestIcon})
                 .addTo( markersLayer ).bindPopup(popUp);
                 
                 $('.js-request-details').empty().append(options);
-                $('.js-request-type').empty().append(typeInfo);
+                $('.map__legend').empty().addClass('open').append(typeInfo); 
                 map.setView([lat, lon],16, {animate: true});
             } else {
                 console.log("incomplete geographic info");
