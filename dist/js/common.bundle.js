@@ -41723,24 +41723,29 @@ var $ = require('jquery');
 var previousSection = '';
 var currentSection = '';
 
-function runNavigation(newSection){
+function runNavigation(navHref, navGroup){
 	previousSection = currentSection;
 	
 	//hide and show
-	$('.js-nav-section').hide();
-	$('#' + newSection).show();
+	$('.js-nav-section').each(function(){
+		if ($(this).data('nav-group') == navGroup) {
+			$(this).hide();
+		}
+	});
+
+	$('#' + navHref).show();
 	
 	//Let everyone know
-	eventManager.fire('section_opened', {owner:'main_nav', data:{section: newSection}});
-	eventManager.fire('section_closed', {owner:'main_nav', data:{section: previousSection}});
+	eventManager.fire('section_opened', {owner:navGroup, data:{section: navHref}});
+	eventManager.fire('section_closed', {owner:navGroup, data:{section: previousSection}});
 	
 	//update the url history!
 	if (window.history) {
 		var stateObj = null; //could be interesting...
-		history.pushState(stateObj, newSection, "?chart=" + newSection);
+		history.pushState(stateObj, navHref, "?chart=" + navHref);
 	}
 
-	currentSection = newSection;
+	currentSection = navHref;
 }
 
 module.exports = {
@@ -41749,16 +41754,17 @@ module.exports = {
 		//what's the URL we're on?
 		var loadChart = urlParameter.getParameter('chart');
 		if (loadChart) {
-			runNavigation(loadChart);
+			runNavigation(loadChart, 'main');
 		} else {
 			//load the search screen
-			runNavigation('search');
+			runNavigation('search', 'main');
 		}
 
 		//listen to the buttons for they shall speak to you
 		$('.js-nav-button').on('click', function(){		
-			var newSection = $(this).data('section');
-			runNavigation(newSection);
+			var navHref = $(this).data('nav-href');
+			var navGroup = $(this).data('nav-group');
+			runNavigation(navHref, navGroup);
 		});
 
 		//Listen for going "back"

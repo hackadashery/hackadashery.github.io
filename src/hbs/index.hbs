@@ -42,17 +42,17 @@
 			<div class="tabs">
 				<div class="tabs__tab-col">
 					<div class="tabs__tab">
-						<div class="tabs__tab-text js-nav-button" data-section="search">Search</div>
+						<div class="tabs__tab-text js-nav-button" data-nav-href="search" data-nav-group="main">Search</div>
 					</div>
 				</div>
 				<div class="tabs__tab-col">
 					<div class="tabs__tab">
-						<div class="tabs__tab-text js-nav-button" data-section="explore">Explore</div>
+						<div class="tabs__tab-text js-nav-button" data-nav-href="explore" data-nav-group="main">Explore</div>
 					</div>
 				</div>
 				<div class="tabs__tab-col">
 					<div class="tabs__tab">
-						<div class="tabs__tab-text js-nav-button" data-section="about">About</div>
+						<div class="tabs__tab-text js-nav-button" data-nav-href="about" data-nav-group="main">About</div>
 					</div>
 				</div>
 			</div>
@@ -61,7 +61,7 @@
 
 	<div class="main js-main">
 
-		<section id="search" class="view js-nav-section">
+		<section id="search" class="view js-nav-section" data-nav-group="main">
 			<div class="view__sidebar">
 
 				<div class="search-form js-search-form">
@@ -106,32 +106,32 @@
 
 		</section>
 
-		<section class="view js-nav-section" id="explore">
+		<section class="view js-nav-section" id="explore" data-nav-group="main">
 			<div class="view__sidebar">
 
 				<nav class="nav">
 					<section class="nav__section">
 						<div class="nav__section-title">311 Stats</div>
-						<button class="nav__button js-nav-button" data-section="linebasic">Grey Linechart</button>
-						<button class="nav__button js-nav-button" data-section="bluebar">Blue barchart</button>
-						<button class="nav__button js-nav-button" data-section="burnrate">Burnrate</button>
+						<button class="nav__button js-nav-button" data-nav-href="linebasic" data-nav-group="explore">Grey Linechart</button>
+						<button class="nav__button js-nav-button" data-nav-href="bluebar" data-nav-group="explore">Blue barchart</button>
+						<button class="nav__button js-nav-button" data-nav-href="burnrate" data-nav-group="explore">Burnrate</button>
 					</section>
 				</nav>
 				
 			</div>
 			<div class="view__body">
 				
-				<section id="linebasic" class="main__section js-nav-section">
+				<section id="linebasic" class="main__section js-nav-section" data-nav-group="explore">
 					{{> timespan_tabs }}
 					<div class="requests-linechart"></div>
 				</section>
 
-				<section id="bluebar" class="main__section js-nav-section">
+				<section id="bluebar" class="main__section js-nav-section" data-nav-group="explore">
 					{{> timespan_tabs }}
 					<svg id="requests-barchart" class="requests-barchart"></svg>
 				</section>
 
-				<section id="burnrate" class="main__section js-nav-section">
+				<section id="burnrate" class="main__section js-nav-section" data-nav-group="explore">
 					<div class="toolbar">
 						Dept picker | Timespan
 					</div>
@@ -141,7 +141,7 @@
 			</div>
 		</section>
 
-		<section class="view js-nav-section" id="about">
+		<section class="view js-nav-section" id="about" data-nav-group="main">
 			<h1>About Hackadashery</h1>
 		</section>
 
