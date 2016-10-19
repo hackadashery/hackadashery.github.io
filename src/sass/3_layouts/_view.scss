@@ -1,12 +1,14 @@
 .view {
 	display: flex;
 	width: 100%;
+	min-height: 100vh;
 
 	&__sidebar {
-		width: rem(350);
-    height: calc(100vh - 64px); // 64px is height of header
+		max-width: 350px;
+		min-width: 200px;
+		//height: calc(100vh - 64px); // 64px is height of header --- to keep min height as the screen, checkout vh unnits!
 		padding-top: rem($vUnit / 2);
-    overflow: scroll;
+		overflow: auto;
 	}
 	&__body {
 		flex-grow: 1;

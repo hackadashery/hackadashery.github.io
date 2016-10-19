@@ -427,23 +427,31 @@ These create the structurs within which components will live
 .header {
   display: -ms-flexbox;
   display: flex;
-  -ms-flex-align: end;
-      align-items: flex-end;
+  -ms-flex-direction: column;
+      flex-direction: column;
   width: 100%;
+  background: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 5px rgba(0, 0, 0, 0.075);
   transform: translate(0, -10px);
   opacity: 0;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  background: #fff;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 5px rgba(0, 0, 0, 0.075); }
+  transition: opacity 0.5s ease, transform 0.5s ease; }
   .header.js-loaded {
     opacity: 1;
     transform: translate(0, 0px); }
-  .header__sidebar {
-    width: 21.875rem;
-    padding-left: 0.625rem; }
-  .header__body {
-    -ms-flex-positive: 1;
-        flex-grow: 1; }
+  @media (min-width: 768px) {
+    .header {
+      -ms-flex-direction: row;
+          flex-direction: row;
+      -ms-flex-align: end;
+          -ms-grid-row-align: flex-end;
+          align-items: flex-end; }
+      .header__sidebar {
+        max-width: 350px;
+        min-width: 270px;
+        padding-left: 0.625rem; }
+      .header__body {
+        -ms-flex-positive: 1;
+            flex-grow: 1; } }
 
 .main {
   display: -ms-flexbox;
@@ -566,12 +574,13 @@ These create the structurs within which components will live
 .view {
   display: -ms-flexbox;
   display: flex;
-  width: 100%; }
+  width: 100%;
+  min-height: 100vh; }
   .view__sidebar {
-    width: 21.875rem;
-    height: calc(100vh - 64px);
+    max-width: 350px;
+    min-width: 200px;
     padding-top: 1rem;
-    overflow: scroll; }
+    overflow: auto; }
   .view__body {
     -ms-flex-positive: 1;
         flex-grow: 1; }
