@@ -1,0 +1,18 @@
+.mobile-menu-button {
+	position: relative;
+	width: rem($vUnit);
+	height: rem($vUnit);
+	cursor: pointer;
+
+	&__dot {
+		width: 100%;
+		height: 3px;
+		background: $gray-3;
+		position: absolute;
+		left: 0;
+
+		&--1 { top: #{($vUnit / 2) - 10}px; }
+		&--2 { top: #{($vUnit / 2) - 2}px; }
+		&--3 { top: #{($vUnit / 2) + 6}px; }
+	}
+}

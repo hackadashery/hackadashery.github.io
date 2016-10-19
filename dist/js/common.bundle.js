@@ -41232,6 +41232,7 @@ if (typeof module !== 'undefined') {
 },{}],34:[function(require,module,exports){
 window.WL_STATE = {};
 
+require('./components/mobile-menu-button').init();
 require('./components/line-basic').init();
 require('./components/requests-barchart').init();
 require('./components/requests-linechart').init();
@@ -41247,7 +41248,7 @@ require('./components/main-nav').init();
 var $ = require('jquery');
 $('.js-main').addClass('js-loaded');
 $('.js-header').addClass('js-loaded');
-},{"./components/burn":36,"./components/general-search-form":37,"./components/line-basic":38,"./components/main-nav":39,"./components/map":40,"./components/requests-barchart":41,"./components/requests-linechart":42,"./components/search-by-id-form":43,"jquery":4}],35:[function(require,module,exports){
+},{"./components/burn":36,"./components/general-search-form":37,"./components/line-basic":38,"./components/main-nav":39,"./components/map":40,"./components/mobile-menu-button":41,"./components/requests-barchart":42,"./components/requests-linechart":43,"./components/search-by-id-form":44,"jquery":4}],35:[function(require,module,exports){
 'use strict';
 
 var eventManager = require('../utils/eventManager');
@@ -41268,7 +41269,7 @@ module.exports = {
         });
 	}
 }
-},{"../utils/eventManager":44,"jquery":4}],36:[function(require,module,exports){
+},{"../utils/eventManager":45,"jquery":4}],36:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -41517,7 +41518,7 @@ function buildChart(){
 }
 
 
-},{"../utils/eventManager":44,"d3":2}],37:[function(require,module,exports){
+},{"../utils/eventManager":45,"d3":2}],37:[function(require,module,exports){
 'use strict';
 
 var eventManager = require('../utils/eventManager');
@@ -41548,7 +41549,7 @@ function runSearch(searchId){
 		eventManager.fire('get_issue_by_id_returned', { owner: 'searchform', data: res });
 	});
 }
-},{"../utils/eventManager":44,"./api":35,"jquery":4}],38:[function(require,module,exports){
+},{"../utils/eventManager":45,"./api":35,"jquery":4}],38:[function(require,module,exports){
 'use strict';
 
 // ===================================================================================
@@ -41744,7 +41745,7 @@ function buildChart(){
 }
 
 
-},{"../utils/eventManager":44,"d3":2}],39:[function(require,module,exports){
+},{"../utils/eventManager":45,"d3":2}],39:[function(require,module,exports){
 'use strict';
 
 var eventManager = require('../utils/eventManager');
@@ -41803,7 +41804,7 @@ module.exports = {
 	}
 }
 
-},{"../utils/eventManager":44,"../utils/urlParameter":45,"jquery":4}],40:[function(require,module,exports){
+},{"../utils/eventManager":45,"../utils/urlParameter":46,"jquery":4}],40:[function(require,module,exports){
 'use strict';
 
 var $ = require("jquery");
@@ -41975,7 +41976,23 @@ function buildChart(){
 }
 
 
-},{"../utils/eventManager":44,"./api":35,"jquery":4,"mapbox.js":16}],41:[function(require,module,exports){
+},{"../utils/eventManager":45,"./api":35,"jquery":4,"mapbox.js":16}],41:[function(require,module,exports){
+'use strict';
+
+var eventManager = require('../utils/eventManager');
+var $ = require('jquery');
+
+module.exports = {
+	init(){
+		$('.js-mobile-menu-button').on('click', function(){
+			console.log('toggle the mobile menu!');
+
+			$('.js-mobile-menu-slide').toggleSlide();
+		});
+	}
+}
+
+},{"../utils/eventManager":45,"jquery":4}],42:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -42074,7 +42091,7 @@ function buildChart(){
 }
 
 
-},{"../utils/eventManager":44,"d3":2}],42:[function(require,module,exports){
+},{"../utils/eventManager":45,"d3":2}],43:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -42218,7 +42235,7 @@ module.exports = {
 		});
 	}
 }
-},{"d3":2}],43:[function(require,module,exports){
+},{"d3":2}],44:[function(require,module,exports){
 'use strict';
 
 var eventManager = require('../utils/eventManager');
@@ -42253,7 +42270,7 @@ function runSearch(searchId){
 		eventManager.fire('get_issue_by_id_returned', { owner: 'searchform', data: res });
 	});
 }
-},{"../utils/eventManager":44,"./api":35,"jquery":4}],44:[function(require,module,exports){
+},{"../utils/eventManager":45,"./api":35,"jquery":4}],45:[function(require,module,exports){
 'use strict';
 
 /* The Event Manager
@@ -42304,7 +42321,7 @@ module.exports = {
 		}
 	}
 }
-},{}],45:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 'use strict';
 
 /* A URL parameter reader

@@ -2,15 +2,41 @@
 	display: flex;
 	width: 100%;
 	min-height: 100vh;
+	position: relative;
+	padding-top: rem($vUnit * 1.5);
+
+	&__mobile-header {
+		position: absolute;
+		top: 0;
+		right: rem($hPad);
+		left: rem($hPad);
+		top: rem($vUnit / 4);
+		display: flex;
+		align-items: center;
+	}
+		&__mobile-header-title {
+			flex-grow: 1;
+		}
+		&__mobile-header-button {
+			margin-right: rem($hPad);
+		}
 
 	&__sidebar {
 		max-width: 350px;
 		min-width: 200px;
 		//height: calc(100vh - 64px); // 64px is height of header --- to keep min height as the screen, checkout vh unnits!
-		padding-top: rem($vUnit / 2);
 		overflow: auto;
 	}
 	&__body {
 		flex-grow: 1;
+	}
+
+	@include breakpoint(medium){
+
+		&__mobile-menu-toggle { display: none; }
+
+		&__sidebar {
+			padding-top: rem($vUnit / 2);
+		}
 	}
 }
