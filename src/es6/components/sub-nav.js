@@ -24,12 +24,10 @@ function runNavigation(navHref, navGroup){
 	eventManager.fire('section_opened', {owner:navGroup, data:{section: navHref}});
 	eventManager.fire('section_closed', {owner:navGroup, data:{section: previousSection}});
 	
-	if (navGroup == 'main') {
-		//update the url history!
-		if (window.history) {
-			var stateObj = null; //could be interesting...
-			history.pushState(stateObj, navHref, "?p=" + navHref);
-		}
+	//update the url history!
+	if (window.history) {
+		var stateObj = null; //could be interesting...
+		history.pushState(stateObj, navHref, "?chart=" + navHref);
 	}
 
 	currentSection = navHref;
@@ -39,7 +37,7 @@ module.exports = {
 	init(){
 		var chartLoaded = false;
 		//what's the URL we're on?
-		var loadChart = urlParameter.getParameter('p');
+		var loadChart = urlParameter.getParameter('chart');
 		if (loadChart) {
 			runNavigation(loadChart, 'main');
 		} else {

@@ -41301,7 +41301,7 @@ function buildChart(){
 	d3.json('dist/data/burn_total.json', function(error, data) {
 		// =================================== Variables	
 		var svgWidth = document.getElementById('burnchart').clientWidth;
-		var svgHeight = svgWidth * 0.7;
+		var svgHeight = Math.min( (svgWidth * 0.5), (screen.height - 90) ); console.log('SCREEN HEIGHT', svgHeight);
 		var chartWidth = (-chartPadding.left) + svgWidth + (-chartPadding.right);
 		var chartHeight = (-chartPadding.top) + svgHeight + (-chartPadding.bottom);
 		var pxToChartTop = chartPadding.top;
@@ -41772,10 +41772,12 @@ function runNavigation(navHref, navGroup){
 	eventManager.fire('section_opened', {owner:navGroup, data:{section: navHref}});
 	eventManager.fire('section_closed', {owner:navGroup, data:{section: previousSection}});
 	
-	//update the url history!
-	if (window.history) {
-		var stateObj = null; //could be interesting...
-		history.pushState(stateObj, navHref, "?chart=" + navHref);
+	if (navGroup == 'main') {
+		//update the url history!
+		if (window.history) {
+			var stateObj = null; //could be interesting...
+			history.pushState(stateObj, navHref, "?p=" + navHref);
+		}
 	}
 
 	currentSection = navHref;
@@ -41785,7 +41787,7 @@ module.exports = {
 	init(){
 		var chartLoaded = false;
 		//what's the URL we're on?
-		var loadChart = urlParameter.getParameter('chart');
+		var loadChart = urlParameter.getParameter('p');
 		if (loadChart) {
 			runNavigation(loadChart, 'main');
 		} else {
