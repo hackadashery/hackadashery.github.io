@@ -44,19 +44,7 @@ function buildChart(){
     var otherRequestsIcon = L.divIcon({className: 'map__round-icon'});
     var yourRequestIcon = L.divIcon({className: 'map__round-icon-single'});
 
-    // Figure out what the date was 7 days ago
-    var weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-
-    //add leading zero if month or day is less than 10
-    function cleanDate(input) {
-        return (input < 10) ? '0' + input : input;
-    }
-
-    // Create date string for 7 days ago that looks like: YYYY-mm-dd
-    weekAgo = weekAgo.getFullYear() + '-' 
-    + cleanDate((weekAgo.getMonth() + 1)) + '-' 
-    + cleanDate((weekAgo.getDate()));
+    var weekAgo = api.getTimeRange("week");
 
     // Function for request result date formatting
     function formatRequestDate(string) {
