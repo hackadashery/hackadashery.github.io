@@ -1,0 +1,13 @@
+.cta {
+	border: 1px solid white;
+	line-height: rem($vUnit);
+	padding: 0 rem($vUnit / 2);
+	border-radius: rem($vUnit / 2);
+	cursor: pointer;
+
+
+	&:hover {
+		background-color: white;
+		color: $hacka_blue;
+	}
+}

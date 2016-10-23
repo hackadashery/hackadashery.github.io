@@ -41795,7 +41795,7 @@ module.exports = {
 			runNavigation(loadChart, 'main');
 		} else {
 			//load the search screen
-			runNavigation('search', 'main');
+			runNavigation('landing', 'main');
 		}
 
 		//listen to the buttons for they shall speak to you

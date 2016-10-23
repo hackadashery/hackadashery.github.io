@@ -635,41 +635,6 @@ These create the structurs within which components will live
 COMPONENTS
 BEM land
 */
-.about {
-  background: url("https://upload.wikimedia.org/wikipedia/commons/f/fd/Philadelphia_Aerial.JPG");
-  background-color: #0995ba;
-  background-blend-mode: multiply;
-  background-size: cover;
-  background-position: center;
-  min-height: 100vh;
-  position: relative; }
-  .about:before {
-    content: " ";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 20%;
-    background: linear-gradient(#0aa8d2, rgba(9, 149, 186, 0)); }
-  .about__content {
-    position: relative;
-    z-index: 1;
-    color: rgba(255, 255, 255, 0.9);
-    max-width: 500px;
-    margin: 6rem auto; }
-  .about__title {
-    line-height: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid white;
-    margin-bottom: 2rem; }
-  .about__description {
-    line-height: 2rem;
-    font-size: 1.125rem; }
-    .about__description a {
-      color: rgba(255, 255, 255, 0.9); }
-      .about__description a:hover {
-        color: white; }
-
 .burnchart {
   width: 100%; }
   .burnchart__new-line {
@@ -714,6 +679,16 @@ BEM land
     stroke: #cacaca; }
   .burnchart__hover-note {
     text-anchor: middle; }
+
+.cta {
+  border: 1px solid white;
+  line-height: 2rem;
+  padding: 0 1rem;
+  border-radius: 1rem;
+  cursor: pointer; }
+  .cta:hover {
+    background-color: white;
+    color: #0aa8d2; }
 
 .general-search-form {
   display: -ms-flexbox;
@@ -766,6 +741,47 @@ BEM land
     cursor: pointer;
     -ms-flex-item-align: end;
         align-self: flex-end; }
+
+.landing {
+  background: url("https://upload.wikimedia.org/wikipedia/commons/f/fd/Philadelphia_Aerial.JPG");
+  background-color: #0995ba;
+  background-blend-mode: multiply;
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  position: relative; }
+  .landing:before {
+    content: " ";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 20%;
+    background: linear-gradient(#0aa8d2, rgba(9, 149, 186, 0)); }
+  .landing__content {
+    position: relative;
+    z-index: 1;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 500px;
+    margin: 6rem auto; }
+  .landing__title {
+    line-height: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid white;
+    margin-bottom: 2rem; }
+  .landing__actions {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+    padding: 0 0 8rem 0; }
+  .landing__description {
+    line-height: 2rem;
+    font-size: 1.125rem; }
+    .landing__description a {
+      color: rgba(255, 255, 255, 0.9); }
+      .landing__description a:hover {
+        color: white; }
 
 .line-basic__line {
   stroke: steelblue;

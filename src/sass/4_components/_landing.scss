@@ -1,4 +1,4 @@
-.about {
+.landing {
 	background: url('https://upload.wikimedia.org/wikipedia/commons/f/fd/Philadelphia_Aerial.JPG');
 	background-color: darken($hacka_blue, 5%);
 	background-blend-mode: multiply;
@@ -25,12 +25,20 @@
 		max-width: 500px;
 		margin: rem($vUnit * 3) auto;
 	}
+
 		&__title {
 			line-height: rem($vUnit / 2);
 			padding-bottom: rem($vUnit / 2);
 			border-bottom: 1px solid white;
 			margin-bottom: rem($vUnit);
 		}
+
+		&__actions {
+			display: flex;
+			justify-content: space-around;
+			padding: 0 0 rem($vUnit * 4) 0;
+		}
+
 		&__description {
 			line-height: rem($vUnit);
 			font-size: rem(18);
