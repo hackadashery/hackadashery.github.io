@@ -41231,23 +41231,49 @@ if (typeof module !== 'undefined') {
 
 },{}],34:[function(require,module,exports){
 window.WL_STATE = {};
+console.time('INIT');
 
+console.time('mobile menu button');
 require('./components/mobile-menu-button').init();
-require('./components/line-basic').init();
-require('./components/requests-barchart').init();
-require('./components/requests-linechart').init();
-require('./components/burn').init();
-require('./components/map').init();
+console.timeEnd('mobile menu button');
 
+console.time('line basic');
+require('./components/line-basic').init();
+console.timeEnd('line basic');
+
+console.time('requests barchart');
+require('./components/requests-barchart').init();
+console.timeEnd('requests barchart');
+
+console.time('requests linechart');
+require('./components/requests-linechart').init();
+console.timeEnd('requests linechart');
+
+console.time('burn');
+require('./components/burn').init();
+console.timeEnd('burn');
+
+console.time('map');
+require('./components/map').init();
+console.timeEnd('map');
+
+console.time('search by id form');
 require('./components/search-by-id-form').init();
+console.timeEnd('search by id form');
+
+console.time('general search form');
 require('./components/general-search-form').init();
+console.timeEnd('general search form');
 
 //Load this last - the events fired from here will kick things off so if you set up a subsciber after this has run you might miss out on something!
+console.time('main nav');
 require('./components/main-nav').init();
+console.timeEnd('main nav');
 
 var $ = require('jquery');
 $('.js-main').addClass('js-loaded');
 $('.js-header').addClass('js-loaded');
+console.timeEnd('INIT');
 },{"./components/burn":36,"./components/general-search-form":37,"./components/line-basic":38,"./components/main-nav":39,"./components/map":40,"./components/mobile-menu-button":41,"./components/requests-barchart":42,"./components/requests-linechart":43,"./components/search-by-id-form":44,"jquery":4}],35:[function(require,module,exports){
 'use strict';
 
