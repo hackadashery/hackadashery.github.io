@@ -580,14 +580,14 @@ These create the structurs within which components will live
   padding-top: 3rem; }
   .view__mobile-header {
     position: absolute;
-    top: 0;
     right: 0.625rem;
     left: 0.625rem;
     top: 0.5rem;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-align: center;
-        align-items: center; }
+        align-items: center;
+    min-height: 2rem; }
   .view__mobile-header-title {
     -ms-flex-positive: 1;
         flex-grow: 1; }
@@ -597,14 +597,25 @@ These create the structurs within which components will live
     max-width: 350px;
     min-width: 200px;
     overflow: auto; }
+    .view__sidebar--mobile-slide {
+      position: absolute;
+      min-height: 100vh;
+      background: white;
+      left: 0;
+      transform: translateX(-100%);
+      transition: transform 0.2s ease; }
+      .view__sidebar--mobile-slide.open {
+        transform: translateX(0%); }
   .view__body {
     -ms-flex-positive: 1;
         flex-grow: 1; }
   @media (min-width: 768px) {
-    .view__mobile-menu-toggle {
+    .view__mobile-header-button {
       display: none; }
     .view__sidebar {
-      padding-top: 1rem; } }
+      padding-top: 1rem; }
+      .view__sidebar--mobile-slide {
+        position: static; } }
 
 /*
 COMPONENTS
