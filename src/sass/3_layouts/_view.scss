@@ -28,8 +28,8 @@
 
 		&--mobile-slide {
 			position: absolute;
-			min-height: 100vh;
-			background: white;
+			z-index: $z-mobile-menu;
+			background: $background-color;
 			left: 0;
 			transform: translateX(-100%);
 			transition: transform 0.2s ease;
@@ -53,6 +53,7 @@
 
 			&--mobile-slide {
 				position: static;
+				transform: translateX(0%);
 			}
 		}
 	}

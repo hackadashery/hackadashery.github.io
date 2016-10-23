@@ -3,6 +3,12 @@ VARIABLES
 The various settings / variables that will be used throughout
 */
 /*
+This is to keep the z space organized.
+As in free of the whole "ahh! My thing's not on top of that other thing, I'll just stick more 9's in mine".
+No - bad fed!
+Stick it in here, one name per z thing, keep them sorted by z-index.
+*/
+/*
 MIXINS
 mixins / functions
 */
@@ -599,8 +605,8 @@ These create the structurs within which components will live
     overflow: auto; }
     .view__sidebar--mobile-slide {
       position: absolute;
-      min-height: 100vh;
-      background: white;
+      z-index: 1500;
+      background: #f5fafb;
       left: 0;
       transform: translateX(-100%);
       transition: transform 0.2s ease; }
@@ -615,7 +621,8 @@ These create the structurs within which components will live
     .view__sidebar {
       padding-top: 1rem; }
       .view__sidebar--mobile-slide {
-        position: static; } }
+        position: static;
+        transform: translateX(0%); } }
 
 /*
 COMPONENTS
