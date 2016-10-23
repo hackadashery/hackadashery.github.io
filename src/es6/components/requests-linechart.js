@@ -24,6 +24,7 @@ module.exports = {
 function buildChart(){
 	if (chartIsBuilt) { return; }
 	chartIsBuilt = true;
+	var chartPadding = { top: 60, right: 60, bottom: 40, left: 60 }
 
 	// ------------------------------------------------------------------------------
 	// SET TIME RANGE
@@ -57,7 +58,7 @@ function buildChart(){
 	
 
 	// ------------------------------------------------------------------------------
-	// GET DATA!
+	// BUILD SVG CHART AND GET DATA!
 	// ------------------------------------------------------------------------------ 
 	function getd3(url) {
 		d3.select('.requests-linechart__graph').remove(); // if graph is there, clear it out before building another
@@ -72,6 +73,15 @@ function buildChart(){
 			width = 500 - margin.left - margin.right,
 			height = 300 - margin.top - margin.bottom;
 
+		var svgWidth = document.getElementById('linebasic').clientWidth;
+		var svgHeight = Math.min( (svgWidth * 0.5), (screen.height - 90) ); console.log('SCREEN HEIGHT', svgHeight);
+		var chartWidth = (-chartPadding.left) + svgWidth + (-chartPadding.right);
+		var chartHeight = (-chartPadding.top) + svgHeight + (-chartPadding.bottom);
+		var pxToChartTop = chartPadding.top;
+		var pxToChartBottom = chartPadding.top + chartHeight;
+		var pxToChartLeft = chartPadding.left;
+		var pxToChartRight = chartPadding.left + chartWidth;
+
 		// parse the date
 		var parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L");
 		var parseDay = d3.timeParse("%Y-%m-%d");
@@ -83,8 +93,8 @@ function buildChart(){
 		var dayDate = d3.timeFormat("%Y-%m-%d");
 
 		// scale the data to the size of the graph
-		var x = d3.scaleTime().range([0,width]);
-		var y = d3.scaleLinear().range([height,0]);
+		var x = d3.scaleTime().range([0,chartWidth]);
+		var y = d3.scaleLinear().range([chartHeight,0]);
 
 		// generate line path and set up strucure to put data into sets of x,y coordinates
 		var valueline = d3.line()
@@ -100,8 +110,8 @@ function buildChart(){
 		// add SVG element to DOM as our line graph canvas and set its dimensions
 		var svg = d3.select('.requests-linechart')
 			.append('svg')
-				.attr('width', width + margin.left + margin.right)
-				.attr('height', height + margin.top + margin.bottom)
+				.attr('width', svgWidth)
+				.attr('height', svgHeight)
 				.attr('class', 'requests-linechart__graph')
 			.append('g')
 				.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
@@ -144,7 +154,7 @@ function buildChart(){
 			svg.append('g')
 				.attr('class', 'line-basic__grid')
 				.call(make_y_axis()
-					.tickSize(-width, 0, 0)
+					.tickSize(-chartWidth, 0, 0)
 					.tickFormat("")
 				)
 
@@ -156,7 +166,7 @@ function buildChart(){
 
 			// add x-axis
 			svg.append('g')
-				.attr('transform', 'translate(0,' + height + ')')
+				.attr('transform', 'translate(0,' + chartHeight + ')')
 				.attr('class', 'requests-linechart__axis requests-linechart__axis-x')
 				.call(d3.axisBottom(x).ticks(5));
 
@@ -167,7 +177,7 @@ function buildChart(){
 
 			// add graph title
 			svg.append('text')
-				.attr('x', (width/2))
+				.attr('x', (chartWidth/2))
 				.attr('y', 0 - (margin.top / 2))
 				.attr('class', 'requests-linechart__title')
 				.text('Requests Received');

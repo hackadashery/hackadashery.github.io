@@ -19,6 +19,33 @@ module.exports = {
 				$(this).html('Oh wait, yes I do know my case ID');
 			}
 		});
+
+		$('.js-adv-search-submit').on('click', function(e){
+			var $advForm = $(this).closest('.js-general-search-form');
+			var queryStringsArray = [];
+
+			//get req number
+			var serviceNo = $advForm.find('.js-search-service-type').val();
+			var serviceQuery = '';
+			if (serviceNo.length > 0) {
+				serviceQuery = 'service_code="' + serviceNo + '"';
+				queryStringsArray.push(serviceQuery);
+			}
+
+			//requested_datetime
+			var dateInput = $advForm.find('.js-search-date-of-request').val();
+			var dateQuery = '';
+			if (dateInput.length > 0){
+				dateQuery = 'requested_datetime="' + new Date(dateInput).toISOString() + '"';
+				queryStringsArray.push(dateQuery);
+			}
+
+			
+			var queryString = queryStringsArray.join(' AND ');
+			api.getRequestsByQuery(queryString).then(function(data){
+				console.log('==================requests found: ', data);
+			});
+		});
 	}
 }
 

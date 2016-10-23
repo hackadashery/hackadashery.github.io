@@ -7,6 +7,16 @@ module.exports = {
 	getIssueById(id){
 		return $.get( "https://data.phila.gov/resource/4t9v-rppq.json?service_request_id=" + id);
 	},
+	getRequestsByQuery(queryString){
+		console.info('api:getRequestsByQuery', queryString);
+		return $.ajax({
+			url: "https://data.phila.gov/resource/4t9v-rppq.json",
+			type: "GET",
+			data: {
+				$where : queryString
+			}
+        });
+	},
 	getRelatedRequests(service_name, requested_datetime){
 		console.info('api:getRelatedRequests', service_name, requested_datetime);
 		return $.ajax({
@@ -16,6 +26,12 @@ module.exports = {
 				$where : "service_name=" + "'" + service_name + "' AND requested_datetime>=" + "'" + requested_datetime + "'"
 			}
         });
+	},
+	getRequestTypes(){
+		return $.ajax({
+			url:"http://www.publicstuff.com/api/open311/services.json?jurisdiction_id=philadelphia-pa",
+			type: "GET"
+		});
 	},
 	getD3url(service_name, requested_datetime){
 		console.info('api:getD3url', service_name, requested_datetime);
