@@ -32,6 +32,9 @@ function runNavigation(navHref, navGroup){
 		}
 	}
 
+	ga('set', 'page', '/?p=' + navHref);
+	ga('send', 'pageview');
+
 	currentSection = navHref;
 }
 
