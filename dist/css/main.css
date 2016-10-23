@@ -454,8 +454,8 @@ These create the structurs within which components will live
           -ms-grid-row-align: flex-end;
           align-items: flex-end; }
       .header__sidebar {
-        max-width: 350px;
-        min-width: 270px;
+        -ms-flex-preferred-size: 270px;
+            flex-basis: 270px;
         padding-left: 0.625rem; }
       .header__body {
         -ms-flex-positive: 1;
@@ -609,8 +609,8 @@ These create the structurs within which components will live
   .view__mobile-header-button {
     margin-right: 0.625rem; }
   .view__sidebar {
-    max-width: 350px;
-    min-width: 200px;
+    -ms-flex-preferred-size: 270px;
+        flex-basis: 270px;
     overflow: auto; }
     .view__sidebar--mobile-slide {
       position: absolute;

@@ -22,8 +22,7 @@
 		}
 
 	&__sidebar {
-		max-width: 350px;
-		min-width: 200px;
+		flex-basis: 270px;
 		overflow: auto;
 
 		&--mobile-slide {
