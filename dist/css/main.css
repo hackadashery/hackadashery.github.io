@@ -451,6 +451,7 @@ These create the structurs within which components will live
       -ms-flex-direction: row;
           flex-direction: row;
       -ms-flex-align: end;
+          -ms-grid-row-align: flex-end;
           align-items: flex-end; }
       .header__sidebar {
         -ms-flex-preferred-size: 270px;
