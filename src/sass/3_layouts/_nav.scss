@@ -1,38 +1,42 @@
 .nav {
+	padding: 0 rem($hPad);
+	margin-bottom: rem($vUnit);
 
-	&__section {
-		padding: 0 rem($hPad) rem($vUnit) rem($hPad);
+	&__button {
+		width: 100%;
+		text-align: left;
+		background: $hacka_blue;
+		color: white;
+		text-transform: uppercase;
+		font-weight: 200;
+		font-size: rem(14);
+		line-height: rem($vUnit);
+		padding: 0 rem($hPad);
+		cursor: pointer;
+		border: 0;
+		+ .nav__button {
+			border-top: 1px solid $background-color;
+			margin-top: -1px;
+		}
 
+
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		
+		&:hover {
+			color: white;
+			background: $link-hover-color;
+		}
+
+		svg {
+			fill: $hacka_ellow;
+			fill: white;
+			width: 1em;
+			height: 1em;
+			display: inline-block;
+			vertical-align: middle;
+		}
 	}
-		&__section-title {
-			// text-align: center;
-			font-weight: bold;
-			text-transform: uppercase;
-			font-size: rem(16);
-			line-height: rem($vUnit);
-		}
 
-		&__button {
-			display: block;
-			width: 100%;
-			text-align: left;
-			background: white;
-			color: $gray-5;
-			text-transform: uppercase;
-			font-weight: 200;
-			font-size: rem(14);
-			line-height: rem($vUnit);
-			padding: 0 rem($hPad);
-			cursor: pointer;
-
-			border: 0;
-			+ .main-nav__button {
-				border-top: 1px solid $background-color;
-				margin-top: -1px;
-			}
-
-			&:hover {
-				color: $text-color;
-			}
-		}
 }

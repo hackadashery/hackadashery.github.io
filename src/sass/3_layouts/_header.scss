@@ -14,6 +14,10 @@
 		transform: translate(0, 0px);
 	}
 
+	&__title {
+		color: $title-color;
+	}
+
 
 	@include breakpoint(medium){
 		flex-direction: row;

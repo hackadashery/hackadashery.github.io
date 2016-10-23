@@ -45,10 +45,10 @@ body {
 /* HTML5 display definitions
    ========================================================================== */
 *::-moz-selection {
-  background: #f27835;
+  background: #e62222;
   /* WebKit/Blink Browsers */ }
 *::selection {
-  background: #f27835;
+  background: #e62222;
   /* WebKit/Blink Browsers */ }
 
 /**
@@ -279,11 +279,11 @@ button {
   border: 0;
   background: transparent;
   padding: 0;
-  color: #14b9d6;
+  color: #0aa8d2;
   cursor: pointer;
   transition: color 0.2s ease; }
   button:hover {
-    color: #f27835; }
+    color: #e62222; }
 
 /**
  * Restore the font weight unset by the previous rule.
@@ -444,6 +444,8 @@ These create the structurs within which components will live
   .header.js-loaded {
     opacity: 1;
     transform: translate(0, 0px); }
+  .header__title {
+    color: #e62222; }
   @media (min-width: 768px) {
     .header {
       -ms-flex-direction: row;
@@ -470,33 +472,40 @@ These create the structurs within which components will live
     opacity: 1;
     transform: translate(0, 0px); }
 
-.nav__section {
-  padding: 0 0.625rem 2rem 0.625rem; }
-
-.nav__section-title {
-  font-weight: bold;
-  text-transform: uppercase;
-  font-size: 1rem;
-  line-height: 2rem; }
-
-.nav__button {
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: white;
-  color: #5d6d80;
-  text-transform: uppercase;
-  font-weight: 200;
-  font-size: 0.875rem;
-  line-height: 2rem;
+.nav {
   padding: 0 0.625rem;
-  cursor: pointer;
-  border: 0; }
-  .nav__button + .main-nav__button {
-    border-top: 1px solid #f5fafb;
-    margin-top: -1px; }
-  .nav__button:hover {
-    color: #323a45; }
+  margin-bottom: 2rem; }
+  .nav__button {
+    width: 100%;
+    text-align: left;
+    background: #0aa8d2;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 200;
+    font-size: 0.875rem;
+    line-height: 2rem;
+    padding: 0 0.625rem;
+    cursor: pointer;
+    border: 0;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+        align-items: center;
+    -ms-flex-pack: justify;
+        justify-content: space-between; }
+    .nav__button + .nav__button {
+      border-top: 1px solid #f5fafb;
+      margin-top: -1px; }
+    .nav__button:hover {
+      color: white;
+      background: #e62222; }
+    .nav__button svg {
+      fill: #fefe00;
+      fill: white;
+      width: 1em;
+      height: 1em;
+      display: inline-block;
+      vertical-align: middle; }
 
 /* .splitter is a layout class to make it easy to put things next to each other */
 .splitter {
@@ -618,11 +627,9 @@ These create the structurs within which components will live
   @media (min-width: 768px) {
     .view__mobile-header-button {
       display: none; }
-    .view__sidebar {
-      padding-top: 1rem; }
-      .view__sidebar--mobile-slide {
-        position: static;
-        transform: translateX(0%); } }
+    .view__sidebar--mobile-slide {
+      position: static;
+      transform: translateX(0%); } }
 
 /*
 COMPONENTS
@@ -630,7 +637,7 @@ BEM land
 */
 .about {
   background: url("https://upload.wikimedia.org/wikipedia/commons/f/fd/Philadelphia_Aerial.JPG");
-  background-color: #12a5bf;
+  background-color: #0995ba;
   background-blend-mode: multiply;
   background-size: cover;
   background-position: center;
@@ -643,7 +650,7 @@ BEM land
     right: 0;
     top: 0;
     height: 20%;
-    background: linear-gradient(#14b9d6, rgba(18, 165, 191, 0)); }
+    background: linear-gradient(#0aa8d2, rgba(9, 149, 186, 0)); }
   .about__content {
     position: relative;
     z-index: 1;
@@ -703,9 +710,6 @@ BEM land
     stroke: #cacaca; }
   .burnchart__hover-note {
     text-anchor: middle; }
-
-.explore__section {
-  padding-top: 1rem; }
 
 .general-search-form {
   display: -ms-flexbox;
@@ -822,21 +826,21 @@ BEM land
       width: 15px;
       height: 15px;
       margin: 0 1rem 0 0;
-      background: #f27835;
+      background: #e62222;
       border-radius: 50%; }
     .map__legend-item--related:before {
-      background: #14b9d6; }
+      background: #0aa8d2; }
   .map__round-icon {
     width: 15px !important;
     height: 15px !important;
-    background: #14b9d6;
+    background: #0aa8d2;
     border-radius: 50%; }
     .map__round-icon--single {
       background: #f27835; }
   .map__round-icon-single {
     width: 15px !important;
     height: 15px !important;
-    background: #f27835;
+    background: #e62222;
     border-radius: 50%; }
 
 .mobile-menu-button {
@@ -935,10 +939,10 @@ BEM land
     -ms-flex-item-align: end;
         align-self: flex-end; }
     .search-by-id__button svg {
-      fill: #14b9d6;
+      fill: #0aa8d2;
       transition: fill 0.2s ease; }
     .search-by-id__button:hover svg {
-      fill: #f27835; }
+      fill: #e62222; }
 
 .search-results {
   display: -ms-flexbox;
@@ -972,12 +976,12 @@ BEM land
     left: 1px;
     right: 1px;
     bottom: 0;
-    background: #14b9d6;
+    background: #0aa8d2;
     cursor: pointer;
     transition: all 0.2s ease; }
     .tabs__tab:hover, .tabs__tab:active, .tabs__tab.active {
       top: -10px;
-      background: #f27835; }
+      background: #e62222; }
       .tabs__tab:hover .tabs__tab-text, .tabs__tab:active .tabs__tab-text, .tabs__tab.active .tabs__tab-text {
         bottom: 10px; }
   .tabs__tab-text {

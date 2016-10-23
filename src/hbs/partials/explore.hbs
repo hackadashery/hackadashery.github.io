@@ -14,11 +14,28 @@
 <div class="view__sidebar view__sidebar--mobile-slide js-mobile-menu-slide" data-mobile-menu-name="explore">
 
 	<nav class="nav">
-		<section class="nav__section">
-			<button class="nav__button js-nav-button" data-nav-href="linebasic" data-nav-group="explore">Grey Linechart</button>
-			<button class="nav__button js-nav-button" data-nav-href="bluebar" data-nav-group="explore">Blue barchart</button>
-			<button class="nav__button js-nav-button" data-nav-href="burnrate" data-nav-group="explore">Burnrate</button>
-		</section>
+		
+		<button class="nav__button js-nav-button" data-nav-href="linebasic" data-nav-group="explore">
+			Grey Linechart
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">
+			  <path d="M5 0v2h-5v1h5v2l3-2.53-3-2.47z" transform="translate(0 1)" />
+			</svg>
+		</button>
+
+		<button class="nav__button js-nav-button" data-nav-href="bluebar" data-nav-group="explore">
+			Blue barchart
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">
+			  <path d="M5 0v2h-5v1h5v2l3-2.53-3-2.47z" transform="translate(0 1)" />
+			</svg>
+		</button>
+		
+		<button class="nav__button js-nav-button" data-nav-href="burnrate" data-nav-group="explore">
+			Burnrate
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">
+			  <path d="M5 0v2h-5v1h5v2l3-2.53-3-2.47z" transform="translate(0 1)" />
+			</svg>
+		</button>
+
 	</nav>
 
 	<div class="search-by-id-wrap">
@@ -48,16 +65,31 @@
 	
 </div>
 <div class="view__body">
+	<section id="explore-welcome"
+			 class="js-nav-section"
+			 data-nav-group="explore">
+			 <!-- the default first section, therefor no display:none; -->
+		This is the explore section!
+	</section>
 	
-	<section id="linebasic" class="explore__section js-nav-section" data-nav-group="explore">
+	<section id="linebasic" 
+			 class="js-nav-section" 
+			 data-nav-group="explore"
+			 style="display: none;">
 		<div class="requests-linechart"></div>
 	</section>
 
-	<section id="bluebar" class="explore__section js-nav-section" data-nav-group="explore">
+	<section id="bluebar" 
+			 class="js-nav-section" 
+			 data-nav-group="explore"
+			 style="display: none;">
 		<svg id="requests-barchart" class="requests-barchart"></svg>
 	</section>
 
-	<section id="burnrate" class="explore__section js-nav-section" data-nav-group="explore">
+	<section id="burnrate" 
+			 class="js-nav-section" 
+			 data-nav-group="explore"
+			 style="display: none;">
 		<div class="toolbar">
 			Dept picker | Timespan
 		</div>
