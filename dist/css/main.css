@@ -665,6 +665,10 @@ BEM land
   .about__description {
     line-height: 2rem;
     font-size: 1.125rem; }
+    .about__description a {
+      color: rgba(255, 255, 255, 0.9); }
+      .about__description a:hover {
+        color: white; }
 
 .burnchart {
   width: 100%; }

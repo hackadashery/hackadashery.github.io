@@ -34,5 +34,12 @@
 		&__description {
 			line-height: rem($vUnit);
 			font-size: rem(18);
+
+			a {
+				color: rgba(255,255,255,0.9);
+				&:hover {
+					color: white;
+				}
+			}
 		}
 }
