@@ -16,7 +16,7 @@
 	<nav class="nav">
 		
 		<button class="nav__button js-nav-button" data-nav-href="linebasic" data-nav-group="explore">
-			Grey Linechart
+			Request Rates
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">
 			  <path d="M5 0v2h-5v1h5v2l3-2.53-3-2.47z" transform="translate(0 1)" />
 			</svg>
@@ -38,7 +38,15 @@
 
 	</nav>
 
-	<div class="search-by-id-wrap">
+	<div class="filter__list filter__list--time">
+		<a class="js-filter filter__item filter__item--day">Day</a>
+		<a class="js-filter filter__item filter__item--week">Week</a>
+		<a class="js-filter filter__item filter__item--month">Month</a>
+		<a class="js-filter filter__item filter__item--year">Year</a>
+	</div>
+
+<!-- hide until functionality is in place -->
+<!-- 	<div class="search-by-id-wrap">
 		<div class="search-by-id js-search-by-id-form">
 			<label class="search-by-id__label">Requests by ZIP</label> 
 			<input type="text" class="search-by-id__input js-search-by-id-input">
@@ -60,7 +68,7 @@
 				</svg>
 			</button>
 		</div>
-	</div>
+	</div> -->
 
 	
 </div>
