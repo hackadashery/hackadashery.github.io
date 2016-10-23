@@ -1020,6 +1020,14 @@ BEM land
   top: 20px; }
 
 /*
+PAGES
+BEM land for big things
+*/
+.submit {
+  width: 100%;
+  text-align: center; }
+
+/*
 UTILITY CLASSES
 Single responsability classes
  */

@@ -29,7 +29,13 @@ BEM land
 @import "4_components/**/*.scss";
 
 /*
+PAGES
+BEM land for big things
+*/
+@import "5_pages/**/*.scss";
+
+/*
 UTILITY CLASSES
 Single responsability classes
  */
-@import "5_nukes/**/*.scss";
+@import "6_nukes/**/*.scss";

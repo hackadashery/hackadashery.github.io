@@ -71,17 +71,22 @@
 
 	<div class="main js-main">
 
+		<section id="landing" class="view js-nav-section landing" data-nav-group="main">
+			{{> landing }}
+		</section>
+
 		<section id="search" class="view js-nav-section" data-nav-group="main">
 			{{> map }}
+		</section>
+
+		<section id="submit" class="view js-nav-section" data-nav-group="main">
+			{{> submit }}
 		</section>
 
 		<section id="explore" class="view js-nav-section" data-nav-group="main">
 			{{> explore }}
 		</section>
 
-		<section id="landing" class="view js-nav-section landing" data-nav-group="main">
-			{{> landing }}
-		</section>
 
 	</div>
 </body>
