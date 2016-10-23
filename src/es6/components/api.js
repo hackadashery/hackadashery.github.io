@@ -17,15 +17,10 @@ module.exports = {
 			}
         });
 	},
-	getTodaysRequests(service_name, requested_datetime){
-		console.info('api:getRelatedRequests', service_name, requested_datetime);
-		return $.ajax({
-			url: "https://data.phila.gov/resource/4t9v-rppq.json",
-			type: "GET",
-			data: {
-				$where : "service_name=" + "'" + service_name + "' AND requested_datetime>=" + "'" + requested_datetime + "'"
-			}
-        });
+	getD3url(service_name, requested_datetime){
+		console.info('api:getD3url', service_name, requested_datetime);
+		let url = "https://data.phila.gov/resource/4t9v-rppq.json?$where=service_name='" + service_name + "' AND requested_datetime>=" + "'" + requested_datetime + "'";
+		return url;
 	},
 	getTimeRange(range){
 		// Creates time ranges (day, week, month, year) and formats dates for 311 API requests

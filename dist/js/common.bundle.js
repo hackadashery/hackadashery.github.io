@@ -41262,15 +41262,10 @@ module.exports = {
 			}
         });
 	},
-	getTodaysRequests(service_name, requested_datetime){
-		console.info('api:getRelatedRequests', service_name, requested_datetime);
-		return $.ajax({
-			url: "https://data.phila.gov/resource/4t9v-rppq.json",
-			type: "GET",
-			data: {
-				$where : "service_name=" + "'" + service_name + "' AND requested_datetime>=" + "'" + requested_datetime + "'"
-			}
-        });
+	getD3url(service_name, requested_datetime){
+		console.info('api:getD3url', service_name, requested_datetime);
+		let url = "https://data.phila.gov/resource/4t9v-rppq.json?$where=service_name='" + service_name + "' AND requested_datetime>=" + "'" + requested_datetime + "'";
+		return url;
 	},
 	getTimeRange(range){
 		// Creates time ranges (day, week, month, year) and formats dates for 311 API requests
@@ -42178,7 +42173,7 @@ function buildChart(){
 		height = 300 - margin.top - margin.bottom;
 
 	// parse the date
-	var parseDate = d3.timeParse("%-m/%-d/%-y %H:%M");
+	var parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L");
 	var parseDay = d3.timeParse("%-m/%-d/%-y");
 
 	// style the date for tooltips
@@ -42215,43 +42210,34 @@ function buildChart(){
 	function make_y_axis() {
 		return d3.axisLeft(y).ticks(5);
 	}
-
-// temp 
-var service = "Rubbish/Recyclable Material Collection";
-getTodaysRequests(service,api.getTimeRange('week'));
+ 
 	// GET DATA!
-	// get 311 data based on service name for the last 7 days
-  function getTodaysRequests(service,date) {
-  		
-  		 
-      api.getTodaysRequests(service, date).then(function(data){
-          console.log(data);
-          $.each(data, function(key, obj) {
+	var service = "Rubbish/Recyclable Material Collection";
+  var weekAgo = api.getTimeRange('week');
+  var url = api.getD3url(service,weekAgo);
 
-          });
-
-          // eventManager.fire('get_related_requests_returned', {owner:"map", data: { service, originalRequestID, data }});
-      });
-  }
-
-	d3.json('dist/data/sept311.json', function(error, data) {
-		data.forEach(function(d) {
-			d.date = parseDate(d['Requested Date'].Time);
-			d.dayDate = dayDate(d.date);
+		d3.json(url, function(error, data) {
+			$.each(data, function(d) {
+				console.log(data[d]);
+			 data[d].date = parseDate(data[d].requested_datetime);
+			 data[d].dayFormat = dayDate(data[d].date);
+			console.log(data[d].dayFormat);
 		});
 
 		var reqsPerDay = d3.nest()
-			.key(function(d) { return d.dayDate; })
-			.key(function(d) { return d["Service Name"]; })
+			.sortKeys(d3.ascending).key(function(d) { return d.dayFormat; })
+			.key(function(d) { return d["service_name"]; })
 			.rollup(function(v) { return {
 				"count": v.length } 
 			})
 			.entries(data);
-		//console.log(JSON.stringify(reqsPerDay));
+		console.log(JSON.stringify(reqsPerDay));
 
 		reqsPerDay.forEach(function(d) {
 			d.sum = +d.values[0].value.count;
+			console.log(d.sum);
 			d.day = parseDay(d.key);
+			console.log(d.key);
 			
 		});
 
