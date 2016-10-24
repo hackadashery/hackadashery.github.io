@@ -46,8 +46,15 @@ module.exports = {
 				queryStringsArray.push(dateQuery);
 			}
 
+			var agencyInput = $advForm.find('.js-search-agency-responsible').val();
+			var agencyQuery = '';
+			if (agencyInput.length > 0){
+				agencyQuery = "agency_responsible='" + agencyInput + "'";
+				queryStringsArray.push(agencyQuery);
+			}
+
 			
-			var queryString = queryStringsArray.join(' AND ');
+			var queryString = queryStringsArray.join(' AND ') + "&$limit=1000";
 			if (queryString.length > 0) {
 				api.getRequestsByQuery(queryString).then(function(data){
 					console.log('==================requests found: ', data);
