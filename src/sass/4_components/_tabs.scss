@@ -17,8 +17,7 @@
 			transition: all 0.2s ease;
 
 			&:hover,
-			&:active,
-			&.active {
+			&:active {
 				top: -10px;
 				background: $hacka_range;
 
@@ -26,6 +25,14 @@
 					bottom: 10px;
 				}
 			}
+
+			&.active {
+				top: -10px;
+				.tabs__tab-text {
+					bottom: 10px;
+				}
+			}
+
 		}
 
 			&__tab-text {

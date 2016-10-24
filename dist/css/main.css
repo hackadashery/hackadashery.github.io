@@ -499,6 +499,8 @@ These create the structurs within which components will live
     .nav__button:hover {
       color: white;
       background: #e62222; }
+    .nav__button.active {
+      font-weight: bold; }
     .nav__button svg {
       fill: #fefe00;
       fill: white;
@@ -999,10 +1001,14 @@ BEM land
     background: #0aa8d2;
     cursor: pointer;
     transition: all 0.2s ease; }
-    .tabs__tab:hover, .tabs__tab:active, .tabs__tab.active {
+    .tabs__tab:hover, .tabs__tab:active {
       top: -10px;
       background: #e62222; }
-      .tabs__tab:hover .tabs__tab-text, .tabs__tab:active .tabs__tab-text, .tabs__tab.active .tabs__tab-text {
+      .tabs__tab:hover .tabs__tab-text, .tabs__tab:active .tabs__tab-text {
+        bottom: 10px; }
+    .tabs__tab.active {
+      top: -10px; }
+      .tabs__tab.active .tabs__tab-text {
         bottom: 10px; }
   .tabs__tab-text {
     position: absolute;

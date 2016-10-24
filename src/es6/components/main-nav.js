@@ -11,15 +11,27 @@ var currentSection = '';
 function runNavigation(navHref, navGroup){
 	previousSection = currentSection;
 	
-	//hide and show
+	//hide and show the sections
 	$('.js-nav-section').each(function(){
 		if ($(this).data('nav-group') == navGroup) {
 			$(this).hide();
 		}
 	});
-
 	$('#' + navHref).show();
 	
+	//set the active state
+	$('.js-nav-button').each(function(){
+		var $this = $(this);
+		//only do it for this nav group
+		if ($this.data('nav-group') == navGroup) {
+			if ($this.data('nav-href') == navHref) {
+				$this.addClass('active');
+			} else {
+				$this.removeClass('active');
+			}
+		}
+	});
+
 	//Let everyone know
 	eventManager.fire('section_opened', {owner:navGroup, data:{section: navHref}});
 	eventManager.fire('section_closed', {owner:navGroup, data:{section: previousSection}});

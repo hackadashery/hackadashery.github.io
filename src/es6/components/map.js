@@ -127,7 +127,7 @@ function buildChart(){
     function getRelatedRequests(service, date, originalRequestID) {
         api.getRelatedRequests(service, date).then(function(data){
             console.log(data);
-            markersLayer.clearLayers();
+            
             $.each(data, function(key, obj) {
                 // add to map if lat and long are available
                 if ( this.lat && this.lon ) {

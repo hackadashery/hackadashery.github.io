@@ -29,6 +29,10 @@
 			background: $link-hover-color;
 		}
 
+		&.active {
+			font-weight: bold;
+		}
+
 		svg {
 			fill: $hacka_ellow;
 			fill: white;
