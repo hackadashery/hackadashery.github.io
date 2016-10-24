@@ -127,6 +127,7 @@ function buildChart(){
     function getRelatedRequests(service, date, originalRequestID) {
         api.getRelatedRequests(service, date).then(function(data){
             console.log(data);
+            markersLayer.clearLayers();
             $.each(data, function(key, obj) {
                 // add to map if lat and long are available
                 if ( this.lat && this.lon ) {
@@ -154,5 +155,27 @@ function buildChart(){
             eventManager.fire('get_related_requests_returned', {owner:"map", data: { service, originalRequestID, data }});
         });
     }
+
+    eventManager.subscribe('general_request_search_returned', function(event){
+        $.each(event.data.results, function(key, obj) {
+            // add to map if lat and long are available
+            if ( this.lat && this.lon ) {
+                var lat = Number(this.lat);
+                var lon = Number(this.lon);
+                let requested_date = formatRequestDate(this.requested_datetime);
+                let expected_date = formatRequestDate(this.expected_datetime);
+                let popUp = "<p class='search-results__item'><span class='search-results__item--key'>Case ID</span>" + this.service_request_id + "</p>";
+                    popUp += "<p class='search-results__item'><span class='search-results__item--key'>Status</span>" + this.status + "</p>";
+                    popUp += "<p class='search-results__item'><span class='search-results__item--key'>Date Requested</span>" + requested_date + "</p>";
+                    popUp += "<p class='search-results__item'><span class='search-results__item--key'>Expected Resolution Date</span>" + expected_date + "</p>";
+                    popUp += "<p class='search-results__item'><span class='search-results__item--key'>Address</span>" + this.address + "</p>";
+                
+                new L.marker([lat, lon], {icon: otherRequestsIcon})
+                .addTo( markersLayer ).bindPopup(popUp);
+            } else {
+                console.log("incomplete geographic info");
+            }
+        });
+    });
 }
 
