@@ -37,19 +37,23 @@ module.exports = {
 			var dateQuery = '';
 			if (dateInput.length > 0){
 				var fromDate = new Date(dateInput);
-				fromDate.setDate(fromDate.getDate() - 10);
+				fromDate.setDate(fromDate.getDate() - 1);
 				var toDate = new Date(dateInput);
-				toDate.setDate(toDate.getDate() + 10);
-				dateQuery = "requested_datetime between '" + fromDate.toISOString() + "' and '" + toDate.toISOString() + "'";
+				toDate.setDate(toDate.getDate() + 1);
+				//Wrong: $where=requested_datetime%20between%20%272016-09-25T00:00:00.000Z%27%20and%20%272016-10-15T00:00:00.000Z%27
+				//Right: $where=requested_datetime%20between%20%272016-09-25T00:00:00%27%20and%20%272016-10-15T00:00:00%27
+				dateQuery = "requested_datetime between '" + fromDate.toISOString().replace('.000Z', '') + "' and '" + toDate.toISOString().replace('.000Z', '') + "'";
 				queryStringsArray.push(dateQuery);
 			}
 
 			
 			var queryString = queryStringsArray.join(' AND ');
-			console.log('queryStringqueryStringqueryStringqueryString', queryString);
-			api.getRequestsByQuery(queryString).then(function(data){
-				console.log('==================requests found: ', data);
-			});
+			if (queryString.length > 0) {
+				api.getRequestsByQuery(queryString).then(function(data){
+					console.log('==================requests found: ', data);
+					eventManager.fire('general_request_search_returned', {owner:'general-search-form', data: {query: queryString, results: data}});
+				});
+			}
 		});
 	}
 }
