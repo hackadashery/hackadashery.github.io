@@ -30,6 +30,11 @@ module.exports = {
 			type: "GET"
 		});
 	},
+	getD3urlOrig(requested_datetime){
+    console.info('api:getD3url', requested_datetime);
+    let url = "https://data.phila.gov/resource/4t9v-rppq.json?$where=requested_datetime>=" + "'" + requested_datetime + "'";
+    return url;
+  }, 
 	getD3url(service_name, requested_datetime){
 		console.info('api:getD3url', service_name, requested_datetime);
 		let url = "https://data.phila.gov/resource/4t9v-rppq.json?$where=service_name='" + service_name + "' AND requested_datetime>=" + "'" + requested_datetime + "'";

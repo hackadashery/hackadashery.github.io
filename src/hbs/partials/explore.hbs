@@ -38,11 +38,19 @@
 
 	</nav>
 
-	<div class="filter__list filter__list--time">
-		<a class="js-filter filter__item filter__item--day">Day</a>
+	<div class="filter__list">
+		<a class="js-filter filter__item filter__item--day">Day</a> 
 		<a class="js-filter filter__item filter__item--week">Week</a>
 		<a class="js-filter filter__item filter__item--month">Month</a>
 		<a class="js-filter filter__item filter__item--year">Year</a>
+
+		<label for="service-type">Select Service Type</label>
+		<select id="service-type" class="js-service filter__item filter__item--select" name="select">
+			<option value="1">All</option>
+			<option value="2">Information Request</option>
+			<option value="3">Sanitation / Dumpster Violation</option>
+			<option value="4">Rubbish/Recyclable Material Collection</option>
+		</select>
 	</div>
 
 <!-- hide until functionality is in place -->

@@ -41307,6 +41307,11 @@ module.exports = {
 			type: "GET"
 		});
 	},
+	getD3urlOrig(requested_datetime){
+    console.info('api:getD3url', requested_datetime);
+    let url = "https://data.phila.gov/resource/4t9v-rppq.json?$where=requested_datetime>=" + "'" + requested_datetime + "'";
+    return url;
+  }, 
 	getD3url(service_name, requested_datetime){
 		console.info('api:getD3url', service_name, requested_datetime);
 		let url = "https://data.phila.gov/resource/4t9v-rppq.json?$where=service_name='" + service_name + "' AND requested_datetime>=" + "'" + requested_datetime + "'";
@@ -42277,36 +42282,61 @@ module.exports = {
 function buildChart(){
 	if (chartIsBuilt) { return; }
 	chartIsBuilt = true;
-	var chartPadding = { top: 60, right: 60, bottom: 40, left: 60 }
 
 	// ------------------------------------------------------------------------------
-	// SET TIME RANGE
+	// SET TIME RANGE AND SERVICE TYPE
 	// ------------------------------------------------------------------------------
 	var timeRange = api.getTimeRange('week');
 	var service = "Rubbish/Recyclable Material Collection";
 	var url = api.getD3url(service,timeRange);
-	getd3(url);
+	getd3(url);  
 
-	$('.js-filter').on('click', function(){
+	// select time range
+	var detectRange = function() {
 		if ( $(this).html() == "Day" ) {
 			timeRange = api.getTimeRange("day");
-			console.log(timeRange);
-			url = api.getD3url(service,timeRange);
-			return getd3(url);
+			return timeRange;
 		} else if ( $(this).html() == "Week" ) { 
-			timeRange = api.getTimeRange("week");
-			console.log(timeRange); 
-			url = api.getD3url(service,timeRange);
-			return getd3(url);
+			timeRange = api.getTimeRange("week"); 
+			return timeRange;
 		} else if ( $(this).html() == "Month" ) { 
 			timeRange = api.getTimeRange("month"); 
-			url = api.getD3url(service,timeRange);
-			return getd3(url);
+			return timeRange;
 		} else if ( $(this).html() == "Year" ) { 
 			timeRange = api.getTimeRange("year"); 
-			url = api.getD3url(service,timeRange);
-			return getd3(url);
+			return timeRange;
 		}
+		return timeRange = api.getTimeRange("week");
+	}
+	// detectRange();
+
+	// select service type
+	var detectService = function() {
+		var service = $('.js-service :selected').text();
+		return service;
+	}
+	// detectService();
+
+	var buildURL = function(detectService,detectRange) {
+		console.log('helloooo');
+		if ( detectService == null ) {
+			url = api.getD3urlOrig(detectRange);
+			return url;
+		} else {
+			url = api.getD3url(detectService,detectRange);
+			return url;
+		}
+	}
+
+	$('.js-filter').on('click', function(){ 
+		var filter1 = detectService();
+		var filter2 = detectRange();
+		getd3(buildURL(filter1,filter2));
+	});
+	$(".js-service").change(function() {
+		var filter1 = detectService();
+		var filter2 = detectRange();
+		getd3(buildURL(filter1,filter2));
 	});
 	
 
@@ -42315,25 +42345,12 @@ function buildChart(){
 	// ------------------------------------------------------------------------------ 
 	function getd3(url) {
 		d3.select('.requests-linechart__graph').remove(); // if graph is there, clear it out before building another
-		
-		var margin = {
-			top: 30,
-			right: 20,
-			bottom: 30,
-			left: 50
-		},
-
-			width = 500 - margin.left - margin.right,
-			height = 300 - margin.top - margin.bottom;
 
 		var svgWidth = document.getElementById('linebasic').clientWidth;
 		var svgHeight = Math.min( (svgWidth * 0.5), (screen.height - 90) ); console.log('SCREEN HEIGHT', svgHeight);
+		var chartPadding = { top: 80, right: 60, bottom: 60, left: 70 }
 		var chartWidth = (-chartPadding.left) + svgWidth + (-chartPadding.right);
 		var chartHeight = (-chartPadding.top) + svgHeight + (-chartPadding.bottom);
-		var pxToChartTop = chartPadding.top;
-		var pxToChartBottom = chartPadding.top + chartHeight;
-		var pxToChartLeft = chartPadding.left;
-		var pxToChartRight = chartPadding.left + chartWidth;
 
 		// parse the date
 		var parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%L");
@@ -42367,7 +42384,7 @@ function buildChart(){
 				.attr('height', svgHeight)
 				.attr('class', 'requests-linechart__graph')
 			.append('g')
-				.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+				.attr('transform', 'translate(' + chartPadding.left + ',' + chartPadding.top + ')');
 
 		// make horizontal grid lines for graph
 		function make_y_axis() {
@@ -42393,6 +42410,14 @@ function buildChart(){
 				d.sum = +d.values[0].value.count;
 				d.day = parseDay(d.key);			
 			});
+
+			var requestTypes = d3.nest()
+				.key(function(d) { return d["service_name"]; })
+				.rollup(function(v) { return {
+					"count": v.length } 
+				})
+				.entries(data);
+				console.log(JSON.stringify(requestTypes));
 
 			// define the scope of the data on x and y axes
 			x.domain(d3.extent(data, function(d) {
@@ -42431,7 +42456,7 @@ function buildChart(){
 			// add graph title
 			svg.append('text')
 				.attr('x', (chartWidth/2))
-				.attr('y', 0 - (margin.top / 2))
+				.attr('y', -30)
 				.attr('class', 'requests-linechart__title')
 				.text('Requests Received');
 
