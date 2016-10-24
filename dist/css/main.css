@@ -707,7 +707,10 @@ BEM land
   .general-search-form__expander-button {
     width: 100%;
     text-align: center;
-    font-size: 0.75rem; }
+    font-size: 0.75rem;
+    line-height: 1rem; }
+    .general-search-form__expander-button:focus {
+      outline: 1px solid #e62222; }
   .general-search-form__expander-section {
     display: none;
     padding-top: 1rem;
@@ -1006,17 +1009,14 @@ BEM land
       background: #e62222; }
       .tabs__tab:hover .tabs__tab-text, .tabs__tab:active .tabs__tab-text {
         bottom: 10px; }
-    .tabs__tab.active {
-      top: -10px; }
-      .tabs__tab.active .tabs__tab-text {
-        bottom: 10px; }
+    .tabs__tab.active .tabs__tab-text {
+      font-weight: bold; }
   .tabs__tab-text {
     position: absolute;
     bottom: 5px;
     transition: bottom 0.3s ease;
     width: 100%;
     text-align: center;
-    font-weight: bold;
     color: white; }
 
 .toolbar {

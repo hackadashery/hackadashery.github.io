@@ -27,9 +27,9 @@
 			}
 
 			&.active {
-				top: -10px;
+				
 				.tabs__tab-text {
-					bottom: 10px;
+					font-weight: bold;
 				}
 			}
 
@@ -41,7 +41,6 @@
 				transition: bottom 0.3s ease;
 				width: 100%;
 				text-align: center;
-				font-weight: bold;
 				color: white;
 			}
 }
