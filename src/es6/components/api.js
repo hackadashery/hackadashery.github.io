@@ -10,11 +10,8 @@ module.exports = {
 	getRequestsByQuery(queryString){
 		console.info('api:getRequestsByQuery', queryString);
 		return $.ajax({
-			url: "https://data.phila.gov/resource/4t9v-rppq.json",
-			type: "GET",
-			data: {
-				$where : queryString
-			}
+			url: "https://data.phila.gov/resource/4t9v-rppq.json?$where=" + queryString,
+			type: "GET"
         });
 	},
 	getRelatedRequests(service_name, requested_datetime){

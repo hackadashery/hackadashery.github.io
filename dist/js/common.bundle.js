@@ -41287,11 +41287,8 @@ module.exports = {
 	getRequestsByQuery(queryString){
 		console.info('api:getRequestsByQuery', queryString);
 		return $.ajax({
-			url: "https://data.phila.gov/resource/4t9v-rppq.json",
-			type: "GET",
-			data: {
-				$where : queryString
-			}
+			url: "https://data.phila.gov/resource/4t9v-rppq.json?$where=" + queryString,
+			type: "GET"
         });
 	},
 	getRelatedRequests(service_name, requested_datetime){
@@ -41633,7 +41630,7 @@ module.exports = {
 			var serviceNo = $advForm.find('.js-search-service-type').val();
 			var serviceQuery = '';
 			if (serviceNo.length > 0) {
-				serviceQuery = 'service_code="' + serviceNo + '"';
+				serviceQuery = "service_code='" + serviceNo + "'";
 				queryStringsArray.push(serviceQuery);
 			}
 
@@ -41641,12 +41638,17 @@ module.exports = {
 			var dateInput = $advForm.find('.js-search-date-of-request').val();
 			var dateQuery = '';
 			if (dateInput.length > 0){
-				dateQuery = 'requested_datetime="' + new Date(dateInput).toISOString() + '"';
+				var fromDate = new Date(dateInput);
+				fromDate.setDate(fromDate.getDate() - 10);
+				var toDate = new Date(dateInput);
+				toDate.setDate(toDate.getDate() + 10);
+				dateQuery = "requested_datetime between '" + fromDate.toISOString() + "' and '" + toDate.toISOString() + "'";
 				queryStringsArray.push(dateQuery);
 			}
 
 			
 			var queryString = queryStringsArray.join(' AND ');
+			console.log('queryStringqueryStringqueryStringqueryString', queryString);
 			api.getRequestsByQuery(queryString).then(function(data){
 				console.log('==================requests found: ', data);
 			});
