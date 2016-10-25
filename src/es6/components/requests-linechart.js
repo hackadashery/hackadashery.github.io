@@ -161,7 +161,7 @@ function buildChart(){
 			// add valueline path with data
 			svg.append('path')
 				.data([reqsPerDay])
-				.attr('class', 'requests-linechart__line')
+				.attr('class', 'requests-linechart__line') 
 				.attr('d', valueline);
 
 			// add x-axis
