@@ -176,11 +176,12 @@ function buildChart(){
 				.call(d3.axisLeft(y).ticks(5));
 
 			// add graph title
+			var title_type = $('.js-service :selected').text();
 			svg.append('text')
 				.attr('x', (chartWidth/2))
 				.attr('y', -30)
 				.attr('class', 'requests-linechart__title')
-				.text('Requests Received');
+				.text(title_type + ' Requests Received'); 
 
 			//add data points with tooltips
 			svg.selectAll('dot')
