@@ -42406,6 +42406,7 @@ function buildChart(){
 
 			// add graph title
 			var title_type = $('.js-service :selected').text();
+			console.log(title_type);
 			svg.append('text')
 				.attr('x', (chartWidth/2))
 				.attr('y', -30)
