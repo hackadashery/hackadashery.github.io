@@ -26,60 +26,40 @@ function buildChart(){
 	chartIsBuilt = true;
 
 	// ------------------------------------------------------------------------------
-	// SET TIME RANGE AND SERVICE TYPE
+	// GET TIME RANGE AND SERVICE TYPE, BUILD URL
 	// ------------------------------------------------------------------------------
-	var timeRange = api.getTimeRange('week');
-	var service = "Rubbish/Recyclable Material Collection";
-	var url = api.getD3url(service,timeRange);
-	getd3(url);  
+	function createQuery() {
+		var $advForm = $('.js-filter-form');
+		var queryStringsArray = [];
 
-	// select time range
-	var detectRange = function() {
-		if ( $(this).html() == "Day" ) {
-			timeRange = api.getTimeRange("day");
-			return timeRange;
-		} else if ( $(this).html() == "Week" ) { 
-			timeRange = api.getTimeRange("week"); 
-			return timeRange;
-		} else if ( $(this).html() == "Month" ) { 
-			timeRange = api.getTimeRange("month"); 
-			return timeRange;
-		} else if ( $(this).html() == "Year" ) { 
-			timeRange = api.getTimeRange("year"); 
-			return timeRange;
+		//get timerange
+		var timeRng = $advForm.find('input:radio[name=time]:checked').val();
+		var frmtTimeRng = api.getTimeRange(timeRng);
+		var serviceQuery = '';
+		if (frmtTimeRng.length > 0) {
+			serviceQuery = "requested_datetime>='" + frmtTimeRng + "'";
+			queryStringsArray.push(serviceQuery);
 		}
-		return timeRange = api.getTimeRange("week");
-	}
-	// detectRange();
 
-	// select service type
-	var detectService = function() {
-		var service = $('.js-service :selected').text();
-		return service;
-	}
-	// detectService();
+		//get req number
+		var serviceNo = $advForm.find('.js-service').val();
+		var serviceQuery = '';
+		if (serviceNo.length > 0) {
+			serviceQuery = "service_code='" + serviceNo + "'";
+			queryStringsArray.push(serviceQuery);
+		}
 
-	var buildURL = function(detectService,detectRange) {
-		console.log('helloooo');
-		if ( detectService == null ) {
-			url = api.getD3urlOrig(detectRange);
-			return url;
-		} else {
-			url = api.getD3url(detectService,detectRange);
-			return url;
+		var queryString = queryStringsArray.join(' AND ');
+		if (queryString.length > 0) {
+			var url = api.getD3url(queryString);
+			getd3(url);  
 		}
 	}
+	createQuery();
 
-	$('.js-filter').on('click', function(){ 
-		var filter1 = detectService();
-		var filter2 = detectRange();
-		getd3(buildURL(filter1,filter2));
-	});
-	$(".js-service").change(function() {
-		var filter1 = detectService();
-		var filter2 = detectRange();
-		getd3(buildURL(filter1,filter2));
-	});
+	$('.js-filter-form').change(function() {
+		createQuery();
+	})
 	
 
 	// ------------------------------------------------------------------------------

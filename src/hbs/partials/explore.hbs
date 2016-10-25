@@ -38,19 +38,71 @@
 
 	</nav>
 
-	<div class="filter__list">
-		<a class="js-filter filter__item filter__item--day">Day</a> 
-		<a class="js-filter filter__item filter__item--week">Week</a>
-		<a class="js-filter filter__item filter__item--month">Month</a>
-		<a class="js-filter filter__item filter__item--year">Year</a>
+	<div class="chart-filter js-filter-form">
+		<fieldset>
+      <input type="radio" name="time" value="day" />Day<br />
+      <input checked type="radio" name="time" value="week" />Week<br />
+      <input type="radio" name="time" value="month" />Month<br />
+      <input type="radio" name="time" value="year" />Year<br />
+    </fieldset>
 
-		<label for="service-type">Select Service Type</label>
-		<select id="service-type" class="js-service filter__item filter__item--select" name="select">
-			<option value="1">All</option>
-			<option value="2">Information Request</option>
-			<option value="3">Sanitation / Dumpster Violation</option>
-			<option value="4">Rubbish/Recyclable Material Collection</option>
-		</select>
+		<label class="chart-filter__label">
+			<span class="chart-filter__label-text">Select Service Type</span> 
+			<!-- request ids: https://gist.github.com/mheadd/7171ea534e3e3afe8037f639b630c3d5 -->
+			<select type="text" class="chart-filter__select js-service">
+				<option selected value>All</option>
+				<option value="SR-LI21">Maintenance Residential</option>
+				<option value="SR-ST03">Rubbish/Recyclable Material Collection</option>
+				<option value="SR-ST02">Illegal Dumping</option>
+				<option value="SR-PD01">Abandoned Automobile</option>
+				<option value="SR-ST01">Street Defect</option>
+				<option value="SR-CL01">Graffiti Removal</option>
+				<option value="SR-ST18">Salting</option>
+				<option value="SR-ST04">Street Light Outage</option>
+				<option value="SR-CL02">Vacant Lot Clean-Up</option>
+				<option value="SR-LI27">Vacant House or Commercial</option>
+				<option value="SR-ST19">Sanitation / Dumpster Violation</option>
+				<option value="SR-ST25">Traffic Signal Emergency</option>
+				<option value="SR-LI06">Construction Site Task Force</option>
+				<option value="SR-PR08">Street Trees</option>
+				<option value="SR-FD02">Smoke Detector</option>
+				<option value="SR-LI03">Building Dangerous</option>
+				<option value="SR-LI02">Building Construction</option>
+				<option value="SR-MI01">Miscellaneous</option>
+				<option value="SR-ST16">Other (Streets)</option>
+				<option value="SR-LI28">Zoning Business</option>
+				<option value="SR-ST08">Complaint (Streets)</option>
+				<option value="SR-ST06">Alley Light Outage</option>
+				<option value="SR-WD01">Inlet Cleaning</option>
+				<option value="SR-ST09">Dangerous Sidewalk</option>
+				<option value="SR-LI22">No Heat (Residential)</option>
+				<option value="SR-PR01">Parks and Rec Safety and Maintenance</option>
+				<option value="SR-ST24">Traffic (Other)</option>
+				<option value="SR-LI16">Fire Residential or Commercial</option>
+				<option value="SR-LI19">License Residential</option>
+				<option value="SR-LI30">Zoning Residential</option>
+				<option value="SR-ST20">Shoveling</option>
+				<option value="SR-ST10">Dead Animal in Street</option>
+				<option value="SR-ST21">Stop Sign Repair</option>
+				<option value="SR-LI17">Infestation Residential</option>
+				<option value="SR-LI01">Boarding Room House</option>
+				<option value="SR-ST23">Street Paving</option>
+				<option value="SR-ST14">Manhole Cover</option>
+				<option value="SR-WD02">Hydrant Request</option>
+				<option value="SR-LI23">Other Dangerous</option>
+				<option value="SR-LI25">Tree Dangerous</option>
+				<option value="SR-ST13">Line Striping</option>
+				<option value="SR-PD02">Police Complaint</option>
+				<option value="SR-ST05">Abandoned Bike</option>
+				<option value="SR-FD01">Complaints against Fire or EMS</option>
+				<option value="SR-LI08">Daycare Residential or Commercial</option>
+				<option value="SR-ST15">Newsstand Outdoor Cafe</option>
+				<!-- <option value="ST24">Hydrant Knocked Down (No Water)</option>
+				<option value="ST24">No Heat Residential</option>
+				<option value="ST24">Newsstand/Outdoor Cafe</option> -->
+				<option value="SR-LI13">Emergency Air Conditioning</option>
+			</select>
+		</label>
 	</div>
 
 <!-- hide until functionality is in place -->
