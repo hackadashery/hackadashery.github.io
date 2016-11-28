@@ -22,6 +22,7 @@
   "devDependencies": {
     "browserify": "^13.1.0",
     "d3-selection-multi": "^1.0.0",
+    "del": "^2.2.2",
     "event-stream": "^3.3.4",
     "glob": "^7.1.0",
     "gulp": "github:gulpjs/gulp#4.0",
@@ -29,6 +30,7 @@
     "gulp-compile-handlebars": "^0.6.1",
     "gulp-css-globbing": "^0.1.8",
     "gulp-handlebars": "^4.0.0",
+    "gulp-hash": "^3.1.0",
     "gulp-htmlmin": "^3.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.3.2",

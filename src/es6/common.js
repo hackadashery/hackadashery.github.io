@@ -1,6 +1,25 @@
 window.WL_STATE = {};
 console.time('INIT');
 
+//node style error first
+if ('serviceWorker' in navigator) {
+
+    //need hash in here
+    navigator.serviceWorker.register('/sw.bundle.js', {scope:'./'}).then(function(registration) {
+        // Registration was successful
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }).catch(function(err) {
+        // registration failed :(
+        console.log('ServiceWorker registration failed: ', err);
+    });
+
+} else {
+    //no SW :(
+    //upgrade your browser!
+}
+
+
+
 console.time('mobile menu button');
 require('./components/mobile-menu-button').init();
 console.timeEnd('mobile menu button');

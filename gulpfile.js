@@ -12,7 +12,9 @@ var gulp = require('gulp'),
     es         = require('event-stream'),
     notifier   = require('node-notifier'),
     handlebars = require('gulp-compile-handlebars'),
-    htmlmin    = require('gulp-htmlmin');
+    htmlmin    = require('gulp-htmlmin'),
+    hash       = require('gulp-hash'),
+    del        = require('del');
 
 
 
@@ -30,6 +32,22 @@ var fancyErrorHandler = function(err){
 
 
 
+//=============================================================== Cleaning dist
+gulp.task('clean', function() {
+  return del('dist/**/*');
+});
+    gulp.task('clean:css', function() {
+        return del('dist/**/*.css');
+    });
+    gulp.task('clean:data', function() {
+        return del('dist/**/*.json');
+    });
+    gulp.task('clean:js', function() {
+        return del('dist/**/*.js');
+    });
+
+
+
 //=============================================================== Sass -> CSS
 gulp.task('sass', function() {
   return gulp.src('src/sass/main.scss')
@@ -39,9 +57,9 @@ gulp.task('sass', function() {
     .pipe(sass())
     .on('error', fancyErrorHandler)
     .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1'))
-    .pipe(gulp.dest('dist/css'));
+    .pipe(gulp.dest('./dist/css'));
 });
-gulp.task('watch:sass', function() { gulp.watch('src/sass/**/*.scss', gulp.series('sass')); });
+gulp.task('watch:sass', function() { gulp.watch('src/sass/**/*.scss', gulp.series('clean:css', 'sass', 'hash')); });
 
 
 
@@ -51,7 +69,6 @@ gulp.task('es6', function(done) {
         if(err) done(err);
 
         var tasks = files.map(function(entry) {
-            console.log('entry: ', entry);
             return browserify({ entries: [entry] })
                 .bundle()
                 .on('error', fancyErrorHandler)
@@ -61,13 +78,39 @@ gulp.task('es6', function(done) {
                     extname: '.bundle.js'
                 }))
                 .pipe(gulp.dest('./dist/js'));
-            });
+                //.pipe(hash.manifest('assets.json'))
+                //.pipe(gulp.dest('./'));
+        });
         es.merge(tasks).on('end', done);
     })
 });
-gulp.task('watch:es6', function() {  gulp.watch('src/es6/**/*.js', gulp.series('es6')); });
+gulp.task('watch:es6', function() {  gulp.watch('src/es6/**/*.js', gulp.series('clean:js', 'es6', 'hash')); });
 
 
+
+//=============================================================== Service Worker
+//has to be in the root for full control over the various routes. 
+//This can be set from within the dist folder but we would need to add an http header - and we're hosted on github so that's not going to happen.
+//The solution - it gets it's own build process in this here gulp file! 
+gulp.task('sw', function(done) {
+    glob('./src/sw/**.js', function(err, files) {
+        if(err) done(err);
+
+        var tasks = files.map(function(entry) {
+            return browserify({ entries: [entry] })
+                .bundle()
+                .on('error', fancyErrorHandler)
+                .pipe(source(entry))
+                .pipe(rename({
+                    dirname: '',
+                    extname: '.bundle.js'
+                }))
+                .pipe(gulp.dest('./'));
+        });
+        es.merge(tasks).on('end', done);
+    })
+});
+gulp.task('watch:sw', function() {  gulp.watch('src/sw/**/*.js', gulp.series('es6', 'hash')); });
 
 //=============================================================== Handlebars -> HTML
 gulp.task('hbs', function () {
@@ -103,10 +146,20 @@ gulp.task('data', function () {
     return gulp.src('src/data/**/*')
         .pipe(gulp.dest('dist/data'));
 });
-gulp.task('watch:data', function() {  gulp.watch('src/data/**/*', gulp.series('data')); });
+gulp.task('watch:data', function() {  gulp.watch('src/data/**/*', gulp.series('clean:data', 'data')); });
 
+
+
+//=============================================================== Hashing
+gulp.task('hash', function () {
+    return gulp.src(['dist/**/*.js','dist/**/*.css'])
+        .pipe(hash())
+        .pipe(gulp.dest('./dist'))
+        .pipe(hash.manifest('assets.json'))
+        .pipe(gulp.dest('./dist'));
+});
 
 
 //=============================================================== `gulp`
-gulp.task('watch', gulp.parallel('watch:sass', 'watch:es6', 'watch:hbs', 'watch:data'));
-gulp.task('default', gulp.series('sass','es6','hbs','data','watch'));
+gulp.task('watch', gulp.parallel('watch:sass', 'watch:es6', 'watch:sw', 'watch:hbs', 'watch:data'));
+gulp.task('default', gulp.series('clean','sass','es6','sw','hbs','data','hash','watch'));

@@ -15,7 +15,7 @@ https://hackadashery.github.io/
 Download and install these two tools, documentation about installing them can be found on their sites:
 
  - [Node JS](https://nodejs.org)
- - [gulp](http://gulpjs.com/)
+ - [Gulp](http://gulpjs.com/)
 
 Now create a folder for the project anywhere on your computer and [clone](https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository#Cloning-an-Existing-Repository) this repo into it.
 
