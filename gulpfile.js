@@ -37,7 +37,7 @@ gulp.task('clean', function() {
   return del('dist/**/*');
 });
     gulp.task('clean:css', function() {
-        return del('dist/**/*.css');
+        return del('dist/css/**/*');
     });
     gulp.task('clean:data', function() {
         return del('dist/**/*.json');
@@ -59,7 +59,7 @@ gulp.task('sass', function() {
     .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1'))
     .pipe(gulp.dest('./dist/css'));
 });
-gulp.task('watch:sass', function() { gulp.watch('src/sass/**/*.scss', gulp.series('clean:css', 'sass', 'hash')); });
+gulp.task('watch:sass', function() { gulp.watch('src/sass/**/*.scss', gulp.series('clean:css', 'sass', 'hash:css')); });
 
 
 
@@ -84,7 +84,7 @@ gulp.task('es6', function(done) {
         es.merge(tasks).on('end', done);
     })
 });
-gulp.task('watch:es6', function() {  gulp.watch('src/es6/**/*.js', gulp.series('clean:js', 'es6', 'hash')); });
+gulp.task('watch:es6', function() {  gulp.watch('src/es6/**/*.js', gulp.series('clean:js', 'es6', 'hash:js')); });
 
 
 
@@ -151,15 +151,25 @@ gulp.task('watch:data', function() {  gulp.watch('src/data/**/*', gulp.series('c
 
 
 //=============================================================== Hashing
-gulp.task('hash', function () {
-    return gulp.src(['dist/**/*.js','dist/**/*.css'])
-        .pipe(hash())
-        .pipe(gulp.dest('./dist'))
-        .pipe(hash.manifest('assets.json'))
-        .pipe(gulp.dest('./dist'));
-});
+gulp.task('hash', function () { gulp.series('hash:css','hash:js'); });
+
+    gulp.task('hash:css', function () {
+        return gulp.src(['dist/**/*.css'])
+            .pipe(hash())
+            .pipe(gulp.dest('./dist'))
+            .pipe(hash.manifest('assets.json'))
+            .pipe(gulp.dest('./dist'));
+    });
+
+    gulp.task('hash:js', function () {
+        return gulp.src(['dist/**/*.js'])
+            .pipe(hash())
+            .pipe(gulp.dest('./dist'))
+            .pipe(hash.manifest('assets.json'))
+            .pipe(gulp.dest('./dist'));
+    });
 
 
 //=============================================================== `gulp`
 gulp.task('watch', gulp.parallel('watch:sass', 'watch:es6', 'watch:sw', 'watch:hbs', 'watch:data'));
-gulp.task('default', gulp.series('clean','sass','es6','sw','hbs','data','hash','watch'));
+gulp.task('default', gulp.series('clean','sass','hash:css','es6','hash:js','sw','hbs','data','watch'));

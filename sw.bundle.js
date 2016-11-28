@@ -3,7 +3,10 @@
 
 
 self.oninstall = () => {
-  console.log("First load, now the SW is installed!");
+  console.log("Installing the SW");
+
+  //
+
   self.skipWaiting();
 };
 
@@ -14,6 +17,7 @@ self.onactivate = () => {
 
 self.onfetch = evt => {
     console.log("a request/response network event is happening:");
+    //return the cached version... and check to see if there is a new one on the server (different hash)
     evt.respondWith(fetch(evt.request));
 };
 },{}]},{},[1]);
