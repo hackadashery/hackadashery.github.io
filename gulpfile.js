@@ -110,7 +110,7 @@ gulp.task('sw', function(done) {
         es.merge(tasks).on('end', done);
     })
 });
-gulp.task('watch:sw', function() {  gulp.watch('src/sw/**/*.js', gulp.series('es6', 'hash')); });
+gulp.task('watch:sw', function() {  gulp.watch('src/sw/**/*.js', gulp.series('sw')); });
 
 //=============================================================== Handlebars -> HTML
 gulp.task('hbs', function () {

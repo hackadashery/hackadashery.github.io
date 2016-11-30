@@ -29,7 +29,7 @@ self.addEventListener('activate', function(event) {
 //self.onfetch = (evt) => {
 
 self.addEventListener('fetch', function(event) {
-    console.log("a request/response network event is happening:", event); 
+    console.log("a request/response network event is happening:", event);
     //return the cached version... and check to see if there is a new one on the server (different hash)
     event.respondWith(fetch(event.request));
 });
