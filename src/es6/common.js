@@ -3,19 +3,20 @@ console.time('INIT');
 
 //node style error first
 if ('serviceWorker' in navigator) {
-
+    console.log('Common: SW supported, going to register');
     //need hash in here
     navigator.serviceWorker.register('/sw.bundle.js', {scope:'./'}).then(function(registration) {
         // Registration was successful
-        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        console.log('Common: SW register worked: ', registration);
     }).catch(function(err) {
         // registration failed :(
-        console.log('ServiceWorker registration failed: ', err);
+        console.log('Common: SW register failed with err: ', err);
     });
 
 } else {
     //no SW :(
     //upgrade your browser!
+    console.log('Common: SW not supported');
 }
 
 
