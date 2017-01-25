@@ -10,50 +10,47 @@ https://hackadashery.github.io/
 
 ###Installing
 
-[Fork](https://help.github.com/articles/fork-a-repo/) the repo (unless you have permissions to push directly)
-
-Download and install these two tools, documentation about installing them can be found on their sites:
-
- - [Node JS](https://nodejs.org)
- - [Gulp](http://gulpjs.com/)
-
-Now create a folder for the project anywhere on your computer and [clone](https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository#Cloning-an-Existing-Repository) this repo into it.
-
-Open the command line / terminal and navigate/cd into the root of the repo (unless you created your own name for the folder when cloning, it should be called "protodashery").
-
-now run `npm install`
+ - Download and install [Node JS](https://nodejs.org).
+ - Clone / fork the repo.
+ - Open the command line / terminal in the root of the repo and run `npm install`.
+ - Also run `npm install http-server -g` if you don't already have some kind of local server set up.
 
 Set up should be complete! Report any errors as issues on this repo and we'll try to get to them / figure out your problem.
 
 ---
 
-###Localhost
+###Running
 
-If you have your own set up for local projects - just point it at index.html and run `gulp` from this repo's root.
-
-If you don't, we have a super simple set up:
-
- - run  `npm install http-server -g` to install [http-server](https://www.npmjs.com/package/http-server)
- - now run `npm start` and open http://localhost:8080/
+ - `npm start` will fire up the server & watch the files for changes.
+ - `npm build` will run all the build steps if that's more your thing.
 
 ---
 
-###Gulp
+###Directories 
 
-The gulpfile does a few things for us:
+ - *_dont-write-code-in-here/* this is all compiled code.
+ - *metalsmith/* Some functions to help with generating the site.
+ - *lambda/* Will be the place to keep aws stuff if that ever actualy happens.
+ - *development/* Do all your work in here!
+    - *base_scripts/* some handy JS that's used throughout.
+    - *base_styles/* the styles that underly everything.
+    - *components/* Each bit of the "app", this is probably where most of your time will be spent
+    - *layouts/* the head, header, footer, meta. All the things a page needs to be a page. In one place.
+    - *web_root/* This drives the structure of the site
 
- - compiles all the JavaScript from `src/es6` into `dist/js/common.bundle.js` using [Babel](https://babeljs.io/docs/learn-es2015/) and [Browserify](http://browserify.org/)
- - compiles all the [Sass](http://sass-lang.com/) from `src/sass` into `dist/css/main.css`
- - compiles all the [Handlebars](http://handlebarsjs.com/) from `src/hbs` to `dist/index.html`
- - moves the data json files from `src/data` to `dist/data`
- - watches the es6, Sass, hbs and data files in src for any saved changes (when you save it'll run the relevant compilation task again).
+---
 
+###Dev tooling
+
+ - JS is compiled by [Browserify](http://browserify.org/)
+ - CSS is compiled from [SASS](http://sass-lang.com/) by [node-sass](https://github.com/sass/node-sass) & follows the [BEM](https://css-tricks.com/bem-101/) methodology
+ - HTML is compiled from [Handlebars](http://handlebarsjs.com/) using [Metalsmith](http://www.metalsmith.io/)
 
 ---
 
 ###Tests
 
-Located in `/spec` written in [Jasmine](http://jasmine.github.io/), run `npm test` to run tests!
+We don't have any yet, but when we do it will probably be [Tape](https://github.com/substack/tape) because it doesn't use the whole kitchen sink.
 
 ---
 
