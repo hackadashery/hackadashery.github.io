@@ -1,9 +1,14 @@
 var Metalsmith   = require('metalsmith');
 var layouts      = require('metalsmith-layouts');
-var inplace      = require('metalsmith-in-place');
 var permalinks   = require('metalsmith-permalinks');
 var htmlMinifier = require("metalsmith-html-minifier");
 var debug        = require('metalsmith-debug');
+
+/* Bit of a story behind this one. The plugin has recently upgraded to 2.x (breaking change - whoop) hence the package.json requirment for 1.4.4
+ * BUT turns out when it reads the partials it ignores the file extension, so I brought it into this repo (metalsmith/in-place ...) to add an extension check
+ * That check checks to see if the partial files extension is in the pattern passed in below so we don't get sass in the markup. Awkward!
+ */
+var inplace      = require('./metalsmith/in-place');
 
 var sanityCheck = function(options){
   return function(files, metalsmith, done){

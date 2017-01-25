@@ -1,0 +1,3 @@
+a {
+    @include occluded-underline(white, $link-color, $link-hover-color);
+}

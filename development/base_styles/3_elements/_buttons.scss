@@ -1,0 +1,15 @@
+.button, a.button {
+    color: white;
+    background: $hacka_blue;
+    padding: rem($pad) rem($pad * 2);
+    text-transform: uppercase;
+
+    //overriding the occluded underline on a tags
+    text-shadow: none;
+    background-image: none;
+
+    &:hover {
+        text-shadow: none;
+        background-image: none;
+    }
+}
