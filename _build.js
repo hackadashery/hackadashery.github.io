@@ -5,6 +5,16 @@ var permalinks   = require('metalsmith-permalinks');
 var htmlMinifier = require("metalsmith-html-minifier");
 var debug        = require('metalsmith-debug');
 
+var sanityCheck = function(options){
+  return function(files, metalsmith, done){
+    Object.keys(files).forEach(function(fileName){
+      console.log('fileName ', fileName);
+    });
+
+    done();
+  };
+};
+
 Metalsmith(__dirname)
   .metadata({
     title: "Hackadashery",
@@ -15,8 +25,12 @@ Metalsmith(__dirname)
   .source('./development/web_root')
   .destination('./_dont-write-code-in-here')
   .clean(false)
+  .use(sanityCheck())
   .use(inplace({
-    pattern: "**/*.html"
+    pattern: '**/*.html',
+    engine: 'handlebars',
+    directory: "development/layouts",
+    partials: "development/components"
   }))
   .use(layouts({
     engine: 'handlebars',
