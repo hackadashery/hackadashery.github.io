@@ -1,0 +1,36 @@
+//------------ Color Defenitions
+
+//"brand" colors
+$hacka_blue: #14b9d6;
+$hacka_range: #f27835;
+
+//new "brand" colors?
+$hacka_blue: #0aa8d2;
+$hacka_range: #e62222;
+$hacka_ellow: #fefe00;
+
+$white: #fff;
+$blue-lt: #f5fafb;
+
+//shades of grey, the dash character matches the first character of the grey hex code
+//also US / UK variable names because it's driving me mad!!
+$gray-e: #eaedf2; $grey-e: $gray-e;
+$gray-d: #dae0e8; $grey-d: $gray-d;
+$gray-b: #bec7cc; $grey-b: $gray-b;
+$gray-9: #9ea6b2; $grey-9: $gray-9;
+$gray-5: #5d6d80; $grey-5: $gray-5;
+$gray-4: #4d4d4d; $grey-4: $gray-4;
+$gray-3: #323a45; $grey-3: $gray-3;
+
+
+//------------ Common color assignments
+
+$title-color: $hacka_range;
+
+// $background-color: $gray-e;
+$background-color: $blue-lt; //what do you think about this color?
+
+$rule-color: $gray-5; //borders hr lines
+$text-color: $gray-3;
+$link-color: $hacka_blue;
+$link-hover-color: $hacka_range;

@@ -1,0 +1,31 @@
+/* 
+1 VARIABLES & MIXINS
+Sass things / settings for use throughout the styles.
+__name.scss for vars (so they come first)
+_name.scss for mixins
+*/
+@import "base_styles/1_vars_and_mixins/**/*.scss";
+
+/*
+2 BASE
+The base styling that underlies everything. Generally speaking, this is normalize
+*/
+@import "base_styles/2_base/**/*.scss";
+
+/*
+3 ELEMENTS
+Basic styles for the html elements
+*/
+@import "base_styles/3_elements/**/*.scss";
+
+/*
+4 LAYOUTS
+These create the layout structurs within which components will live. (component styles are set beside their components)
+*/
+@import "base_styles/4_layouts/**/*.scss";
+
+/*
+5 NUKES / utiility classes / atomic classes
+Single responsability classes. for those times when it makes life easier to just put a class in the html to tweak something.
+ */
+@import "base_styles/5_nukes/**/*.scss";

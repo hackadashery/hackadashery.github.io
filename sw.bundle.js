@@ -11,6 +11,7 @@ self.addEventListener('install', function(event) {
     caches.open(version + 'fundamentals')
     .then(function(cache) {
         return cache.addAll([
+          '/',
           '/dist/js/common.bundle.js',
           '/dist/css/main.css'
         ]);
@@ -111,7 +112,7 @@ self.addEventListener('fetch', function(event) {
              - Generate a Response programmaticaly, as shown below, and return that
           */
 
-          console.log('WORKER: fetch request failed in both cache and network.', arguments);
+          console.log('WORKER: fetch request failed in both cache and network.');
 
           /* Here we're creating a response programmatically. The first parameter is the
              response body, and the second one defines the options for the response.
