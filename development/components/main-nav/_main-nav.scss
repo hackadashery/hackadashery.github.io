@@ -1,0 +1,27 @@
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding: rem($pad);
+
+    //a
+    &__link {
+        color: white;
+        background: $hacka_blue;
+        padding: rem($pad) rem($pad * 2);
+        text-decoration: none;
+        text-transform: uppercase;
+        margin-bottom: rem($pad);
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    @include breakpoint(small){
+        flex-direction: row;
+        &__link {
+            margin-bottom: 0;
+        }
+    }
+}

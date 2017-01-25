@@ -1,0 +1,18 @@
+.header {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+    padding: rem($pad);
+	background: $white;
+	box-shadow: inset 0 1px 0 rgba(255,255,255,.15),0 1px 5px rgba(0,0,0,.075);
+
+	&__title {
+		color: $title-color;
+        margin-bottom: 0;
+	}
+
+	@include breakpoint(medium){
+		flex-direction: row;
+		align-items: flex-end;
+	}
+}

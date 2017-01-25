@@ -156,35 +156,10 @@ dfn {
  * `article` contexts in Chrome, Firefox, and Safari.
  */
 
-h1 {
-  font-size: rem(42);
-}
-
-h1, h2 {
-  line-height: rem(2 * $vUnit);
-  margin: 0;
-}
-
-h3, h4 {
-  line-height: rem($vUnit);
-  margin-bottom: rem($vUnit / 2);
-}
-
-h5, h6 {
-  line-height: 0;  
-  margin-bottom: 0;
-}
-
-h2, h3, h4, h5, h6, p {
+h1, h2, h3, h4, h5, h6, p {
   margin-top: 0;
-
 }
 
-p {
-  font-size: rem(16);
-  line-height: rem($vUnit);
-  margin-bottom: rem($vUnit / 2);
-}
 
 /**
  * Add the correct background and color in IE 9-.
