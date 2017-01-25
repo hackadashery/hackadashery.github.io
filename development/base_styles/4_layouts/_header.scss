@@ -6,13 +6,13 @@
 	box-shadow: inset 0 1px 0 rgba(255,255,255,.15),0 1px 5px rgba(0,0,0,.075);
 
 	//the load in animation... for fun!
-	transform: translate(0, -10px);
-	opacity: 0;
-	transition: opacity 0.5s ease, transform 0.5s ease;
-	&.js-loaded {
-		opacity: 1;
-		transform: translate(0, 0px);
-	}
+	//transform: translate(0, -10px);
+	//opacity: 0;
+	//transition: opacity 0.5s ease, transform 0.5s ease;
+	// &.js-loaded {
+	// 	opacity: 1;
+	// 	transform: translate(0, 0px);
+	// }
 
 	&__title {
 		color: $title-color;
