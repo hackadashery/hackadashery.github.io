@@ -4,3 +4,12 @@ layout: main.html
 
 Find request by id
 
+<section class="sidebar-layout">
+    <div class="sidebar-layout__sidebar">
+        {{> search-by-id/_search-by-id }}
+        {{> search-by-filters/_search-by-filters }}
+    </div>
+    <div class="sidebar-layout__body">
+        {{> map/_map }}
+    </div>
+</section>

@@ -1,0 +1,14 @@
+.sidebar-layout {
+
+    @include breakpoint(medium) {
+        display: flex;
+
+        &__sidebar {
+            width: rem(300);
+        }
+
+        &__body {
+            width: 100%;
+        }
+    }
+}
