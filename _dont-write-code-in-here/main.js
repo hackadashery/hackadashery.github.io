@@ -296,19 +296,7 @@ function buildChart(){
 
 module.exports = {
 	init(){
-		$('.js-general-search-form-toggle').on('click', function(e){
-			if ($(this).hasClass('isToggled')) {
-				$(this).removeClass('isToggled');
-				$(this).closest('.js-general-search').find('.js-general-search-form').slideUp();
-				$('.js-search-by-id-form').slideDown();
-				$(this).html('Don\'t know your case ID?');
-			} else {
-				$(this).addClass('isToggled');
-				$(this).closest('.js-general-search').find('.js-general-search-form').slideDown();
-				$('.js-search-by-id-form').slideUp();
-				$(this).html('Oh wait, yes I do know my case ID');
-			}
-		});
+        
 
 		$('.js-adv-search-submit').on('click', function(e){
 			var $advForm = $(this).closest('.js-general-search-form');
