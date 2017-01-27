@@ -2,11 +2,15 @@
     display: flex;
     justify-content: space-between;
     flex-direction: column;
+    align-items: center;
     
     //a
     &__link {
         margin-bottom: rem($pad);
-        font-size: rem(14);
+        font-size: rem(16);
+        height: rem(21);
+        font-weight: bold;
+        @include occluded-underline(white, $link-color, $link-color);
     }
 
     //form
@@ -27,12 +31,12 @@
 
             //make a little gap between each button
             + .main-nav__link {
-                margin-left: 1px; 
+                margin-left: rem(20); 
             }
         }
 
         &__search {
-            margin-left: rem($pad);
+            margin-left: rem(20);
         }
     }
 }

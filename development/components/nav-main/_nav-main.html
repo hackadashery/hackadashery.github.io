@@ -1,18 +1,18 @@
 <nav class="main-nav">
-    <a href="/submit-request" class="main-nav__link button button--red"> 
+    <a href="/submit-request" class="main-nav__link"> 
         Submit Request
     </a>
 
-    <a href="/find-requests-by-address" class="main-nav__link button"> 
+    <a href="/find-requests-by-address" class="main-nav__link"> 
         Your Neighbourhood
     </a>
 
-    <a href="/stats" class="main-nav__link button"> 
+    <a href="/stats" class="main-nav__link"> 
         Stats
     </a>
 
     <form class="main-nav__search" action="/find-request-by-id" method="GET">
-        <input type="text" name="id" class="main-nav__search-input">
-        <input type="submit" class="main-nav__search-submit">
+        <input type="text" name="id" class="main-nav__search-input" placeholder="Enter Request ID">
+        <input type="submit" class="main-nav__search-submit" value="Search">
     </form>
 </nav>
