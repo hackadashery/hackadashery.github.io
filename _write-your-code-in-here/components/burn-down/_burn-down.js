@@ -16,7 +16,7 @@ module.exports = {
 
 function buildChart(){
 	
-	d3.json('/data/burn_total.json', function(error, data) {
+	d3.json('/philly311/data/burn_total.json', function(error, data) {
 		// =================================== Variables	
 		var svgWidth = document.getElementById('burnchart').clientWidth;
 		var svgHeight = Math.min( (svgWidth * 0.5), (screen.height - 90) ); console.log('SCREEN HEIGHT', svgHeight);

@@ -27,7 +27,7 @@ Metalsmith(__dirname)
     generator: "Metalsmith",
     url: "http://www.metalsmith.io/"
   })
-  .source('./_write-your-code-in-here/web_root')
+  .source('./_write-your-code-in-here/pages')
   .destination('./philly311')
   .clean(false)
   .use(sanityCheck())

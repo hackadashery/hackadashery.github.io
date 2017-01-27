@@ -144,7 +144,7 @@ module.exports = {
 
 function buildChart(){
 	
-	d3.json('/data/burn_total.json', function(error, data) {
+	d3.json('/philly311/data/burn_total.json', function(error, data) {
 		// =================================== Variables	
 		var svgWidth = document.getElementById('burnchart').clientWidth;
 		var svgHeight = Math.min( (svgWidth * 0.5), (screen.height - 90) ); console.log('SCREEN HEIGHT', svgHeight);
@@ -641,7 +641,7 @@ module.exports = {
 
 function buildChart(){
 	
-	d3.json('/data/eg_dept_requests.json', function(error, data) {
+	d3.json('/philly311/data/eg_dept_requests.json', function(error, data) {
 		var w = document.getElementById('requests-barchart').clientWidth;
 		var barHeight = 30;
 		var outerBarHeight = barHeight + bargin + 2; //plus 2 for the bar stroke

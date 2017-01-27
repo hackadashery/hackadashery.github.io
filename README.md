@@ -24,7 +24,7 @@ Directories:
         - `_component-name.js` if it needs JS to do it's thing. Added to main.js like this: `window.threeOneOne.map = require('./components/map/_map.js');` then add a `<script> threeOneOne.burndown.init(); </script>` in the html file for the component.
         - `_component-name.scss` the styling for the component. By convention the class prefix is the same as the name and we're using the [BEM](https://css-tricks.com/bem-101/) methodology.
     - **layouts/** Markup (HTML) for the head, header, footer, meta. The basic top and bottom for every page, written with [handlebars](http://handlebarsjs.com/).
-    - **web_root/** This drives the structure of the site (a directory as a sitemap if you will). Also written with [handlebars](http://handlebarsjs.com/).
+    - **pages/** This drives the structure of the site (a directory as a sitemap if you will). Also written with [handlebars](http://handlebarsjs.com/).
     - `main.js` This is the "entry point" for all the JS.
     - `style-base.scss` This pulls all the base styles into a css file that will be loaded, the critical css.
     - `style-components.scss` This pulls all the component styles into a different css file that will be loaded.
