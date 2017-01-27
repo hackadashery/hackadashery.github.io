@@ -15,12 +15,15 @@
 
     //form
     &__search {
+        position: relative;
 
         &-input {
-
+            padding-right: 50px;
         }
         &-submit {
-
+            position: absolute;
+            top: 0;
+            right: 0;
         }
     }
 
