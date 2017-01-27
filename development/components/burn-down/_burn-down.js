@@ -2,30 +2,21 @@
 
 var d3 = require('d3');
 
-var chartIsBuilt = false;
 var chartPadding = { top: 60, right: 60, bottom: 40, left: 60 }
 
 
 module.exports = {
 	init(){
-		eventManager.subscribe('section_opened', function(event){
-			if (event.data.section == 'burnrate') {
-				buildChart();
-			}
-		});
-		eventManager.subscribe('section_closed', function(event){
-			if (event.data.section == 'burnrate') {
-				//unload the DOM elements
-			}
+		$( document ).ready(function(){
+			console.log("building!");
+			buildChart();
 		});
 	}
 }
 
 function buildChart(){
-	if (chartIsBuilt) { return; }
-	chartIsBuilt = true;
 	
-	d3.json('dist/data/burn_total.json', function(error, data) {
+	d3.json('/data/burn_total.json', function(error, data) {
 		// =================================== Variables	
 		var svgWidth = document.getElementById('burnchart').clientWidth;
 		var svgHeight = Math.min( (svgWidth * 0.5), (screen.height - 90) ); console.log('SCREEN HEIGHT', svgHeight);

@@ -6,6 +6,7 @@
 	background-position: center;
 	min-height: 100vh;
 	position: relative;
+	text-align: center;
 
 	//fade in the hacka_blue
 	&:before {
@@ -19,14 +20,18 @@
 	}
 
 	&__content {
+		display: inline-block;
+		text-align: left;
 		position: relative;
 		z-index: 1;
 		color: rgba(255,255,255,0.9);
 		max-width: 500px;
-		margin: rem($vUnit * 3) auto;
+		padding: rem($vUnit * 3) rem($pad);
 	}
 
 		&__title {
+			font-size: rem(32);
+			font-weight: normal;
 			line-height: rem($vUnit / 2);
 			padding-bottom: rem($vUnit / 2);
 			border-bottom: 1px solid white;
@@ -35,12 +40,15 @@
 
 		&__description {
 			line-height: rem($vUnit);
-			font-size: rem(18);
+			font-size: rem(20);
 
 			a {
-				color: rgba(255,255,255,0.9);
+				color: white;
+				font-weight: bold;
+				text-shadow: none; 
 				&:hover {
-					color: white;
+					background-image: none;
+					text-decoration: underline;
 				}
 			}
 		}

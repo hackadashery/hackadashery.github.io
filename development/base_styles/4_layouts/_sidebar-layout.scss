@@ -1,11 +1,20 @@
 .sidebar-layout {
+    min-height: 100vh;
 
+    &__sidebar {
+        padding: rem($pad);
+    }
+
+    &__body {
+        padding: rem($pad);
+    }
+    
     @include breakpoint(medium) {
         display: flex;
 
         &__sidebar {
             width: rem(300);
-            padding: 0 rem($pad);
+            background: darken($background-color, 5%);
         }
 
         &__body {

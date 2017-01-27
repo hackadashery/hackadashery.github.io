@@ -1,3 +1,65 @@
-.burn-down {
-    
+.burnchart {
+	width: 100%;	
+
+	&__new-line {
+		stroke: #d18462;
+		stroke-width: 2;
+		fill: none;
+	}
+	&__new-area {
+		fill: rgba(#d18462, 0.3);
+		fill: url(#redstripe);
+		stroke-width: 0;
+	}
+	&__new-dot {
+		fill: white;
+		stroke: #d18462;
+		stroke-width: 2;
+	}
+
+	&__resolved-line {
+		stroke: #a1bd89;
+		stroke-width: 2;
+		fill: none;
+	}
+	&__resolved-area {
+		fill: rgba(#a1bd89, 0.3);
+		stroke-width: 0;
+	}
+	&__resolved-dot {
+		fill: white;
+		stroke: #a1bd89;
+		stroke-width: 2;
+	}
+
+	&__balance-line {
+		stroke: #496b7c;
+		stroke-dasharray: 5, 5;
+		stroke-width: 2;
+		fill: none;
+	}
+	&__balance-dot {
+		fill: white;
+		stroke: #496b7c;
+		stroke-width: 2;
+	}
+
+	&__axis {
+		path {
+			stroke: #cacaca;
+		}
+		line {
+			stroke: #cacaca;
+		}
+	}
+		&__axis-label {
+			text-anchor: middle; //center align
+		}
+
+	&__hover-line {
+		stroke: #cacaca;
+	}
+	&__hover-note {
+		text-anchor: middle; //center align
+	}
 }
