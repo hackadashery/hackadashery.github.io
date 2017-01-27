@@ -7,13 +7,13 @@
     "start": "run-p server watch:*",
     "build": "run-s build:*",
     "build:html": "node _build.js",
-    "build:js": "browserify development/main.js > _dont-write-code-in-here/main.js",
-    "build:sass": "node-sass development -o _dont-write-code-in-here --importer node_modules/node-sass-glob-importer/dist/cli.js --output-style compressed",
-    "watch:js": "sane \"npm run build:js\" development --glob=**/*.js",
-    "watch:markdown": "sane \"npm run build:html\" development --glob=**/*.md",
-    "watch:html": "sane \"npm run build:html\" development --glob=**/*.html",
-    "watch:sass": "sane \"npm run build:sass\" development --glob=**/*.scss",
-    "server": "http-server ./_dont-write-code-in-here"
+    "build:js": "browserify _write-your-code-in-here/main.js > philly311/main.js",
+    "build:sass": "node-sass _write-your-code-in-here -o philly311 --importer node_modules/node-sass-glob-importer/dist/cli.js --output-style compressed",
+    "watch:js": "sane \"npm run build:js\" _write-your-code-in-here --glob=**/*.js",
+    "watch:markdown": "sane \"npm run build:html\" _write-your-code-in-here --glob=**/*.md",
+    "watch:html": "sane \"npm run build:html\" _write-your-code-in-here --glob=**/*.html",
+    "watch:sass": "sane \"npm run build:sass\" _write-your-code-in-here --glob=**/*.scss",
+    "server": "http-server &"
   },
   "repository": {
     "type": "git",

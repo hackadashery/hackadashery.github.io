@@ -27,20 +27,20 @@ Metalsmith(__dirname)
     generator: "Metalsmith",
     url: "http://www.metalsmith.io/"
   })
-  .source('./development/web_root')
-  .destination('./_dont-write-code-in-here')
+  .source('./_write-your-code-in-here/web_root')
+  .destination('./philly311')
   .clean(false)
   .use(sanityCheck())
   .use(inplace({
     pattern: '**/*.html',
     engine: 'handlebars',
-    directory: "development/layouts",
-    partials: "development/components"
+    directory: "_write-your-code-in-here/layouts",
+    partials: "_write-your-code-in-here/components"
   }))
   .use(layouts({
     engine: 'handlebars',
-    directory: "development/layouts",
-    partials: "development/components"
+    directory: "_write-your-code-in-here/layouts",
+    partials: "_write-your-code-in-here/components"
   }))
   .use(permalinks())
   .use(htmlMinifier())
