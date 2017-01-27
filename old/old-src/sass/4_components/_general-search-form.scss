@@ -1,0 +1,50 @@
+.general-search-form {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	width: 100%;
+	max-width: 400px;
+	padding: 0 rem($hPad) rem($vUnit / 2);
+
+
+	&__label {
+		display: block;
+		width: 100%;
+		border-bottom: 1px solid $gray-3;
+		margin-top: -1px;
+		position: relative;
+		margin-bottom: rem($vUnit);
+	}
+		&__label-text {
+			display: block;
+			font-size: rem(12);
+			line-height: rem($vUnit / 2);
+		}
+		&__input {
+			display: block;
+			width: 100%;
+			line-height: rem($vUnit);
+			background: transparent;
+			border: 0;
+			padding: 0 rem($hPad);
+		}
+
+	//hides / expands
+	&__advanced-section {
+		display: none;
+	}
+	
+
+	&__button {
+		display: block;
+		margin-left: auto;
+		padding: 0 rem($hPad);
+		border-radius: #{$vUnit / 2}px;
+		background: white;
+		border: 1px solid $rule-color;
+		line-height: rem($vUnit);
+		cursor: pointer;
+		align-self: flex-end;
+	}
+}

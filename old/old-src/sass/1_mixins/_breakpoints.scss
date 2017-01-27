@@ -1,0 +1,23 @@
+$breakpoints: (
+	tiny: 320px,
+	small: 540px,
+	medium: 768px,
+	large: 980px,
+	huge: 1200px
+);
+
+$oldIE: false;
+
+@mixin breakpoint($point) {
+	 @if $oldIE {
+		@content;
+	}@else{
+		@each $breakpoint in $breakpoints {
+			@if $point == nth($breakpoint, 1) {
+				@media (min-width: nth($breakpoint, 2)) {
+					@content;
+				}
+			}
+		}
+	}
+}

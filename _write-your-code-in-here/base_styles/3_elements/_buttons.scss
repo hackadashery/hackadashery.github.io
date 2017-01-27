@@ -1,0 +1,70 @@
+.button, a.button {
+    color: white;
+    background: transparent;
+    padding: rem(7) rem(14);
+
+    //overriding the occluded underline on a tags
+    text-shadow: none;
+    background-image: none;
+
+    &:hover {
+        text-shadow: none;
+        background-image: none;
+    }
+
+    //usually this is an svg
+    &__icon {
+        fill: white;
+        width: 1em;
+        height: 1em;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    //hover effects!
+    position: relative;
+    z-index: 1;
+
+    &:before { //the background that pops out
+        content: " ";
+        display: block;
+        position: absolute;
+        z-index: -1;
+        top: 0; bottom: 0;
+        left: 0; right: 0;
+        background: $hacka_blue;
+        border-radius: 2px;
+
+        transition: transform 0.2s ease;
+        transform: scale(1);
+    }
+
+    &:after { //the shadow that descends
+        content: " ";
+        display: block;
+        position: absolute;
+        z-index: -2;
+        top: 5px; bottom: 0px;
+        left: 5px; right: 5px;
+        background: rgba(darken($hacka_blue, 5%), 0.2);
+
+        transition: transform 0.2s ease;
+        transform: translateY(0%) scale(1);
+    }
+    
+    &:hover {
+
+        &:before { //pop out the background
+            transform: scale(1.02);
+        }
+
+        &:after { //drop down the shadow
+            transform: translateY(15%) scale(1.02);
+        }
+    }
+
+    &--red {
+        &:before { background: $hacka_range; }
+        &:after { background: rgba(darken($hacka_range, 5%), 0.2); }
+    }
+}

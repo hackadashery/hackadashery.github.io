@@ -1,0 +1,5 @@
+/* Import all the component styles here so they will be "bundled" up into a single file which can be requested in the background from the landing page.
+ * As opposed to loading them individually depending on the compoments required on sub pages (which is a legitimate option)
+ */
+ @import "base_styles/1_vars_and_mixins/**/*.scss"; //because we'll probably use the min the components too
+ @import "components/**/*.scss";

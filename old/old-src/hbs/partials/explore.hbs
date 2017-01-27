@@ -1,0 +1,166 @@
+<div class="view__mobile-header">
+	<div class="view__mobile-header-button">
+		
+		<div class="mobile-menu-button js-mobile-menu-button" data-mobile-menu-name="explore">
+			<div class="mobile-menu-button__dot mobile-menu-button__dot--1"></div>
+			<div class="mobile-menu-button__dot mobile-menu-button__dot--2"></div>
+			<div class="mobile-menu-button__dot mobile-menu-button__dot--3"></div>
+		</div>
+	
+	</div>
+	<div class="view__mobile-header-title"><b>Explore</b> some general stats about Philly's 311 performance.</div>
+</div>
+
+<div class="view__sidebar view__sidebar--mobile-slide js-mobile-menu-slide" data-mobile-menu-name="explore">
+
+	<nav class="nav">
+		
+		<button class="nav__button js-nav-button" data-nav-href="linebasic" data-nav-group="explore">
+			Request Rates
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">
+			  <path d="M5 0v2h-5v1h5v2l3-2.53-3-2.47z" transform="translate(0 1)" />
+			</svg>
+		</button>
+
+		<button class="nav__button js-nav-button" data-nav-href="bluebar" data-nav-group="explore">
+			Blue barchart
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">
+			  <path d="M5 0v2h-5v1h5v2l3-2.53-3-2.47z" transform="translate(0 1)" />
+			</svg>
+		</button>
+		
+		<button class="nav__button js-nav-button" data-nav-href="burnrate" data-nav-group="explore">
+			Burnrate
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">
+			  <path d="M5 0v2h-5v1h5v2l3-2.53-3-2.47z" transform="translate(0 1)" />
+			</svg>
+		</button>
+
+	</nav>
+
+	<div class="chart-filter js-filter-form">
+		<fieldset>
+			<input type="radio" name="time" value="day" />Day<br />
+			<input checked type="radio" name="time" value="week" />Week<br />
+			<input type="radio" name="time" value="month" />Month<br />
+			<input type="radio" name="time" value="year" />Year<br />
+		</fieldset>
+
+		<label class="chart-filter__label">
+			<span class="chart-filter__label-text">Select Service Type</span> 
+			<!-- request ids: https://gist.github.com/mheadd/7171ea534e3e3afe8037f639b630c3d5 -->
+			<select type="text" class="chart-filter__select js-service">
+				<!-- <option selected value>All</option> -->
+				<option value="SR-LI21">Maintenance Residential</option>
+				<option value="SR-ST03">Rubbish/Recyclable Material Collection</option>
+				<option value="SR-ST02">Illegal Dumping</option>
+				<option value="SR-PD01">Abandoned Automobile</option>
+				<option value="SR-ST01">Street Defect</option>
+				<option value="SR-CL01">Graffiti Removal</option>
+				<option value="SR-ST18">Salting</option>
+				<option value="SR-ST04">Street Light Outage</option>
+				<option value="SR-CL02">Vacant Lot Clean-Up</option>
+				<option value="SR-LI27">Vacant House or Commercial</option>
+				<option value="SR-ST19">Sanitation / Dumpster Violation</option>
+				<option value="SR-ST25">Traffic Signal Emergency</option>
+				<option value="SR-LI06">Construction Site Task Force</option>
+				<option value="SR-PR08">Street Trees</option>
+				<option value="SR-FD02">Smoke Detector</option>
+				<option value="SR-LI03">Building Dangerous</option>
+				<option value="SR-LI02">Building Construction</option>
+				<option value="SR-MI01">Miscellaneous</option>
+				<option value="SR-ST16">Other (Streets)</option>
+				<option value="SR-LI28">Zoning Business</option>
+				<option value="SR-ST08">Complaint (Streets)</option>
+				<option value="SR-ST06">Alley Light Outage</option>
+				<option value="SR-WD01">Inlet Cleaning</option>
+				<option value="SR-ST09">Dangerous Sidewalk</option>
+				<option value="SR-LI22">No Heat (Residential)</option>
+				<option value="SR-PR01">Parks and Rec Safety and Maintenance</option>
+				<option value="SR-ST24">Traffic (Other)</option>
+				<option value="SR-LI16">Fire Residential or Commercial</option>
+				<option value="SR-LI19">License Residential</option>
+				<option value="SR-LI30">Zoning Residential</option>
+				<option value="SR-ST20">Shoveling</option>
+				<option value="SR-ST10">Dead Animal in Street</option>
+				<option value="SR-ST21">Stop Sign Repair</option>
+				<option value="SR-LI17">Infestation Residential</option>
+				<option value="SR-LI01">Boarding Room House</option>
+				<option value="SR-ST23">Street Paving</option>
+				<option value="SR-ST14">Manhole Cover</option>
+				<option value="SR-WD02">Hydrant Request</option>
+				<option value="SR-LI23">Other Dangerous</option>
+				<option value="SR-LI25">Tree Dangerous</option>
+				<option value="SR-ST13">Line Striping</option>
+				<option value="SR-PD02">Police Complaint</option>
+				<option value="SR-ST05">Abandoned Bike</option>
+				<option value="SR-FD01">Complaints against Fire or EMS</option>
+				<option value="SR-LI08">Daycare Residential or Commercial</option>
+				<option value="SR-ST15">Newsstand Outdoor Cafe</option>
+				<!-- <option value="ST24">Hydrant Knocked Down (No Water)</option>
+				<option value="ST24">No Heat Residential</option>
+				<option value="ST24">Newsstand/Outdoor Cafe</option> -->
+				<option value="SR-LI13">Emergency Air Conditioning</option>
+			</select>
+		</label>
+	</div>
+
+<!-- hide until functionality is in place -->
+<!-- 	<div class="search-by-id-wrap">
+		<div class="search-by-id js-search-by-id-form">
+			<label class="search-by-id__label">Requests by ZIP</label> 
+			<input type="text" class="search-by-id__input js-search-by-id-input">
+			<button class="search-by-id__button js-search-by-id-button">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 8 8">
+					<path d="M3.5 0c-1.93 0-3.5 1.57-3.5 3.5s1.57 3.5 3.5 3.5c.59 0 1.17-.14 1.66-.41a1 1 0 0 0 .13.13l1 1a1.02 1.02 0 1 0 1.44-1.44l-1-1a1 1 0 0 0-.16-.13c.27-.49.44-1.06.44-1.66 0-1.93-1.57-3.5-3.5-3.5zm0 1c1.39 0 2.5 1.11 2.5 2.5 0 .66-.24 1.27-.66 1.72-.01.01-.02.02-.03.03a1 1 0 0 0-.13.13c-.44.4-1.04.63-1.69.63-1.39 0-2.5-1.11-2.5-2.5s1.11-2.5 2.5-2.5z"/>
+				</svg>
+			</button>
+		</div>
+	</div>
+
+	<div class="search-by-id-wrap">
+		<div class="search-by-id js-search-by-id-form">
+			<label class="search-by-id__label">Requests by Agency</label> 
+			<input type="text" class="search-by-id__input js-search-by-id-input">
+			<button class="search-by-id__button js-search-by-id-button">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 8 8">
+					<path d="M3.5 0c-1.93 0-3.5 1.57-3.5 3.5s1.57 3.5 3.5 3.5c.59 0 1.17-.14 1.66-.41a1 1 0 0 0 .13.13l1 1a1.02 1.02 0 1 0 1.44-1.44l-1-1a1 1 0 0 0-.16-.13c.27-.49.44-1.06.44-1.66 0-1.93-1.57-3.5-3.5-3.5zm0 1c1.39 0 2.5 1.11 2.5 2.5 0 .66-.24 1.27-.66 1.72-.01.01-.02.02-.03.03a1 1 0 0 0-.13.13c-.44.4-1.04.63-1.69.63-1.39 0-2.5-1.11-2.5-2.5s1.11-2.5 2.5-2.5z"/>
+				</svg>
+			</button>
+		</div>
+	</div> -->
+
+	
+</div>
+<div class="view__body">
+	<section id="explore-welcome"
+			 class="js-nav-section"
+			 data-nav-group="explore">
+			 <!-- the default first section, therefor no display:none; -->
+		This is the explore section!
+	</section>
+	
+	<section id="linebasic" 
+			 class="js-nav-section" 
+			 data-nav-group="explore"
+			 style="display: none;">
+		<div class="requests-linechart"></div>
+	</section>
+
+	<section id="bluebar" 
+			 class="js-nav-section" 
+			 data-nav-group="explore"
+			 style="display: none;">
+		<svg id="requests-barchart" class="requests-barchart"></svg>
+	</section>
+
+	<section id="burnrate" 
+			 class="	js-nav-section" 
+			 data-nav-group="explore"
+			 style="display: none;">
+		<div class="toolbar">
+			Dept picker | Timespan
+		</div>
+		<svg id="burnchart" class="burnchart"></svg>
+	</section>
+</div>

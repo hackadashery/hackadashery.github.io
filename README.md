@@ -1,67 +1,64 @@
-#Protodashery
+*Temp note - where did all the images go!?! Have no fear, I've set up a dropbox folder for them & other larger files - ping your email at me on the Hackadashery channel in the Code for Philly slack and I'll add you.*
 
-This repo is a play space / testing area for trying out ways to build the charts & graphs.
+#Hackadashery's Protodashery for Philly 311
 
-https://hackadashery.github.io/
+https://hackadashery.github.io/philly311
 
 ---
 
-##Set up
+##Quick tour of the code
 
-###Installing
+Tooling:
 
-[Fork](https://help.github.com/articles/fork-a-repo/) the repo (unless you have permissions to push directly)
+ - [handlebars](http://handlebarsjs.com/) :point_right: [Metalsmith](http://www.metalsmith.io/) :point_right: **HTML**
+ - [SASS](http://sass-lang.com/) :point_right: [node-sass](https://github.com/sass/node-sass) :point_right: **CSS**
+ - [Browserify](http://browserify.org/) :point_right: **JS**
 
-Download and install these two tools, documentation about installing them can be found on their sites:
+Directories:
 
- - [Node JS](https://nodejs.org)
- - [gulp](http://gulpjs.com/)
+ - **_write-your-code-in-here/**.  
+    - **base_scripts/** A home Global JS (don't shudder, global things can be good). Using [Browserify](http://browserify.org/) to compile so you can `require('node-modules-too');`!
+    - **base_styles/** The styles that underly everything. For each folder in here, there is a quick description in `_write-your-code-in-here/style-base.scss`. Written in [SASS](http://sass-lang.com/) and following the [BEM](https://css-tricks.com/bem-101/) naming methodology.
+    - **components/** Each bit of the "app", this is probably where most of your time will be spent.
+        - `_component-name.html` a [handlebars](http://handlebarsjs.com/) partial. These are added to the pages (in web_root/) like this: `{{> component-name/_component-name}}`
+        - `_component-name.js` if it needs JS to do it's thing. Added to main.js like this: `window.threeOneOne.map = require('./components/map/_map.js');` then add a `<script> threeOneOne.burndown.init(); </script>` in the html file for the component.
+        - `_component-name.scss` the styling for the component. By convention the class prefix is the same as the name and we're using the [BEM](https://css-tricks.com/bem-101/) methodology.
+    - **layouts/** Markup (HTML) for the head, header, footer, meta. The basic top and bottom for every page, written with [handlebars](http://handlebarsjs.com/).
+    - **pages/** This drives the structure of the site (a directory as a sitemap if you will). Also written with [handlebars](http://handlebarsjs.com/).
+    - `main.js` This is the "entry point" for all the JS.
+    - `style-base.scss` This pulls all the base styles into a css file that will be loaded, the critical css.
+    - `style-components.scss` This pulls all the component styles into a different css file that will be loaded.
+ - **metalsmith/** Some functions to help with generating the site, there shouldn't be much to do in here.
+ - **philly311/** Don't write any code in here! It will be overwritten. The build process takes everything from **_write-your-code-in-here**, smashes it all together, and spits it out into **philly311/**.
+ - `index.html` redirects to `/philly311` because we're using github to host the site so the repo root is the site root but we don't want to be compiling files into the repo root :/
 
-Now create a folder for the project anywhere on your computer and [clone](https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository#Cloning-an-Existing-Repository) this repo into it.
 
-Open the command line / terminal and navigate/cd into the root of the repo (unless you created your own name for the folder when cloning, it should be called "protodashery").
+---
 
-now run `npm install`
+##Getting set up
+
+ - Download and install [Node JS](https://nodejs.org) - if you haven't already.
+ - Clone / fork the repo.
+ - Open the command line / terminal in the root of the repo and run `npm install`.
+ - Also run `npm install http-server -g` if you don't already have some kind of local server set up.
+
+ - `npm start` will fire up the server & watch the files for changes! It won't build initially, if you want to just do a full build (HTML, CSS, & JS) you can also run `npm run build`.
 
 Set up should be complete! Report any errors as issues on this repo and we'll try to get to them / figure out your problem.
 
 ---
 
-###Localhost
-
-If you have your own set up for local projects - just point it at index.html and run `gulp` from this repo's root.
-
-If you don't, we have a super simple set up:
-
- - run  `npm install http-server -g` to install [http-server](https://www.npmjs.com/package/http-server)
- - now run `npm start` and open http://localhost:8080/
-
----
-
-###Gulp
-
-The gulpfile does a few things for us:
-
- - compiles all the JavaScript from `src/es6` into `dist/js/common.bundle.js` using [Babel](https://babeljs.io/docs/learn-es2015/) and [Browserify](http://browserify.org/)
- - compiles all the [Sass](http://sass-lang.com/) from `src/sass` into `dist/css/main.css`
- - compiles all the [Handlebars](http://handlebarsjs.com/) from `src/hbs` to `dist/index.html`
- - moves the data json files from `src/data` to `dist/data`
- - watches the es6, Sass, hbs and data files in src for any saved changes (when you save it'll run the relevant compilation task again).
-
-
----
-
 ###Tests
 
-Located in `/spec` written in [Jasmine](http://jasmine.github.io/), run `npm test` to run tests!
+We don't have any yet, but when we do it will probably be [Tape](https://github.com/substack/tape) because it doesn't use the whole kitchen sink, or [Zora](https://github.com/lorenzofox3/zora) for the same reason :) - but really, it's up to whoever takes the time to actually set it up.
 
 ---
 
 ###Chart ideas
 
-*Burn chart*: X is time, Y (left) is number of active issues, Y (right) total number of issues. red line for issues added, green line for issues resolved, blue line for total number of issues.
- 
-*Additions & deletions per week* / day (look at the github one vs the Target Process one). Y: time, X: total open line, resolved bar, new bar
+*TODO: make a project on github for each new chart idea - initial issue for set up chat? and more at the chart's lead contributors discretion*
 
- - Seasonal punchcard (rows are months, cols are days)
+ - **Burndown**: X is time, Y (left) is number of active issues, Y (right) total number of issues. red line for issues added, green line for issues resolved, blue line for total number of issues.
+ - **Additions & deletions per week** / day (look at the github one vs the Target Process one). Y: time, X: total open line, resolved bar, new bar
+ - **Seasonal punchcard** (rows are months, cols are days)
  - Y: number of open bugs, X: time (week / month / year). Line for each week / month / year

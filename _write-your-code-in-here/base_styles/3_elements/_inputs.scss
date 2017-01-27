@@ -1,0 +1,14 @@
+input {
+    background: transparent;
+    border: 1px solid grey;
+    border-radius: 3px;
+    padding: rem($pad / 2) rem($pad);
+}
+
+input[type="submit"] {
+    border: 1px solid $link-color;
+    color: $link-color;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: bold;
+}

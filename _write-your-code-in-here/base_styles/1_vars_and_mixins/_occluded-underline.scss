@@ -1,0 +1,19 @@
+@mixin occluded-underline($bgColor, $textColor, $hoverColor){
+    color: $textColor;
+    text-decoration: none;
+
+    background-image: linear-gradient(transparent 50%, rgba($textColor, 0.1) 50%);
+    background-repeat: repeat-x;
+    background-size: 2px 2px;
+    background-position: 0 95%;
+    text-shadow: .03em 0 0 $bgColor,.06em 0 0 $bgColor,.09em 0 0 $bgColor,.12em 0 0 $bgColor,.15em 0 0 $bgColor,-.03em 0 0 $bgColor,-.06em 0 0 $bgColor,-.09em 0 0 $bgColor,-.12em 0 0 $bgColor,-.15em 0 0 $bgColor;
+
+    &:hover {
+        background-image: linear-gradient(transparent 50%, $hoverColor 50%);
+    }
+
+    &::selection { 
+        background: $hoverColor;
+        text-shadow: none; 
+    }
+}

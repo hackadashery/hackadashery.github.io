@@ -1,0 +1,27 @@
+.requests-barchart {
+	font-weight: 500;
+	width: 100%;
+	
+	&__bar {
+		border-top-right-radius: 5px;
+		border-bottom-right-radius: 5px;
+		stroke: black;
+		stroke-width: 1px;
+		x: 1;
+		rx: 5px;
+		ry: 5px;
+	}
+
+		&__bar-label {
+			fill: white;
+			font-size: rem(14);
+			font-weight: bold;
+			alignment-baseline: middle;
+		}
+
+		&__bar-number {
+			fill: #ccc;
+			font-size: rem(20);
+			alignment-baseline: middle;
+		}
+}

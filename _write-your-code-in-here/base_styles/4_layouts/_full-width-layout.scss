@@ -1,0 +1,8 @@
+.full-width-layout {
+    padding: rem($pad);
+    &__body {
+        max-width: rem($site-width);
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
