@@ -417,7 +417,7 @@ require('./components/map/_map.js').init();
 $('.js-main').addClass('js-loaded');
 $('.js-header').addClass('js-loaded'); 
 
-},{"./base_scripts/api":1,"./base_scripts/eventManager":2,"./components/map/_map.js":3,"./components/search-by-filters/_search-by-filters.js":4,"./components/search-by-id/_search-by-id.js":5,"jquery":8}],7:[function(require,module,exports){
+},{"./base_scripts/api":1,"./base_scripts/eventManager":2,"./components/map/_map.js":3,"./components/search-by-filters/_search-by-filters.js":4,"./components/search-by-id/_search-by-id.js":5,"jquery":9}],7:[function(require,module,exports){
 function corslite(url, callback, cors) {
     var sent = false;
 
@@ -513,6 +513,11 @@ function corslite(url, callback, cors) {
 if (typeof module !== 'undefined') module.exports = corslite;
 
 },{}],8:[function(require,module,exports){
+module.exports = Array.isArray || function (arr) {
+  return Object.prototype.toString.call(arr) == '[object Array]';
+};
+
+},{}],9:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.1.1
  * https://jquery.com/
@@ -10734,7 +10739,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 /*
  Leaflet, a JavaScript library for mobile-friendly interactive maps. http://leafletjs.com
  (c) 2010-2013, Vladimir Agafonkin
@@ -19903,30 +19908,25 @@ L.Map.include({
 
 
 }(window, document));
-},{}],10:[function(require,module,exports){
-module.exports = Array.isArray || function (arr) {
-  return Object.prototype.toString.call(arr) == '[object Array]';
-};
-
 },{}],11:[function(require,module,exports){
 module.exports={
   "_args": [
     [
       {
-        "name": "mapbox.js",
         "raw": "mapbox.js@^2.4.0",
-        "rawSpec": "^2.4.0",
         "scope": null,
+        "escapedName": "mapbox.js",
+        "name": "mapbox.js",
+        "rawSpec": "^2.4.0",
         "spec": ">=2.4.0 <3.0.0",
         "type": "range"
       },
-      "C:\\Users\\imccallum\\projects\\Hackadashery\\Protodashery"
+      "C:\\Users\\ijmcc\\Projects\\Hackadashery"
     ]
   ],
   "_from": "mapbox.js@>=2.4.0 <3.0.0",
   "_id": "mapbox.js@2.4.0",
   "_inCache": true,
-  "_installable": true,
   "_location": "/mapbox.js",
   "_nodeVersion": "5.9.1",
   "_npmOperationalInternal": {
@@ -19934,16 +19934,17 @@ module.exports={
     "tmp": "tmp/mapbox.js-2.4.0.tgz_1459367631719_0.44528863835148513"
   },
   "_npmUser": {
-    "email": "tom@macwright.org",
-    "name": "tmcw"
+    "name": "tmcw",
+    "email": "tom@macwright.org"
   },
   "_npmVersion": "3.7.3",
   "_phantomChildren": {},
   "_requested": {
-    "name": "mapbox.js",
     "raw": "mapbox.js@^2.4.0",
-    "rawSpec": "^2.4.0",
     "scope": null,
+    "escapedName": "mapbox.js",
+    "name": "mapbox.js",
+    "rawSpec": "^2.4.0",
     "spec": ">=2.4.0 <3.0.0",
     "type": "range"
   },
@@ -19954,7 +19955,7 @@ module.exports={
   "_shasum": "c43b084a5dd71334c83ee1df28fa67443d73c29c",
   "_shrinkwrap": null,
   "_spec": "mapbox.js@^2.4.0",
-  "_where": "C:\\Users\\imccallum\\projects\\Hackadashery\\Protodashery",
+  "_where": "C:\\Users\\ijmcc\\Projects\\Hackadashery",
   "author": {
     "name": "Mapbox"
   },
@@ -19998,196 +19999,196 @@ module.exports={
   "main": "src/index.js",
   "maintainers": [
     {
-      "email": "mxn@1ec5.org",
-      "name": "1ec5"
+      "name": "1ec5",
+      "email": "mxn@1ec5.org"
     },
     {
-      "email": "aaronlidman@gmail.com",
-      "name": "aaronlidman"
+      "name": "aaronlidman",
+      "email": "aaronlidman@gmail.com"
     },
     {
-      "email": "aj.ashton@gmail.com",
-      "name": "ajashton"
+      "name": "ajashton",
+      "email": "aj.ashton@gmail.com"
     },
     {
-      "email": "ulsh@mapbox.com",
-      "name": "alulsh"
+      "name": "alulsh",
+      "email": "ulsh@mapbox.com"
     },
     {
-      "email": "ansis.brammanis@gmail.com",
-      "name": "ansis"
+      "name": "ansis",
+      "email": "ansis.brammanis@gmail.com"
     },
     {
-      "email": "andrew@mapbox.com",
-      "name": "apendleton"
+      "name": "apendleton",
+      "email": "andrew@mapbox.com"
     },
     {
-      "email": "wb@bergwerk-gis.at",
-      "name": "bergwerkgis"
+      "name": "bergwerkgis",
+      "email": "wb@bergwerk-gis.at"
     },
     {
-      "email": "bryan@mapbox.com",
-      "name": "bhousel"
+      "name": "bhousel",
+      "email": "bryan@mapbox.com"
     },
     {
-      "email": "bobby@mapbox.com",
-      "name": "bsudekum"
+      "name": "bsudekum",
+      "email": "bobby@mapbox.com"
     },
     {
-      "email": "camille@mapbox.com",
-      "name": "camilleanne"
+      "name": "camilleanne",
+      "email": "camille@mapbox.com"
     },
     {
-      "email": "damon@mapbox.com",
-      "name": "dnomadb"
+      "name": "dnomadb",
+      "email": "damon@mapbox.com"
     },
     {
-      "email": "dthompson@gmail.com",
-      "name": "dthompson"
+      "name": "dthompson",
+      "email": "dthompson@gmail.com"
     },
     {
-      "email": "emily@mapbox.com",
-      "name": "emilymcafee"
+      "name": "emilymcafee",
+      "email": "emily@mapbox.com"
     },
     {
-      "email": "flippmoke@gmail.com",
-      "name": "flippmoke"
+      "name": "flippmoke",
+      "email": "flippmoke@gmail.com"
     },
     {
-      "email": "spam@freenerd.de",
-      "name": "freenerd"
+      "name": "freenerd",
+      "email": "spam@freenerd.de"
     },
     {
-      "email": "carol@mapbox.com",
-      "name": "gretacb"
+      "name": "gretacb",
+      "email": "carol@mapbox.com"
     },
     {
-      "email": "ian.villeda@gmail.com",
-      "name": "ian29"
+      "name": "ian29",
+      "email": "ian.villeda@gmail.com"
     },
     {
-      "email": "ian@mapbox.com",
-      "name": "ianshward"
+      "name": "ianshward",
+      "email": "ian@mapbox.com"
     },
     {
-      "email": "nicholas.ingalls@gmail.com",
-      "name": "ingalls"
+      "name": "ingalls",
+      "email": "nicholas.ingalls@gmail.com"
     },
     {
-      "email": "john.firebaugh@gmail.com",
-      "name": "jfirebaugh"
+      "name": "jfirebaugh",
+      "email": "john.firebaugh@gmail.com"
     },
     {
-      "email": "jake@jakepruitt.com",
-      "name": "jrpruit1"
+      "name": "jrpruit1",
+      "email": "jake@jakepruitt.com"
     },
     {
-      "email": "karen@mapbox.com",
-      "name": "karenzshea"
+      "name": "karenzshea",
+      "email": "karen@mapbox.com"
     },
     {
-      "email": "kelvinabrokwa@gmail.com",
-      "name": "kelvinabrokwa"
+      "name": "kelvinabrokwa",
+      "email": "kelvinabrokwa@gmail.com"
     },
     {
-      "email": "kkaefer@gmail.com",
-      "name": "kkaefer"
+      "name": "kkaefer",
+      "email": "kkaefer@gmail.com"
     },
     {
-      "email": "lauren@mapbox.com",
-      "name": "lbud"
+      "name": "lbud",
+      "email": "lauren@mapbox.com"
     },
     {
-      "email": "lucas@lucaswoj.com",
-      "name": "lucaswoj"
+      "name": "lucaswoj",
+      "email": "lucas@lucaswoj.com"
     },
     {
-      "email": "alex@mapbox.com",
-      "name": "lxbarth"
+      "name": "lxbarth",
+      "email": "alex@mapbox.com"
     },
     {
-      "email": "lyzi@mapbox.com",
-      "name": "lyzidiamond"
+      "name": "lyzidiamond",
+      "email": "lyzi@mapbox.com"
     },
     {
-      "email": "accounts@mapbox.com",
-      "name": "mapbox-admin"
+      "name": "mapbox-admin",
+      "email": "accounts@mapbox.com"
     },
     {
-      "email": "matt@mapbox.com",
-      "name": "mateov"
+      "name": "mateov",
+      "email": "matt@mapbox.com"
     },
     {
-      "email": "mcwhittemore@gmail.com",
-      "name": "mcwhittemore"
+      "name": "mcwhittemore",
+      "email": "mcwhittemore@gmail.com"
     },
     {
-      "email": "jeff@miccolis.net",
-      "name": "miccolis"
+      "name": "miccolis",
+      "email": "jeff@miccolis.net"
     },
     {
-      "email": "michael.patrick.morris@gmail.com",
-      "name": "mikemorris"
+      "name": "mikemorris",
+      "email": "michael.patrick.morris@gmail.com"
     },
     {
-      "email": "morgan.herlocker@gmail.com",
-      "name": "morganherlocker"
+      "name": "morganherlocker",
+      "email": "morgan.herlocker@gmail.com"
     },
     {
-      "email": "agafonkin@gmail.com",
-      "name": "mourner"
+      "name": "mourner",
+      "email": "agafonkin@gmail.com"
     },
     {
-      "email": "irwin@mapbox.com",
-      "name": "mtirwin"
+      "name": "mtirwin",
+      "email": "irwin@mapbox.com"
     },
     {
-      "email": "nicki@mapbox.com",
-      "name": "nickidlugash"
+      "name": "nickidlugash",
+      "email": "nicki@mapbox.com"
     },
     {
-      "email": "ryan.clark.j@gmail.com",
-      "name": "rclark"
+      "name": "rclark",
+      "email": "ryan.clark.j@gmail.com"
     },
     {
-      "email": "saman@mapbox.com",
-      "name": "samanbb"
+      "name": "samanbb",
+      "email": "saman@mapbox.com"
     },
     {
-      "email": "tlee@mapbox.com",
-      "name": "sbma44"
+      "name": "sbma44",
+      "email": "tlee@mapbox.com"
     },
     {
-      "email": "scothis@gmail.com",
-      "name": "scothis"
+      "name": "scothis",
+      "email": "scothis@gmail.com"
     },
     {
-      "email": "sean@mapbox.com",
-      "name": "sgillies"
+      "name": "sgillies",
+      "email": "sean@mapbox.com"
     },
     {
-      "email": "dane@mapbox.com",
-      "name": "springmeyer"
+      "name": "springmeyer",
+      "email": "dane@mapbox.com"
     },
     {
-      "email": "patrick@mapbox.com",
-      "name": "themarex"
+      "name": "themarex",
+      "email": "patrick@mapbox.com"
     },
     {
-      "email": "tom@macwright.org",
-      "name": "tmcw"
+      "name": "tmcw",
+      "email": "tom@macwright.org"
     },
     {
-      "email": "tristen.brown@gmail.com",
-      "name": "tristen"
+      "name": "tristen",
+      "email": "tristen.brown@gmail.com"
     },
     {
-      "email": "will@mapbox.com",
-      "name": "willwhite"
+      "name": "willwhite",
+      "email": "will@mapbox.com"
     },
     {
-      "email": "young@mapbox.com",
-      "name": "yhahn"
+      "name": "yhahn",
+      "email": "young@mapbox.com"
     }
   ],
   "name": "mapbox.js",
@@ -20562,7 +20563,7 @@ module.exports = function(url, options) {
     return geocoder;
 };
 
-},{"./feedback":14,"./format_url":15,"./request":30,"./util":35,"isarray":10}],17:[function(require,module,exports){
+},{"./feedback":14,"./format_url":15,"./request":30,"./util":35,"isarray":8}],17:[function(require,module,exports){
 'use strict';
 
 var geocoder = require('./geocoder'),
@@ -21340,7 +21341,7 @@ module.exports.infoControl = function(options) {
 },{"sanitize-caja":37}],23:[function(require,module,exports){
 module.exports = window.L = require('leaflet/dist/leaflet-src');
 
-},{"leaflet/dist/leaflet-src":9}],24:[function(require,module,exports){
+},{"leaflet/dist/leaflet-src":10}],24:[function(require,module,exports){
 'use strict';
 
 var LegendControl = L.Control.extend({

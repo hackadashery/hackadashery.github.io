@@ -1,0 +1,8 @@
+.stats-nav {
+    display: flex;
+    flex-direction: column;
+
+    &__link {
+        margin-bottom: rem($pad);
+    }
+}

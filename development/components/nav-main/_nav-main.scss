@@ -2,17 +2,37 @@
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    padding: rem($pad);
-
+    
     //a
     &__link {
         margin-bottom: rem($pad);
+        font-size: rem(14);
+    }
+
+    //form
+    &__search {
+
+        &-input {
+
+        }
+        &-submit {
+
+        }
     }
 
     @include breakpoint(small){
         flex-direction: row;
         &__link {
             margin-bottom: 0;
+
+            //make a little gap between each button
+            + .main-nav__link {
+                margin-left: 1px; 
+            }
+        }
+
+        &__search {
+            margin-left: rem($pad);
         }
     }
 }

@@ -9,11 +9,13 @@
 	//h1 a
 	&__title {
         margin-bottom: 0;
+		font-size: rem(27);
 		a { color: $title-color; }
 	}
 
 	@include breakpoint(medium){
 		flex-direction: row;
-		align-items: flex-end;
+		align-items: center;
+		justify-content: space-between;
 	}
 }
