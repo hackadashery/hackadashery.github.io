@@ -1,9 +1,15 @@
-<div class="general-search-form js-general-search-form">
 
-    <label class="general-search-form__label">
-        <span class="general-search-form__label-text">What type of service request was it?</span> 
+
+<form class="search-by-filters js-search-by-filters__form" action="/philly311/find-requests-by-address" method="GET">
+
+    <label class="search-by-filters__label">
+        <input type="text" placeholder="zip" name="zip" class="search-by-filters__input js-search-by-filters__zip">
+    </label>
+
+    <label class="search-by-filters__label">
+        <div class="label-text">What type of service request was it?</div> 
         <!-- request ids: https://gist.github.com/mheadd/7171ea534e3e3afe8037f639b630c3d5 -->
-        <select type="text" class="general-search-form__input js-search-service-type">
+        <select type="text" class="search-by-filters__input js-search-by-filters__service-type" name="service-type">
             <option selected value> -- select an option -- </option>
             <option value="SR-LI21">Maintenance Residential</option>
             <option value="SR-ST03">Rubbish/Recyclable Material Collection</option>
@@ -59,14 +65,14 @@
     </label>
 
     <!-- http://dev.office.com/fabric#/components/datepicker -->
-    <label class="general-search-form__label">
-        <span class="general-search-form__label-text">When did you make the request?</span> 
-        <input type="date" class="general-search-form__input js-search-date-of-request">
+    <label class="search-by-filters__label">
+        <div class="label-text">When did you make the request?</div> 
+        <input type="date" class="search-by-filters__input js-search-by-filters__date-of-request" name="date-of-request">
     </label>
 
-    <label class="general-search-form__label">
-        <span class="general-search-form__label-text">Agency</span> 
-        <select type="text" class="general-search-form__input js-search-agency-responsible">
+    <label class="search-by-filters__label">
+        <div class="label-text">Agency</div> 
+        <select type="text" class="search-by-filters__input js-search-by-filters__agency-responsible" name="agency-responsible">
             <option selected value> -- select an option -- </option>
             <option value="Streets Department">Streets Department</option>
             <option value="Community Life Improvement Program">Community Life Improvement Program</option>
@@ -122,6 +128,10 @@
     </label>
 
 
-    <button class="general-search-form__button js-adv-search-submit">Search</button>
+    <input type="submit" value="Search" class="search-by-filters__submit js-search-by-filters__submit" />
 
-</div>
+</form>
+
+<script>
+    threeOneOne.searchByFilters.init();
+</script>

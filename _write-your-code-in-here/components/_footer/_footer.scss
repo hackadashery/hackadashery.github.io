@@ -1,0 +1,14 @@
+.footer {
+    display: flex;
+	flex-direction: column;
+	width: 100%;
+    padding: rem($pad / 2) rem($pad);
+    background-color: $hacka_blue;
+    color: white;
+
+    @include breakpoint(medium){
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+}

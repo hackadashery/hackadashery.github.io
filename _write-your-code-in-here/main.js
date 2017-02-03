@@ -31,6 +31,5 @@ window.threeOneOne.burndown = require('./components/burn-down/_burn-down.js');
 window.threeOneOne.totalRequestsByDept = require('./components/total-requests-by-dept/_total-requests-by-dept.js');
 window.threeOneOne.totalRequestsOverTime = require('./components/total-requests-over-time/_total-requests-over-time.js');
 
-
 $('.js-main').addClass('js-loaded');
 $('.js-header').addClass('js-loaded'); 

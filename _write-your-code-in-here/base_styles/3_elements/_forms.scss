@@ -1,0 +1,42 @@
+/* Try not to play with form styles witin individual components unless they really really need it
+ * Keeping all the styles here make life easier :)
+ * Except for layout things, like floating them around, setting their widths, etc
+ */
+
+//labels wrap inputs and label text (a span)
+label {
+    display: block;
+    margin-bottom: rem($vUnit);
+
+    .label-text {
+        display: block;
+        font-size: rem(12);
+        line-height: rem($vUnit / 2);
+    }
+}
+    input {
+        padding: rem($pad / 2) rem($pad);
+        line-height: rem($vUnit);
+        background: transparent;
+        border-top: 0;
+        border-left: 0; border-right: 0;
+        border-bottom: 1px solid $gray-3;
+        padding: 0 rem($hPad);
+    }
+
+    select {
+        background: transparent;
+        border-top: 0;
+        border-left: 0; border-right: 0;
+        border-bottom: 1px solid $gray-3;
+    }
+
+//The submit button for a form. very button looking
+input[type="submit"] {
+    border: 1px solid $link-color;
+    color: $link-color;
+    background-color: white;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: bold;
+}

@@ -3,13 +3,23 @@
 module.exports = {
 	init(){
         
+		console.log("Initting search by filters");
+		$('.js-search-by-filters__form').on('submit', function(e){
+			e.preventDefault();
 
-		$('.js-adv-search-submit').on('click', function(e){
-			var $advForm = $(this).closest('.js-general-search-form');
+			var $advForm = $(this).closest('.js-search-by-filters__form');
 			var queryStringsArray = [];
 
+			//get zip
+			var zipCode = $advForm.find('.js-search-by-filters__zip').val();
+			var zipQuery = '';
+			if (zipCode.length > 0) {
+				zipQuery = "zip='" + zipCode + "'";
+				queryStringsArray.push(zipQuery);
+			}
+
 			//get req number
-			var serviceNo = $advForm.find('.js-search-service-type').val();
+			var serviceNo = $advForm.find('.js-search-by-filters__service-type').val();
 			var serviceQuery = '';
 			if (serviceNo.length > 0) {
 				serviceQuery = "service_code='" + serviceNo + "'";
@@ -17,7 +27,7 @@ module.exports = {
 			}
 
 			//requested_datetime
-			var dateInput = $advForm.find('.js-search-date-of-request').val();
+			var dateInput = $advForm.find('.js-search-by-filters__date-of-request').val();
 			var dateQuery = '';
 			if (dateInput.length > 0){
 				var fromDate = new Date(dateInput);
@@ -30,7 +40,7 @@ module.exports = {
 				queryStringsArray.push(dateQuery);
 			}
 
-			var agencyInput = $advForm.find('.js-search-agency-responsible').val();
+			var agencyInput = $advForm.find('.js-search-by-filters__agency-responsible').val();
 			var agencyQuery = '';
 			if (agencyInput.length > 0){
 				agencyQuery = "agency_responsible='" + agencyInput + "'";
@@ -39,12 +49,8 @@ module.exports = {
 
 			
 			var queryString = queryStringsArray.join(' AND ') + "&$limit=1000";
-			if (queryString.length > 0) {
-				api.getRequestsByQuery(queryString).then(function(data){
-					console.log('==================requests found: ', data);
-					eventManager.fire('general_request_search_returned', {owner:'general-search-form', data: {query: queryString, results: data}});
-				});
-			}
+
+			eventManager.fire('SEARCH_BY_FILTERS_FORM_SUBMITTED', queryString);
 		});
 	}
 }
