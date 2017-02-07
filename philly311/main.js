@@ -246,27 +246,30 @@ module.exports = {
 
 module.exports = {
 	init(){
-
+			
         eventManager.subscribe('SEARCH_BY_FILTERS_FORM_SUBMITTED', function(queryString){
-
+			$('.js-api').addClass('api--waiting');
             $.ajax({
                 url: "https://data.phila.gov/resource/4t9v-rppq.json?$where=" + queryString,
                 type: "GET"
             }).done(function(data){
                 console.log("returned!", arguments);
                 eventManager.fire('SEARCH_BY_FILTERS_API_RETURNED', {owner:'general-search-form', data: {query: queryString, results: data}});
+				$('.js-api').removeClass('api--waiting');
             });
 
         });
 
 		eventManager.subscribe('SEARCH_BY_ID_SUBMITTED', function(requestID){
-			console.log("making request", requestID);
+			
+			$('.js-api').addClass('api--waiting');
 			$.ajax({
 				url: "https://data.phila.gov/resource/4t9v-rppq.json?service_request_id=" + requestID,
 				type: "GET"
 			}).done(function(data){
 				console.log('returned!', arguments);
 				eventManager.fire('GET_ISSUE_BY_ID_RETURNED', { data: {results: data}});
+				$('.js-api').removeClass('api--waiting');
 			});
 		});
 	},
@@ -1216,11 +1219,11 @@ function buildChart(){
 // =============== base_scripts
 window.eventManager = require('./base_scripts/eventManager');
 window.api = require('./components/_api/_api.js'); //sits in components as it has an associated dom component (in the footer)
-api.init();
 window.urlParameter = require('./base_scripts/urlParameterHandler.js');
 window.$ = require('jquery');
 window.threeOneOne = {}; //container for all the 311 app modules
 
+api.init();
 // =============== component scripts (todo: figure out how to not buundle these in the big bundle)
 require('./components/_header/_header.js').init();
 

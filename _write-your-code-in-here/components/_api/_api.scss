@@ -6,11 +6,20 @@
 
 .api {
 
+
     &__spinner {
+        opacity: 0;
+        transition: opacity 1s ease;
         svg {
             width: 12px;
             height: 12px;
             animation: spin 1s infinite linear;
+        }
+    }
+    &--waiting {
+        .api__spinner { 
+            transition: opacity 0s ease;
+            opacity: 1; 
         }
     }
 

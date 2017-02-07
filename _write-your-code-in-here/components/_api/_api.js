@@ -6,27 +6,30 @@
 
 module.exports = {
 	init(){
-
+			
         eventManager.subscribe('SEARCH_BY_FILTERS_FORM_SUBMITTED', function(queryString){
-
+			$('.js-api').addClass('api--waiting');
             $.ajax({
                 url: "https://data.phila.gov/resource/4t9v-rppq.json?$where=" + queryString,
                 type: "GET"
             }).done(function(data){
                 console.log("returned!", arguments);
                 eventManager.fire('SEARCH_BY_FILTERS_API_RETURNED', {owner:'general-search-form', data: {query: queryString, results: data}});
+				$('.js-api').removeClass('api--waiting');
             });
 
         });
 
 		eventManager.subscribe('SEARCH_BY_ID_SUBMITTED', function(requestID){
-			console.log("making request", requestID);
+			
+			$('.js-api').addClass('api--waiting');
 			$.ajax({
 				url: "https://data.phila.gov/resource/4t9v-rppq.json?service_request_id=" + requestID,
 				type: "GET"
 			}).done(function(data){
 				console.log('returned!', arguments);
 				eventManager.fire('GET_ISSUE_BY_ID_RETURNED', { data: {results: data}});
+				$('.js-api').removeClass('api--waiting');
 			});
 		});
 	},
