@@ -101,14 +101,27 @@
         position: relative;
 
         &-input {
-            padding-right: 50px;
+            padding-right: 25px;
             border: 1px solid grey;
             border-radius: 3px;
         }
+        //label
         &-submit {
             position: absolute;
-            top: 0;
-            right: 0;
+            top: 0; bottom: 0;
+            right: 0; 
+            margin: 0;
+            display: flex;
+            align-items: center;
+            padding: 0 rem($pad);
+
+            input {
+                display: none;
+            }
+            svg {
+                width: 1em; height: 1em;
+                fill: $hacka_blue;
+            }
         }
     }
 
