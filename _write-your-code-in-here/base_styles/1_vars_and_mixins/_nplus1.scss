@@ -1,0 +1,6 @@
+@mixin nplus1(){
+  $this: &;
+  & + #{$this} {
+    @content;
+  }
+}

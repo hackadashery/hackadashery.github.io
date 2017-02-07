@@ -10,20 +10,22 @@
 
         <nav class="main-nav">
         
-            <a href="/philly311/submit-request" class="main-nav__link"> 
-                Submit Request
-            </a>
-
-            <a href="/philly311/find-requests-by-address" class="main-nav__link"> 
-                Your Neighbourhood
-            </a>
-
-            <a href="/philly311/stats" class="main-nav__link"> 
-                Stats
-            </a>
+            <div class="main-nav__links">
+                <a href="/philly311/submit-request" class="main-nav__link"> 
+                    Submit Request
+                </a>
+<!--
+                <a href="/philly311/find-requests-by-address" class="main-nav__link"> 
+                    Your Neighbourhood
+                </a>
+-->
+                <a href="/philly311/stats" class="main-nav__link"> 
+                    Explore Stats
+                </a>
+            </div>
 
             <form class="main-nav__search" action="/philly311/find-request-by-id" method="GET">
-                <input type="text" name="id" class="main-nav__search-input" placeholder="Enter Request ID">
+                <input type="text" name="id" class="main-nav__search-input" placeholder="Request ID / ZIP">
                 <label class="main-nav__search-submit">
                     {{> _svg/search }}
                     <input type="submit" value="Search">

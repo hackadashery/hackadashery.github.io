@@ -87,23 +87,68 @@
     flex-direction: column;
     align-items: center;
     
-    //a
-    &__link {
+    &__links {
         margin-bottom: rem($pad);
-        font-size: rem(16);
-        height: rem(21);
-        font-weight: bold;
-        @include occluded-underline($background-color-dark, $link-color, $link-color);
+        width: 100%;
+    }   
+        //a
+        &__link {
+            display: block;
+            margin-bottom: rem($pad);
+            font-size: rem(16);
+            height: rem(21);
+            font-weight: bold;
+            text-ailgn: center;
+            text-shadow: none;
+            background-image: none;
+            white-space: nowrap;
+            &:hover { 
+                background-image: none;
+            }
+        }
+
+    //on small+ inline the links
+    @include breakpoint(small){
+        &__links {
+            display: flex;
+        }   
+            &__link {  
+                margin-bottom: 0;
+
+                @include occluded-underline($background-color-dark, $link-color, $link-color);
+                @include nplus1(){
+                    margin-left: rem($pad);
+                }
+            }
+    }
+
+    @include breakpoint(medium){
+        flex-direction: row;
+        &__links {
+            margin-bottom: 0;
+        }
+            &__link {
+                margin-bottom: 0;
+                @include occluded-underline(white, $link-color, $link-color);
+
+                //make a little gap between each button
+                + .main-nav__link {
+                    margin-left: rem(20); 
+                }
+            }
     }
 
     //form
     &__search {
         position: relative;
+        width: 100%;
 
         &-input {
             padding-right: 25px;
             border: 1px solid grey;
             border-radius: 3px;
+            background-color: white;
+            width: 100%;
         }
         //label
         &-submit {
@@ -126,17 +171,6 @@
     }
 
     @include breakpoint(medium){
-        flex-direction: row;
-        &__link {
-            margin-bottom: 0;
-            @include occluded-underline(white, $link-color, $link-color);
-
-            //make a little gap between each button
-            + .main-nav__link {
-                margin-left: rem(20); 
-            }
-        }
-
         &__search {
             margin-left: rem(20);
         }
