@@ -6,7 +6,7 @@ https://hackadashery.github.io/philly311
 
 ---
 
-##Quick tour of the code
+##Quick tour of the reop
 
 Tooling:
 
@@ -35,7 +35,7 @@ Directories:
 
 ---
 
-##Getting set up
+##Setting up on your local
 
  - Download and install [Node JS](https://nodejs.org) - if you haven't already.
  - Clone / fork the repo.
@@ -48,7 +48,7 @@ Set up should be complete! Report any errors as issues on this repo and we'll tr
 
 ---
 
-##Making a chart
+##Building your own chart
 
 I'm going to assume you're looking to create a chart on it's very own page.   
 
