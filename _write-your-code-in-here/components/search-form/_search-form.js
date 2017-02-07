@@ -9,14 +9,14 @@ var philadelphiaZipCodeList = [
 module.exports = {
 	init(){
 
-		$('.js-search-form__form').on('submit', function(e){
+		//The filter form
+		$('.js-search-filter-form__form').on('submit', function(e){
 			e.preventDefault();
-
-			var $advForm = $(this).closest('.js-search-form__form');
+			var $thisForm = $(this);
 			var queryStringsArray = [];
 
 			//get zip
-			var zipCode = $advForm.find('.js-search-form__zip').val();
+			var zipCode = $thisForm.find('.js-search-form__zip').val();
 			var zipQuery = '';
 			if (zipCode.length > 0) {
 				zipQuery = "zip='" + zipCode + "'";
@@ -24,7 +24,7 @@ module.exports = {
 			}
 
 			//get req number
-			var serviceNo = $advForm.find('.js-search-form__service-type').val();
+			var serviceNo = $thisForm.find('.js-search-form__service-type').val();
 			var serviceQuery = '';
 			if (serviceNo.length > 0) {
 				serviceQuery = "service_code='" + serviceNo + "'";
@@ -32,7 +32,7 @@ module.exports = {
 			}
 
 			//requested_datetime
-			var dateInput = $advForm.find('.js-search-form__date-of-request').val();
+			var dateInput = $thisForm.find('.js-search-form__date-of-request').val();
 			var dateQuery = '';
 			if (dateInput.length > 0){
 				var fromDate = new Date(dateInput);
@@ -45,17 +45,24 @@ module.exports = {
 				queryStringsArray.push(dateQuery);
 			}
 
-			var agencyInput = $advForm.find('.js-search-form__agency-responsible').val();
+			var agencyInput = $thisForm.find('.js-search-form__agency-responsible').val();
 			var agencyQuery = '';
 			if (agencyInput.length > 0){
 				agencyQuery = "agency_responsible='" + agencyInput + "'";
 				queryStringsArray.push(agencyQuery);
 			}
 
-			
 			var queryString = queryStringsArray.join(' AND ') + "&$limit=1000";
 
 			eventManager.fire('SEARCH_BY_FILTERS_FORM_SUBMITTED', queryString);
+		});
+
+		//The ID form
+		$('.js-search-id-form__form').on('submit', function(e){
+			e.preventDefault();
+			var searchID = $(this).find('.js-search-form__id').val();
+			console.log('submitting!');
+			eventManager.fire('SEARCH_BY_ID_SUBMITTED', searchID);
 		});
 
 		//====================== now that the listners are all set up, check if we have any url params to deal with.
@@ -70,12 +77,20 @@ module.exports = {
 			agencyResponsible: urlParameter.get('agency-responsible', true)
 		}
 
+		var idFormShouldSubmit = false;
+		var filterFormShouldSubmit = false;
+
 		//set them 
-		if (searchParams.zip) {               $('.js-search-form__zip').val(searchParams.zip); }
-		if (searchParams.serviceType) {       $('.js-search-form__service-type').val(searchParams.serviceType); }
-		if (searchParams.dateOfRequest) {     $('.js-search-form__date-of-request').val(searchParams.dateOfRequest); }
-		if (searchParams.agencyResponsible) { $('.js-search-form__agency-responsible').val(searchParams.agencyResponsible); }
-		if (searchParams.id) {                $('.js-search-form__id').val(searchParams.id); }
+		if (searchParams.id) {                $('.js-search-form__id').val(searchParams.id);                                idFormShouldSubmit = true;     }
+		if (searchParams.serviceType) {       $('.js-search-form__service-type').val(searchParams.serviceType);             filterFormShouldSubmit = true; }
+		if (searchParams.dateOfRequest) {     $('.js-search-form__date-of-request').val(searchParams.dateOfRequest);        filterFormShouldSubmit = true; }
+		if (searchParams.agencyResponsible) { $('.js-search-form__agency-responsible').val(searchParams.agencyResponsible); filterFormShouldSubmit = true; }
+		if (searchParams.zip) {               $('.js-search-form__zip').val(searchParams.zip);                              filterFormShouldSubmit = true;
+			if (!philadelphiaZipCodeList.includes(searchParams.zip)) {
+				//do something about it not being a philly zip
+				console.warn('Not a Philadelphia ZIP');
+			}
+		}
 
 		//search is a special case - could be ZIP or Requiest ID
 		if (searchParams.search){
@@ -92,12 +107,7 @@ module.exports = {
 			urlParameter.set('search', '');
 		}
 
+		if (idFormShouldSubmit) {     $('.js-search-id-form__submit').submit(); console.log('submitting id form'); }
+		if (filterFormShouldSubmit) { $('.js-search-filter-form__submit').submit(); }
 	}
-}
-
-function runSearch(searchId){
-	api.getIssueById(searchId).then(function(data){
-		var res = data;
-		eventManager.fire('get_issue_by_id_returned', { owner: 'searchform', data: res });
-	});
 }

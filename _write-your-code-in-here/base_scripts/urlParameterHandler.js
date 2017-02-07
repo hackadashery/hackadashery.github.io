@@ -48,7 +48,7 @@ function debounce(func, wait, immediate) {
 var setHistroy = function(){
 	if (typeof windowRef != 'undefined'){
 		if (windowRef.history) {
-			windowRef.history.pushState(null, '', windowRef.pathname + virtualQueryString);
+			windowRef.history.pushState(null, '', windowRef.location.pathname + virtualQueryString);
 			liveQueryString = virtualQueryString;
 		} else {
 			console.log('No window.history :(');

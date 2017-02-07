@@ -202,7 +202,7 @@ function debounce(func, wait, immediate) {
 var setHistroy = function(){
 	if (typeof windowRef != 'undefined'){
 		if (windowRef.history) {
-			windowRef.history.pushState(null, '', windowRef.pathname + virtualQueryString);
+			windowRef.history.pushState(null, '', windowRef.location.pathname + virtualQueryString);
 			liveQueryString = virtualQueryString;
 		} else {
 			console.log('No window.history :(');
@@ -254,12 +254,25 @@ module.exports = {
                 type: "GET"
             }).done(function(data){
                 console.log("returned!", arguments);
-                eventManager.fire('general_request_search_returned', {owner:'general-search-form', data: {query: queryString, results: data}});
+                eventManager.fire('SEARCH_BY_FILTERS_API_RETURNED', {owner:'general-search-form', data: {query: queryString, results: data}});
             });
 
         });
+
+		eventManager.subscribe('SEARCH_BY_ID_SUBMITTED', function(requestID){
+			console.log("making request", requestID);
+			$.ajax({
+				url: "https://data.phila.gov/resource/4t9v-rppq.json?service_request_id=" + requestID,
+				type: "GET"
+			}).done(function(data){
+				console.log('returned!', arguments);
+				eventManager.fire('GET_ISSUE_BY_ID_RETURNED', { data: {results: data}});
+			});
+		});
 	},
     getIssueById(id){
+
+
 		return $.get( "https://data.phila.gov/resource/4t9v-rppq.json?service_request_id=" + id);
 	},
 	getRequestsByQuery(queryString){
@@ -676,7 +689,7 @@ function buildChart(){
    //this is the first time we get to use the event manager properly! The idea would be any module (map / chart / something else) would be able 
    //to subscribe to this event (get_issue_by_id_returned) and be notified whenever a new request is searched for (or more accuratly, when a search for a request returns)
    //It might actually be an idea to move the request details part into it's own module too and subscribe to this event there too.
-    eventManager.subscribe('get_issue_by_id_returned', function(event){
+    eventManager.subscribe('GET_ISSUE_BY_ID_RETURNED', function(event){
         $.each(event.data, function(key, obj) {
             markersLayer.clearLayers();
 
@@ -757,7 +770,7 @@ function buildChart(){
         });
     }
 
-    eventManager.subscribe('general_request_search_returned', function(event){
+    eventManager.subscribe('SEARCH_BY_FILTERS_API_RETURNED', function(event){
         $.each(event.data.results, function(key, obj) {
             // add to map if lat and long are available
             if ( this.lat && this.lon ) {
@@ -793,14 +806,14 @@ var philadelphiaZipCodeList = [
 module.exports = {
 	init(){
 
-		$('.js-search-form__form').on('submit', function(e){
+		//The filter form
+		$('.js-search-filter-form__form').on('submit', function(e){
 			e.preventDefault();
-
-			var $advForm = $(this).closest('.js-search-form__form');
+			var $thisForm = $(this);
 			var queryStringsArray = [];
 
 			//get zip
-			var zipCode = $advForm.find('.js-search-form__zip').val();
+			var zipCode = $thisForm.find('.js-search-form__zip').val();
 			var zipQuery = '';
 			if (zipCode.length > 0) {
 				zipQuery = "zip='" + zipCode + "'";
@@ -808,7 +821,7 @@ module.exports = {
 			}
 
 			//get req number
-			var serviceNo = $advForm.find('.js-search-form__service-type').val();
+			var serviceNo = $thisForm.find('.js-search-form__service-type').val();
 			var serviceQuery = '';
 			if (serviceNo.length > 0) {
 				serviceQuery = "service_code='" + serviceNo + "'";
@@ -816,7 +829,7 @@ module.exports = {
 			}
 
 			//requested_datetime
-			var dateInput = $advForm.find('.js-search-form__date-of-request').val();
+			var dateInput = $thisForm.find('.js-search-form__date-of-request').val();
 			var dateQuery = '';
 			if (dateInput.length > 0){
 				var fromDate = new Date(dateInput);
@@ -829,17 +842,24 @@ module.exports = {
 				queryStringsArray.push(dateQuery);
 			}
 
-			var agencyInput = $advForm.find('.js-search-form__agency-responsible').val();
+			var agencyInput = $thisForm.find('.js-search-form__agency-responsible').val();
 			var agencyQuery = '';
 			if (agencyInput.length > 0){
 				agencyQuery = "agency_responsible='" + agencyInput + "'";
 				queryStringsArray.push(agencyQuery);
 			}
 
-			
 			var queryString = queryStringsArray.join(' AND ') + "&$limit=1000";
 
 			eventManager.fire('SEARCH_BY_FILTERS_FORM_SUBMITTED', queryString);
+		});
+
+		//The ID form
+		$('.js-search-id-form__form').on('submit', function(e){
+			e.preventDefault();
+			var searchID = $(this).find('.js-search-form__id').val();
+			console.log('submitting!');
+			eventManager.fire('SEARCH_BY_ID_SUBMITTED', searchID);
 		});
 
 		//====================== now that the listners are all set up, check if we have any url params to deal with.
@@ -854,12 +874,20 @@ module.exports = {
 			agencyResponsible: urlParameter.get('agency-responsible', true)
 		}
 
+		var idFormShouldSubmit = false;
+		var filterFormShouldSubmit = false;
+
 		//set them 
-		if (searchParams.zip) {               $('.js-search-form__zip').val(searchParams.zip); }
-		if (searchParams.serviceType) {       $('.js-search-form__service-type').val(searchParams.serviceType); }
-		if (searchParams.dateOfRequest) {     $('.js-search-form__date-of-request').val(searchParams.dateOfRequest); }
-		if (searchParams.agencyResponsible) { $('.js-search-form__agency-responsible').val(searchParams.agencyResponsible); }
-		if (searchParams.id) {                $('.js-search-form__id').val(searchParams.id); }
+		if (searchParams.id) {                $('.js-search-form__id').val(searchParams.id);                                idFormShouldSubmit = true;     }
+		if (searchParams.serviceType) {       $('.js-search-form__service-type').val(searchParams.serviceType);             filterFormShouldSubmit = true; }
+		if (searchParams.dateOfRequest) {     $('.js-search-form__date-of-request').val(searchParams.dateOfRequest);        filterFormShouldSubmit = true; }
+		if (searchParams.agencyResponsible) { $('.js-search-form__agency-responsible').val(searchParams.agencyResponsible); filterFormShouldSubmit = true; }
+		if (searchParams.zip) {               $('.js-search-form__zip').val(searchParams.zip);                              filterFormShouldSubmit = true;
+			if (!philadelphiaZipCodeList.includes(searchParams.zip)) {
+				//do something about it not being a philly zip
+				console.warn('Not a Philadelphia ZIP');
+			}
+		}
 
 		//search is a special case - could be ZIP or Requiest ID
 		if (searchParams.search){
@@ -876,14 +904,9 @@ module.exports = {
 			urlParameter.set('search', '');
 		}
 
+		if (idFormShouldSubmit) {     $('.js-search-id-form__submit').submit(); console.log('submitting id form'); }
+		if (filterFormShouldSubmit) { $('.js-search-filter-form__submit').submit(); }
 	}
-}
-
-function runSearch(searchId){
-	api.getIssueById(searchId).then(function(data){
-		var res = data;
-		eventManager.fire('get_issue_by_id_returned', { owner: 'searchform', data: res });
-	});
 }
 },{}],9:[function(require,module,exports){
 'use strict';
@@ -1193,6 +1216,7 @@ function buildChart(){
 // =============== base_scripts
 window.eventManager = require('./base_scripts/eventManager');
 window.api = require('./components/_api/_api.js'); //sits in components as it has an associated dom component (in the footer)
+api.init();
 window.urlParameter = require('./base_scripts/urlParameterHandler.js');
 window.$ = require('jquery');
 window.threeOneOne = {}; //container for all the 311 app modules

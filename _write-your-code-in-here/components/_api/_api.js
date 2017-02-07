@@ -14,12 +14,25 @@ module.exports = {
                 type: "GET"
             }).done(function(data){
                 console.log("returned!", arguments);
-                eventManager.fire('general_request_search_returned', {owner:'general-search-form', data: {query: queryString, results: data}});
+                eventManager.fire('SEARCH_BY_FILTERS_API_RETURNED', {owner:'general-search-form', data: {query: queryString, results: data}});
             });
 
         });
+
+		eventManager.subscribe('SEARCH_BY_ID_SUBMITTED', function(requestID){
+			console.log("making request", requestID);
+			$.ajax({
+				url: "https://data.phila.gov/resource/4t9v-rppq.json?service_request_id=" + requestID,
+				type: "GET"
+			}).done(function(data){
+				console.log('returned!', arguments);
+				eventManager.fire('GET_ISSUE_BY_ID_RETURNED', { data: {results: data}});
+			});
+		});
 	},
     getIssueById(id){
+
+
 		return $.get( "https://data.phila.gov/resource/4t9v-rppq.json?service_request_id=" + id);
 	},
 	getRequestsByQuery(queryString){

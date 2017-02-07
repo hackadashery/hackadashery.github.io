@@ -1,6 +1,6 @@
 
 
-<form class="search-form js-search-form__form" action="/philly311/find-requests-by-address" method="GET">
+<form class="search-form js-search-filter-form__form" action="/philly311/find-requests-by-address" method="GET">
 
     <label class="search-form__label">
         <div class="label-text">Search within a ZIP code:</div> 
@@ -129,19 +129,19 @@
     </label>
 
 
-    <input type="submit" value="Search" class="search-form__submit js-search-form__submit" />
+    <input type="submit" value="Search" class="search-form__submit js-search-filter-form__submit" />
 
 </form>
 
 <div class="search-form__or"><span class="search-form__or-text">Or</span></div>
 
-<form class="search-form js-search-form__form" action="/philly311/find-requests-by-address" method="GET">
+<form class="search-form js-search-id-form__form" action="/philly311/find-requests-by-address" method="GET">
     <label class="search-form__label">
         <div class="label-text">Search a specific request ID:</div> 
         <input type="text" placeholder="Request ID" name="id" class="search-form__input js-search-form__id">
     </label>
 
-    <input type="submit" value="Search" class="search-form__submit js-search-form__submit" />
+    <input type="submit" value="Search" class="search-form__submit js-search-id-form__submit" />
 </form>
 
 <script>

@@ -58,7 +58,7 @@ function buildChart(){
    //this is the first time we get to use the event manager properly! The idea would be any module (map / chart / something else) would be able 
    //to subscribe to this event (get_issue_by_id_returned) and be notified whenever a new request is searched for (or more accuratly, when a search for a request returns)
    //It might actually be an idea to move the request details part into it's own module too and subscribe to this event there too.
-    eventManager.subscribe('get_issue_by_id_returned', function(event){
+    eventManager.subscribe('GET_ISSUE_BY_ID_RETURNED', function(event){
         $.each(event.data, function(key, obj) {
             markersLayer.clearLayers();
 
@@ -139,7 +139,7 @@ function buildChart(){
         });
     }
 
-    eventManager.subscribe('general_request_search_returned', function(event){
+    eventManager.subscribe('SEARCH_BY_FILTERS_API_RETURNED', function(event){
         $.each(event.data.results, function(key, obj) {
             // add to map if lat and long are available
             if ( this.lat && this.lon ) {
