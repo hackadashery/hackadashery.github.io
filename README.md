@@ -52,7 +52,8 @@ Set up should be complete! Report any errors as issues on this repo and we'll tr
 
 I'm going to assume you're looking to create a chart on it's very own page.   
 
-####Set up the page#### 
+
+####Set up the page
 
 *(This step is optional, you may just be looking to add your chart to a page that already exists in which case, skip!)*
 jump into **_write-your-code-in-here/pages/stats** and create a new .html file.   
@@ -60,7 +61,9 @@ The name of this file will be used in the url.
 For the code that goes in, index.html is a good starting point, copy it all into your file.   
 Finally, to create a link in the stats sub navm, open **_write-your-code-in-here/components/nav-stats/_nav-stats.html** and duplicate one of the existing links with the info for your page.
 
-####Set up a chart component####
+-
+
+####Set up a chart component
 
 Inside **_write-your-code-in-here/components**, create a folder with the name of your chart (make it explicit & descriptive). For example **streets-total-over-time/**   
 Within that folder you need to create a **_streets-total-over-time.html** file for your markup.   
@@ -75,7 +78,9 @@ and "init" it in your markup: `<script> threeOneOne.streetsTotalOverTime.init();
 
 *With the current set up, all the JS is bundled into main.js. It's on the TODO list to break them into files specific to the components they serve.*
 
-####Getting the data####
+-
+
+####Getting the data
 
 We don't yet have data processing set up, so for now - call the API or add a json file manually, have a look through the other charts to see how this is done (we have set up as API module to help out.)
 
