@@ -2,7 +2,7 @@
 
 // var eventManager = require('../utils/eventManager');
 // var $ = require('jquery');
-//var api = require('./api');
+//var api = require('./_api');
 console.log('HIHIHI');
 module.exports = {
 	init(){

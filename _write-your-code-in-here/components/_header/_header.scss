@@ -1,21 +1,131 @@
+/* The header layout
+ * & the main nav styles (because they will only ever appear here in the header - know the rules to break the rules!)
+ */
+
 .header {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-    padding: rem($pad);
 	background: $white;
 	box-shadow: inset 0 1px 0 rgba(255,255,255,.15),0 1px 5px rgba(0,0,0,.075);
+    
+    //So when the menu slides down, it's over the top of the body content.
+    position: relative;
+    z-index: 1;
 
-	//h1 a
+	//h1
 	&__title {
         margin-bottom: 0;
+        padding: rem($pad);
+        background-color: white;
 		font-size: rem(27);
-		a { color: $title-color; }
+		display: flex;
+		justify-content: space-between;
+        position: relative;
+        z-index: 1;
+
+		&-text { //a
+			color: $title-color;
+		}
+
+		&-menu-icon { //span
+			display: inline-block;
+			vertical-align: middle;
+			cursor: pointer;
+
+			svg {
+				width: 1em; height: 1em;
+				fill: $hacka_blue;
+                transform: rotate(90deg);
+                transition: transform 0.2s ease;
+			}
+		}
+
 	}
+
+    //absolutly positioned element wraps the nav and lets us do css transition to slide the nav in on smaller screens
+    &__nav-wrap  {
+        position: absolute;
+        left: 0; right: 0;
+        bottom: 0;
+        padding: rem($pad);
+        background: $background-color-dark; //same background as the sidebar
+        transform: translateY(0);
+        transition: transform 0.2s ease;
+    }
+
+    &--menu-toggled {
+        .header__title-menu-icon svg { 
+            transform: rotate(270deg);
+        }
+
+        .header__nav-wrap {
+            transform: translateY(100%);
+        }
+    }
 
 	@include breakpoint(medium){
 		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
+
+        &__title-menu-icon { display: none; } //no need to slide the nav on larger screens
+
+        //undo the nav drop down
+        &__nav-wrap  { 
+            display: block; 
+            position: static; 
+            background-color: transparent;
+            transform: translateY(0) !important; //even if it was down on mobile, put it BACK right this instant!
+        }
 	}
+}
+
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    
+    //a
+    &__link {
+        margin-bottom: rem($pad);
+        font-size: rem(16);
+        height: rem(21);
+        font-weight: bold;
+        @include occluded-underline($background-color-dark, $link-color, $link-color);
+    }
+
+    //form
+    &__search {
+        position: relative;
+
+        &-input {
+            padding-right: 50px;
+            border: 1px solid grey;
+            border-radius: 3px;
+        }
+        &-submit {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+    }
+
+    @include breakpoint(medium){
+        flex-direction: row;
+        &__link {
+            margin-bottom: 0;
+            @include occluded-underline(white, $link-color, $link-color);
+
+            //make a little gap between each button
+            + .main-nav__link {
+                margin-left: rem(20); 
+            }
+        }
+
+        &__search {
+            margin-left: rem(20);
+        }
+    }
 }

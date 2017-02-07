@@ -18,12 +18,13 @@
 
 // =============== base_scripts
 window.eventManager = require('./base_scripts/eventManager');
-window.api = require('./base_scripts/api');
+window.api = require('./components/_api/_api.js'); //sits in components as it has an associated dom component (in the footer)
 window.$ = require('jquery');
 window.threeOneOne = {}; //container for all the 311 app modules
 
 // =============== component scripts (todo: figure out how to not buundle these in the big bundle)
-require('./components/search-by-id/_search-by-id.js').init();
+require('./components/_search-by-id/_search-by-id.js').init();
+require('./components/_header/_header.js').init();
 
 window.threeOneOne.searchByFilters = require('./components/search-by-filters/_search-by-filters.js');
 window.threeOneOne.map = require('./components/map/_map.js');

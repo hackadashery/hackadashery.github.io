@@ -1,7 +1,32 @@
-<header class="header">
+<header class="header js-header">
     <h1 class="header__title">
-        <a href="/">Philly 311</a>
+        <a href="/" class="header__title-text">Philly 311</a>
+        <span class="header__title-menu-icon js-header__menu-icon">
+            {{> _svg/arrow }}
+        </span>
     </h1>
 
-    {{> nav-main/_nav-main }}
+    <div class="header__nav-wrap">
+
+        <nav class="main-nav">
+        
+            <a href="/philly311/submit-request" class="main-nav__link"> 
+                Submit Request
+            </a>
+
+            <a href="/philly311/find-requests-by-address" class="main-nav__link"> 
+                Your Neighbourhood
+            </a>
+
+            <a href="/philly311/stats" class="main-nav__link"> 
+                Stats
+            </a>
+
+            <form class="main-nav__search" action="/philly311/find-request-by-id" method="GET">
+                <input type="text" name="id" class="main-nav__search-input" placeholder="Enter Request ID">
+                <input type="submit" class="main-nav__search-submit" value="Search">
+            </form>
+        </nav>
+        
+    </div>
 </header>

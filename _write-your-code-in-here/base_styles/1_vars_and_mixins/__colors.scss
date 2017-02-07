@@ -1,9 +1,5 @@
 //------------ Color Defenitions
 
-//"brand" colors
-$hacka_blue: #14b9d6;
-$hacka_range: #f27835;
-
 //new "brand" colors?
 $hacka_blue: #0aa8d2;
 $hacka_range: #e62222;
@@ -30,6 +26,7 @@ $accent-color: $hacka_range;
 
 // $background-color: $gray-e;
 $background-color: $blue-lt; //what do you think about this color?
+$background-color-dark: darken($background-color, 5%);
 
 $rule-color: $gray-5; //borders hr lines
 $text-color: $gray-3;

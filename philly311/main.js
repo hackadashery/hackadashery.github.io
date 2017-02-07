@@ -1,10 +1,77 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
-var eventManager = require('./eventManager');
+/* The Event Manager
+ * each type of event that is subscribed to becomes an array by the same name
+ * That array holds all the functions that have subscribed to the event
+ * So when the event fires, those functions will be run
+ * When firing an event, you can also pass in data that will be accessible to the subscribers
+ * Try not to mutate that data, you never know who else might be expecting it.
+ */
+
+var eventSubscribers = {};
+
+var addSubscriber = function(event, subscriber){
+	if (eventSubscribers[event]) {
+		eventSubscribers[event].push(subscriber);
+	} else {
+		eventSubscribers[event] = [subscriber];
+	}
+}
 
 module.exports = {
-	getIssueById(id){
+	subscribe: function(event, subscriber){
+		/* Takes the name of an event to subscribe to
+		 * and a function to run when that event is fired.
+		 * An index number is returned. This will be needed if 
+		 * the subscriber is ever to be removed. (or we could implement some other kind of id system?)
+		 */	
+		if (Array.isArray(event)){
+			for (var e = 0; e < event.length; e++) {
+				addSubscriber(event[e], subscriber);
+			}
+			return;
+		}
+
+		addSubscriber(event, subscriber);
+	},
+
+	unsubscribe: function(event, index){
+		eventSubscribers[event].splice(index, 1);
+	},
+
+	fire: function(event, data){
+		console.log('EVENT:', event, data);
+		if (eventSubscribers[event]) {
+			for (var s = 0; s < eventSubscribers[event].length; s++) { //s for subscriber
+				eventSubscribers[event][s](data);
+			}
+		}
+	}
+}
+},{}],2:[function(require,module,exports){
+"use strict";
+
+/* Main role is to listen out for anything that would need stuff from the API
+ * Secondary role is updating the little bit of UI that shows the status of the API calls
+ */
+
+module.exports = {
+	init(){
+
+        eventManager.subscribe('SEARCH_BY_FILTERS_FORM_SUBMITTED', function(queryString){
+
+            $.ajax({
+                url: "https://data.phila.gov/resource/4t9v-rppq.json?$where=" + queryString,
+                type: "GET"
+            }).done(function(data){
+                console.log("returned!", arguments);
+                eventManager.fire('general_request_search_returned', {owner:'general-search-form', data: {query: queryString, results: data}});
+            });
+
+        });
+	},
+    getIssueById(id){
 		return $.get( "https://data.phila.gov/resource/4t9v-rppq.json?service_request_id=" + id);
 	},
 	getRequestsByQuery(queryString){
@@ -74,58 +141,60 @@ module.exports = {
 		}
 	}
 }
-},{"./eventManager":2}],2:[function(require,module,exports){
-'use strict';
 
-/* The Event Manager
- * each type of event that is subscribed to becomes an array by the same name
- * That array holds all the functions that have subscribed to the event
- * So when the event fires, those functions will be run
- * When firing an event, you can also pass in data that will be accessible to the subscribers
- * Try not to mutate that data, you never know who else might be expecting it.
+},{}],3:[function(require,module,exports){
+"use strict";
+
+/* The header JS
+ * 
  */
 
-var eventSubscribers = {};
-
-var addSubscriber = function(event, subscriber){
-	if (eventSubscribers[event]) {
-		eventSubscribers[event].push(subscriber);
-	} else {
-		eventSubscribers[event] = [subscriber];
-	}
-}
-
 module.exports = {
-	subscribe: function(event, subscriber){
-		/* Takes the name of an event to subscribe to
-		 * and a function to run when that event is fired.
-		 * An index number is returned. This will be needed if 
-		 * the subscriber is ever to be removed. (or we could implement some other kind of id system?)
-		 */	
-		if (Array.isArray(event)){
-			for (var e = 0; e < event.length; e++) {
-				addSubscriber(event[e], subscriber);
+	init(){
+        $( document ).ready(function() {
+            $('.js-header__menu-icon').on('click', function(e){
+                $('.js-header').toggleClass('header--menu-toggled');
+            });
+        });
+    }
+}
+},{}],4:[function(require,module,exports){
+'use strict';
+
+// var eventManager = require('../utils/eventManager');
+// var $ = require('jquery');
+//var api = require('./_api');
+console.log('HIHIHI');
+module.exports = {
+	init(){
+		console.log("initting search from");
+		//start listening!
+		$('.js-search-by-id-form').on('keypress', function(e){
+			if (e.keyCode == 13) {
+				var searchId = $(this).find('.js-search-by-id-input').val();
+				runSearch(searchId);
 			}
-			return;
-		}
+		});
 
-		addSubscriber(event, subscriber);
-	},
+		$('.js-search-by-id-button').on('click', function(e){
+			var searchId = $(this).closest('.js-search-by-id-form').find('.js-search-by-id-input').val();
+			runSearch(searchId);
+		});
 
-	unsubscribe: function(event, index){
-		eventSubscribers[event].splice(index, 1);
-	},
 
-	fire: function(event, data){
-		console.log('EVENT:', event, data);
-		if (eventSubscribers[event]) {
-			for (var s = 0; s < eventSubscribers[event].length; s++) { //s for subscriber
-				eventSubscribers[event][s](data);
-			}
-		}
+		$('.js-expand-adv-search').on('click', function(e){
+			$(this).closest('.js-search-by-id-form').find('.js-search-advanced-section').slideToggle();
+		});
 	}
 }
-},{}],3:[function(require,module,exports){
+
+function runSearch(searchId){
+	api.getIssueById(searchId).then(function(data){
+		var res = data;
+		eventManager.fire('get_issue_by_id_returned', { owner: 'searchform', data: res });
+	});
+}
+},{}],5:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -364,7 +433,7 @@ function buildChart(){
 }
 
 
-},{"d3":11}],4:[function(require,module,exports){
+},{"d3":12}],6:[function(require,module,exports){
 'use strict';
 
 require('mapbox.js');
@@ -530,7 +599,7 @@ function buildChart(){
 }
 
 
-},{"mapbox.js":25}],5:[function(require,module,exports){
+},{"mapbox.js":26}],7:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -594,43 +663,7 @@ function runSearch(searchId){
 		eventManager.fire('get_issue_by_id_returned', { owner: 'searchform', data: res });
 	});
 }
-},{}],6:[function(require,module,exports){
-'use strict';
-
-// var eventManager = require('../utils/eventManager');
-// var $ = require('jquery');
-//var api = require('./api');
-console.log('HIHIHI');
-module.exports = {
-	init(){
-		console.log("initting search from");
-		//start listening!
-		$('.js-search-by-id-form').on('keypress', function(e){
-			if (e.keyCode == 13) {
-				var searchId = $(this).find('.js-search-by-id-input').val();
-				runSearch(searchId);
-			}
-		});
-
-		$('.js-search-by-id-button').on('click', function(e){
-			var searchId = $(this).closest('.js-search-by-id-form').find('.js-search-by-id-input').val();
-			runSearch(searchId);
-		});
-
-
-		$('.js-expand-adv-search').on('click', function(e){
-			$(this).closest('.js-search-by-id-form').find('.js-search-advanced-section').slideToggle();
-		});
-	}
-}
-
-function runSearch(searchId){
-	api.getIssueById(searchId).then(function(data){
-		var res = data;
-		eventManager.fire('get_issue_by_id_returned', { owner: 'searchform', data: res });
-	});
-}
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -717,7 +750,7 @@ function buildChart(){
 }
 
 
-},{"d3":11}],8:[function(require,module,exports){
+},{"d3":12}],9:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -916,7 +949,7 @@ function buildChart(){
 	}
 }
 
-},{"d3":11}],9:[function(require,module,exports){
+},{"d3":12}],10:[function(require,module,exports){
 //node style error first
 // if ('serviceWorker' in navigator) {
 //     console.log('Common: SW supported, going to register');
@@ -937,12 +970,13 @@ function buildChart(){
 
 // =============== base_scripts
 window.eventManager = require('./base_scripts/eventManager');
-window.api = require('./base_scripts/api');
+window.api = require('./components/_api/_api.js'); //sits in components as it has an associated dom component (in the footer)
 window.$ = require('jquery');
 window.threeOneOne = {}; //container for all the 311 app modules
 
 // =============== component scripts (todo: figure out how to not buundle these in the big bundle)
-require('./components/search-by-id/_search-by-id.js').init();
+require('./components/_search-by-id/_search-by-id.js').init();
+require('./components/_header/_header.js').init();
 
 window.threeOneOne.searchByFilters = require('./components/search-by-filters/_search-by-filters.js');
 window.threeOneOne.map = require('./components/map/_map.js');
@@ -953,7 +987,7 @@ window.threeOneOne.totalRequestsOverTime = require('./components/total-requests-
 $('.js-main').addClass('js-loaded');
 $('.js-header').addClass('js-loaded'); 
 
-},{"./base_scripts/api":1,"./base_scripts/eventManager":2,"./components/burn-down/_burn-down.js":3,"./components/map/_map.js":4,"./components/search-by-filters/_search-by-filters.js":5,"./components/search-by-id/_search-by-id.js":6,"./components/total-requests-by-dept/_total-requests-by-dept.js":7,"./components/total-requests-over-time/_total-requests-over-time.js":8,"jquery":12}],10:[function(require,module,exports){
+},{"./base_scripts/eventManager":1,"./components/_api/_api.js":2,"./components/_header/_header.js":3,"./components/_search-by-id/_search-by-id.js":4,"./components/burn-down/_burn-down.js":5,"./components/map/_map.js":6,"./components/search-by-filters/_search-by-filters.js":7,"./components/total-requests-by-dept/_total-requests-by-dept.js":8,"./components/total-requests-over-time/_total-requests-over-time.js":9,"jquery":13}],11:[function(require,module,exports){
 function corslite(url, callback, cors) {
     var sent = false;
 
@@ -1048,7 +1082,7 @@ function corslite(url, callback, cors) {
 
 if (typeof module !== 'undefined') module.exports = corslite;
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 // https://d3js.org Version 4.2.6. Copyright 2016 Mike Bostock.
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
@@ -17334,7 +17368,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.1.1
  * https://jquery.com/
@@ -27556,7 +27590,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /*
  Leaflet, a JavaScript library for mobile-friendly interactive maps. http://leafletjs.com
  (c) 2010-2013, Vladimir Agafonkin
@@ -36725,12 +36759,12 @@ L.Map.include({
 
 
 }(window, document));
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 module.exports = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 module.exports={
   "_args": [
     [
@@ -37025,7 +37059,7 @@ module.exports={
   "version": "2.4.0"
 }
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -37035,7 +37069,7 @@ module.exports = {
     REQUIRE_ACCESS_TOKEN: true
 };
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 var util = require('./util'),
@@ -37164,7 +37198,7 @@ module.exports.featureLayer = function(_, options) {
     return new FeatureLayer(_, options);
 };
 
-},{"./format_url":19,"./marker":33,"./request":34,"./simplestyle":36,"./util":39,"sanitize-caja":41}],18:[function(require,module,exports){
+},{"./format_url":20,"./marker":34,"./request":35,"./simplestyle":37,"./util":40,"sanitize-caja":42}],19:[function(require,module,exports){
 'use strict';
 
 var Feedback = L.Class.extend({
@@ -37178,7 +37212,7 @@ var Feedback = L.Class.extend({
 
 module.exports = new Feedback();
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 var config = require('./config'),
@@ -37240,7 +37274,7 @@ module.exports.style = function(styleURL, accessToken) {
     return url;
 };
 
-},{"../package.json":15,"./config":16}],20:[function(require,module,exports){
+},{"../package.json":16,"./config":17}],21:[function(require,module,exports){
 'use strict';
 
 var isArray = require('isarray'),
@@ -37384,7 +37418,7 @@ module.exports = function(url, options) {
     return geocoder;
 };
 
-},{"./feedback":18,"./format_url":19,"./request":34,"./util":39,"isarray":14}],21:[function(require,module,exports){
+},{"./feedback":19,"./format_url":20,"./request":35,"./util":40,"isarray":15}],22:[function(require,module,exports){
 'use strict';
 
 var geocoder = require('./geocoder'),
@@ -37590,7 +37624,7 @@ module.exports.geocoderControl = function(_, options) {
     return new GeocoderControl(_, options);
 };
 
-},{"./geocoder":20,"./util":39}],22:[function(require,module,exports){
+},{"./geocoder":21,"./util":40}],23:[function(require,module,exports){
 'use strict';
 
 function utfDecode(c) {
@@ -37608,7 +37642,7 @@ module.exports = function(data) {
     };
 };
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 'use strict';
 
 var util = require('./util'),
@@ -37808,7 +37842,7 @@ module.exports.gridControl = function(_, options) {
     return new GridControl(_, options);
 };
 
-},{"./util":39,"mustache":40,"sanitize-caja":41}],24:[function(require,module,exports){
+},{"./util":40,"mustache":41,"sanitize-caja":42}],25:[function(require,module,exports){
 'use strict';
 
 var util = require('./util'),
@@ -38033,7 +38067,7 @@ module.exports.gridLayer = function(_, options) {
     return new GridLayer(_, options);
 };
 
-},{"./grid":22,"./load_tilejson":29,"./request":34,"./util":39}],25:[function(require,module,exports){
+},{"./grid":23,"./load_tilejson":30,"./request":35,"./util":40}],26:[function(require,module,exports){
 'use strict';
 
 var leaflet = require('./leaflet');
@@ -38042,7 +38076,7 @@ require('./mapbox');
 
 module.exports = leaflet;
 
-},{"./leaflet":27,"./mapbox":31}],26:[function(require,module,exports){
+},{"./leaflet":28,"./mapbox":32}],27:[function(require,module,exports){
 'use strict';
 
 var InfoControl = L.Control.extend({
@@ -38159,10 +38193,10 @@ module.exports.infoControl = function(options) {
     return new InfoControl(options);
 };
 
-},{"sanitize-caja":41}],27:[function(require,module,exports){
+},{"sanitize-caja":42}],28:[function(require,module,exports){
 module.exports = window.L = require('leaflet/dist/leaflet-src');
 
-},{"leaflet/dist/leaflet-src":13}],28:[function(require,module,exports){
+},{"leaflet/dist/leaflet-src":14}],29:[function(require,module,exports){
 'use strict';
 
 var LegendControl = L.Control.extend({
@@ -38231,7 +38265,7 @@ module.exports.legendControl = function(options) {
     return new LegendControl(options);
 };
 
-},{"sanitize-caja":41}],29:[function(require,module,exports){
+},{"sanitize-caja":42}],30:[function(require,module,exports){
 'use strict';
 
 var request = require('./request'),
@@ -38257,7 +38291,7 @@ module.exports = {
     }
 };
 
-},{"./format_url":19,"./request":34,"./util":39}],30:[function(require,module,exports){
+},{"./format_url":20,"./request":35,"./util":40}],31:[function(require,module,exports){
 'use strict';
 
 var tileLayer = require('./tile_layer').tileLayer,
@@ -38493,7 +38527,7 @@ module.exports.map = function(element, _, options) {
     return new LMap(element, _, options);
 };
 
-},{"./feature_layer":17,"./feedback":18,"./grid_control":23,"./grid_layer":24,"./info_control":26,"./legend_control":28,"./load_tilejson":29,"./mapbox_logo":32,"./share_control":35,"./tile_layer":38,"sanitize-caja":41}],31:[function(require,module,exports){
+},{"./feature_layer":18,"./feedback":19,"./grid_control":24,"./grid_layer":25,"./info_control":27,"./legend_control":29,"./load_tilejson":30,"./mapbox_logo":33,"./share_control":36,"./tile_layer":39,"sanitize-caja":42}],32:[function(require,module,exports){
 'use strict';
 
 var geocoderControl = require('./geocoder_control'),
@@ -38549,7 +38583,7 @@ window.L.Icon.Default.imagePath =
     '//api.tiles.mapbox.com/mapbox.js/' + 'v' +
     require('../package.json').version + '/images';
 
-},{"../package.json":15,"./config":16,"./feature_layer":17,"./feedback":18,"./geocoder":20,"./geocoder_control":21,"./grid_control":23,"./grid_layer":24,"./info_control":26,"./legend_control":28,"./map":30,"./marker":33,"./share_control":35,"./simplestyle":36,"./style_layer":37,"./tile_layer":38,"mustache":40,"sanitize-caja":41}],32:[function(require,module,exports){
+},{"../package.json":16,"./config":17,"./feature_layer":18,"./feedback":19,"./geocoder":21,"./geocoder_control":22,"./grid_control":24,"./grid_layer":25,"./info_control":27,"./legend_control":29,"./map":31,"./marker":34,"./share_control":36,"./simplestyle":37,"./style_layer":38,"./tile_layer":39,"mustache":41,"sanitize-caja":42}],33:[function(require,module,exports){
 'use strict';
 
 var MapboxLogoControl = L.Control.extend({
@@ -38583,7 +38617,7 @@ module.exports.mapboxLogoControl = function(options) {
     return new MapboxLogoControl(options);
 };
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 'use strict';
 
 var format_url = require('./format_url'),
@@ -38650,7 +38684,7 @@ module.exports = {
     createPopup: createPopup
 };
 
-},{"./format_url":19,"./util":39,"sanitize-caja":41}],34:[function(require,module,exports){
+},{"./format_url":20,"./util":40,"sanitize-caja":42}],35:[function(require,module,exports){
 'use strict';
 
 var corslite = require('corslite'),
@@ -38684,7 +38718,7 @@ module.exports = function(url, callback) {
     return corslite(url, onload);
 };
 
-},{"./config":16,"./util":39,"corslite":10}],35:[function(require,module,exports){
+},{"./config":17,"./util":40,"corslite":11}],36:[function(require,module,exports){
 'use strict';
 
 var format_url = require('./format_url');
@@ -38807,7 +38841,7 @@ module.exports.shareControl = function(_, options) {
     return new ShareControl(_, options);
 };
 
-},{"./format_url":19,"./load_tilejson":29}],36:[function(require,module,exports){
+},{"./format_url":20,"./load_tilejson":30}],37:[function(require,module,exports){
 'use strict';
 
 // an implementation of the simplestyle spec for polygon and linestring features
@@ -38854,7 +38888,7 @@ module.exports = {
     defaults: defaults
 };
 
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 'use strict';
 
 var util = require('./util');
@@ -38937,7 +38971,7 @@ module.exports.styleLayer = function(_, options) {
     return new StyleLayer(_, options);
 };
 
-},{"./format_url":19,"./request":34,"./util":39,"sanitize-caja":41}],38:[function(require,module,exports){
+},{"./format_url":20,"./request":35,"./util":40,"sanitize-caja":42}],39:[function(require,module,exports){
 'use strict';
 
 var util = require('./util');
@@ -39037,7 +39071,7 @@ module.exports.tileLayer = function(_, options) {
     return new TileLayer(_, options);
 };
 
-},{"./load_tilejson":29,"./util":39,"sanitize-caja":41}],39:[function(require,module,exports){
+},{"./load_tilejson":30,"./util":40,"sanitize-caja":42}],40:[function(require,module,exports){
 'use strict';
 
 function contains(item, list) {
@@ -39084,7 +39118,7 @@ module.exports = {
     }
 };
 
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 /*!
  * mustache.js - Logic-less {{mustache}} templates with JavaScript
  * http://github.com/janl/mustache.js
@@ -39715,7 +39749,7 @@ module.exports = {
 
 }));
 
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 var html_sanitize = require('./sanitizer-bundle.js');
 
 module.exports = function(_) {
@@ -39735,7 +39769,7 @@ function cleanUrl(url) {
 
 function cleanId(id) { return id; }
 
-},{"./sanitizer-bundle.js":42}],42:[function(require,module,exports){
+},{"./sanitizer-bundle.js":43}],43:[function(require,module,exports){
 
 // Copyright (C) 2010 Google Inc.
 //
@@ -42184,4 +42218,4 @@ if (typeof module !== 'undefined') {
     module.exports = html_sanitize;
 }
 
-},{}]},{},[9]);
+},{}]},{},[10]);

@@ -13,7 +13,7 @@
 
         &__sidebar {
             width: rem(300);
-            background: darken($background-color, 5%);
+            background: $background-color-dark;
         }
 
         &__body {
