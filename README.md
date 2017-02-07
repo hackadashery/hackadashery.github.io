@@ -48,13 +48,38 @@ Set up should be complete! Report any errors as issues on this repo and we'll tr
 
 ---
 
-###Tests
+##Making a chart
+
+I'm going to assume you're looking to create a chart on it's very own page.   
+
+####Set up the page#### 
+
+*(This step is optional, you may just be looking to add your chart to a page that already exists in which case, skip!)*
+jump into **_write-your-code-in-here/pages/stats** and create a new .html file.   
+The name of this file will be used in the url.   
+For the code that goes in, index.html is a good starting point, copy it all into your file.   
+Finally, to create a link in the stats sub navm, open **_write-your-code-in-here/components/nav-stats/_nav-stats.html** and duplicate one of the existing links with the info for your page.
+
+####Set up a chart component####
+
+Inside **_write-your-code-in-here/components**, create a folder with the name of your chart (make it explicit & descriptive). For example **streets-total-over-time/**   
+Within that folder you need to create a **_streets-total-over-time.html** file for your markup.   
+You will probably want to create **_streets-total-over-time.js** for the JS you wish to write. 
+And finally, **_streets-total-over-time.scss** to style your chart. Use the same name as the base class, so `.streets-total-over-time { simply super sassy stylins }`
+
+####Getting the data####
+
+We don't yet have data processing set up, so for now - call the API or add a json file manually, have a look through the other charts to see how this is done (we have set up as API module to help out.)
+
+---
+
+##Tests
 
 We don't have any yet, but when we do it will probably be [Tape](https://github.com/substack/tape) because it doesn't use the whole kitchen sink, or [Zora](https://github.com/lorenzofox3/zora) for the same reason :) - but really, it's up to whoever takes the time to actually set it up.
 
 ---
 
-###Chart ideas
+##Chart ideas
 
 *TODO: make a project on github for each new chart idea - initial issue for set up chat? and more at the chart's lead contributors discretion*
 
@@ -62,3 +87,4 @@ We don't have any yet, but when we do it will probably be [Tape](https://github.
  - **Additions & deletions per week** / day (look at the github one vs the Target Process one). Y: time, X: total open line, resolved bar, new bar
  - **Seasonal punchcard** (rows are months, cols are days)
  - Y: number of open bugs, X: time (week / month / year). Line for each week / month / year
+
