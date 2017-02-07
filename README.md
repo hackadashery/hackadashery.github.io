@@ -68,13 +68,33 @@ Finally, to create a link in the stats sub navm, open **_write-your-code-in-here
 Inside **_write-your-code-in-here/components**, create a folder with the name of your chart (make it explicit & descriptive). For example **streets-total-over-time/**   
 Within that folder you need to create a **_streets-total-over-time.html** file for your markup.   
 You will probably want to create **_streets-total-over-time.js** for the JS you wish to write. 
-And for the styles, **_streets-total-over-time.scss**. Use the same name as the base class, so `.streets-total-over-time { simply super sassy stylins }`
+And for the styles, **_streets-total-over-time.scss**. Use the same name as the base class, so 
+
+```css
+.streets-total-over-time { 
+    //simply super sassy stylins 
+}
+```
 
 The styles will be autmoatically bundled so no need to worry about those.   
-The markup in your .html file will beed to be added to the page (or where ever you want it to appear). `{{> streets-total-over-time/_streets-total-over-time }}`
+The markup in your .html file will beed to be added to the page (or where ever you want it to appear). 
+
+```handlebars
+{{> streets-total-over-time/_streets-total-over-time }}
+```
+
 And finally, if you have JS you wish to run on the page:   
-"require" it in **_write-your-code-in-here/main.js**, `window.threeOneOne.streetsTotalOverTime = require('./components/streets-total-over-time/_streets-total-over-time.js');`   
-and "init" it in your markup: `<script> threeOneOne.streetsTotalOverTime.init(); </script>`
+"require" it in **_write-your-code-in-here/main.js**, 
+
+```javascript
+window.threeOneOne.streetsTotalOverTime = require('./components/streets-total-over-time/_streets-total-over-time.js');
+```   
+
+and "init" it in your markup: 
+
+```
+<script> threeOneOne.streetsTotalOverTime.init(); </script>
+```
 
 *With the current set up, all the JS is bundled into main.js. It's on the TODO list to break them into files specific to the components they serve.*
 
