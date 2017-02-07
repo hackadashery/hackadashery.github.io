@@ -19,6 +19,7 @@
 // =============== base_scripts
 window.eventManager = require('./base_scripts/eventManager');
 window.api = require('./components/_api/_api.js'); //sits in components as it has an associated dom component (in the footer)
+window.urlParameter = require('./base_scripts/urlParameterHandler.js');
 window.$ = require('jquery');
 window.threeOneOne = {}; //container for all the 311 app modules
 

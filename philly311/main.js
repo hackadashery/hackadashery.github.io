@@ -50,6 +50,194 @@ module.exports = {
 	}
 }
 },{}],2:[function(require,module,exports){
+'use strict';
+
+//https://github.com/delphic-digital/urlParameter
+
+function addToQueryString(queryString, paramName, value){
+	if (queryString.length > 0) {
+		//there's something in the querystring, I'm going to assume it's a properly formed parameter
+		return queryString + '&' + paramName + '=' + value;
+	} else {
+		//guess there's nothing there, no need to '&'
+		return '?' + paramName + '=' + value;			
+	}
+} 
+
+function removeQueryFromString(queryString, paramName){
+
+	//find the index of paramName (note that the param name could be a substring of another param name)
+	var startSlice = queryString.indexOf('?' + paramName + '='); //include the "?" and "=" to help negate the substring problem
+	if (startSlice == -1){
+		//it's not the first param, but it could be further along
+		var startSlice = queryString.indexOf('&' + paramName + '=');
+		if (startSlice == -1){
+			//it's not there either, just return the string
+			return queryString;
+		}
+	}
+	
+	//shift the index of the start slice along past the '?' or '&'
+	startSlice++;
+	
+
+
+	//find index of the next &
+	var endSlice = queryString.indexOf('&', startSlice);
+	if (endSlice == -1) {
+		//it's the last / only one!
+		return queryString.substr(0, startSlice - 1); //-1 to lop of the preceeding "?" if it's the only one or "&" if it's the last one
+	}
+
+	if (endSlice < queryString.length) {
+		//we're in the middle, add to end slice so it'll lop off one of the "&"'s
+		endSlice++;
+	}
+
+	//if we're here - the param is one of many - return the slice before & after the param
+	return queryString.substr(0, startSlice) + queryString.substr(endSlice, queryString.length);
+}
+
+function formatStringForUrl(unsafeString){
+	//note: I've tried a bunch of alternate methods to replace characters, none have managed to beat the regex.
+	unsafeString = unsafeString.replace(/ /g, '%20');
+	unsafeString = unsafeString.replace(/&/g, '%26');
+	unsafeString = unsafeString.replace(/\//g, '%2F');
+
+	return unsafeString;
+}
+
+module.exports = {
+	get(paramName, queryString, isEncoded){
+		if (typeof paramName != 'string' || typeof queryString != 'string') {
+			return false;
+		}
+
+		//find the index of paramName
+		var startSlice = queryString.indexOf(paramName);
+		if (startSlice == -1){
+			//it's not in there, return false
+			return false;
+		}
+		startSlice = startSlice + paramName.length + 1;//start slice for the actual value. Param name + "="
+
+		//find index of the next &
+		var endSlice = queryString.indexOf('&', startSlice);
+		if (endSlice == -1) {
+			//it's the last / only one!
+			return queryString.substr(startSlice, queryString.length);
+		}
+
+		return queryString.substr(startSlice, endSlice - startSlice); //end slice is index. substr needs length
+	},
+	set(paramName, value, queryString, isEncoded){
+		if (typeof paramName != 'string') {
+			return false;
+		}
+
+		var queryString = removeQueryFromString(queryString, paramName);
+		if (value == "") {
+			return queryString;
+		}
+		if (!isEncoded) {
+			//param name and value have passed, so format them 
+			var paramName = formatStringForUrl(paramName);
+			var value = formatStringForUrl(value);			
+		}
+
+		//and return the new string!
+		var newQuery = addToQueryString(queryString, paramName, value);
+		
+		return newQuery;		
+	}
+}
+},{}],3:[function(require,module,exports){
+'use strict';
+
+//https://github.com/delphic-digital/urlParameter
+
+/* Problem:
+ * A bunch of different components want to update the url parameters
+ * But they don't know about each other.
+ * They add, they remove, they do it at crazy times.
+ * So we get a long tail of url manipulation.
+ *
+ * Solution:
+ * hold a 'virtual' query string.
+ * let the various components update it as much as they want - go mad.
+ * Try to push it to history but ... debounce it :D
+ */
+
+var urlParameter = require('./urlParameter');
+var virtualQueryString = '';
+var liveQueryString = '';
+var debounceTime = 500;
+if (typeof window != 'undefined'){
+	var windowRef = window;
+	virtualQueryString = windowRef.location.search;
+	virtualQueryString = windowRef.location.search;
+}
+
+//Replace me with an import if you have debounce already!
+function debounce(func, wait, immediate) {
+	var timeout;
+	return function() {
+		var context = this,
+			args = arguments;
+		var later = function() {
+			timeout = null;
+			if ( !immediate ) {
+				func.apply(context, args);
+			}
+		};
+		var callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait || 200);
+		if ( callNow ) { 
+			func.apply(context, args);
+		}
+	};
+};
+
+var setHistroy = function(){
+	if (typeof windowRef != 'undefined'){
+		if (windowRef.history) {
+			windowRef.history.pushState(null, '', windowRef.pathname + virtualQueryString);
+			liveQueryString = virtualQueryString;
+		} else {
+			console.log('No window.history :(');
+		}
+	} else {
+		console.log('No window to set histroy on :(');
+	}
+};
+
+var updateUrl = debounce(setHistroy, debounceTime);
+
+module.exports = {
+	get(paramName, isEncoded){
+		return urlParameter.get(paramName, virtualQueryString, isEncoded);
+	},
+	set(paramName, value, isEncoded){
+
+		var newQueryString = urlParameter.set(paramName, value, virtualQueryString, isEncoded);
+
+		virtualQueryString = newQueryString;
+		updateUrl();
+
+		return newQueryString;
+	},
+	config(options){
+		if (options.hasOwnProperty('debounce')) { debounce = options.debounce; };
+		if (options.hasOwnProperty('debounceTime')) { debounceTime = options.debounceTime; };
+		if (options.hasOwnProperty('windowReplacement')) { windowRef = options.windowReplacement; };
+		return true; //return false for err?
+	},
+	getLiveQueryString(){
+		return liveQueryString;
+	}
+}
+},{"./urlParameter":2}],4:[function(require,module,exports){
 "use strict";
 
 /* Main role is to listen out for anything that would need stuff from the API
@@ -142,7 +330,7 @@ module.exports = {
 	}
 }
 
-},{}],3:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 
 /* The header JS
@@ -188,7 +376,7 @@ module.exports = {
 // 		eventManager.fire('get_issue_by_id_returned', { owner: 'searchform', data: res });
 // 	});
 // }
-},{}],4:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -427,7 +615,7 @@ function buildChart(){
 }
 
 
-},{"d3":11}],5:[function(require,module,exports){
+},{"d3":13}],7:[function(require,module,exports){
 'use strict';
 
 require('mapbox.js');
@@ -593,13 +781,18 @@ function buildChart(){
 }
 
 
-},{"mapbox.js":25}],6:[function(require,module,exports){
+},{"mapbox.js":27}],8:[function(require,module,exports){
 'use strict';
+
+var philadelphiaZipCodeList = [ 
+	"19102", "19103", "19104", "19106", "19107", "19109", "19111", "19112", "19114", "19115", "19116", "19118", "19119", "19120", "19121", "19122", 
+	"19123", "19124", "19125", "19126", "19127", "19128", "19129", "19130", "19131", "19132", "19133", "19134", "19135", "19136", "19137", "19138", 
+	"19139", "19140", "19141", "19142", "19143", "19144", "19145", "19146", "19147", "19148", "19149", "19150", "19151", "19152", "19153", "19154"
+]
 
 module.exports = {
 	init(){
-        
-		console.log("Initting search by filters");
+
 		$('.js-search-form__form').on('submit', function(e){
 			e.preventDefault();
 
@@ -648,6 +841,41 @@ module.exports = {
 
 			eventManager.fire('SEARCH_BY_FILTERS_FORM_SUBMITTED', queryString);
 		});
+
+		//====================== now that the listners are all set up, check if we have any url params to deal with.
+
+		//collect all the url params
+		var searchParams = {
+			search: urlParameter.get('search', true),
+			id: urlParameter.get('id', true),
+			zip: urlParameter.get('zip', true),
+			serviceType: urlParameter.get('service-type', true),
+			dateOfRequest: urlParameter.get('date-of-request', true),
+			agencyResponsible: urlParameter.get('agency-responsible', true)
+		}
+
+		//set them 
+		if (searchParams.zip) {               $('.js-search-form__zip').val(searchParams.zip); }
+		if (searchParams.serviceType) {       $('.js-search-form__service-type').val(searchParams.serviceType); }
+		if (searchParams.dateOfRequest) {     $('.js-search-form__date-of-request').val(searchParams.dateOfRequest); }
+		if (searchParams.agencyResponsible) { $('.js-search-form__agency-responsible').val(searchParams.agencyResponsible); }
+		if (searchParams.id) {                $('.js-search-form__id').val(searchParams.id); }
+
+		//search is a special case - could be ZIP or Requiest ID
+		if (searchParams.search){
+			if (philadelphiaZipCodeList.includes(searchParams.search)) {
+				$('.js-search-form__zip').val(searchParams.search);
+				urlParameter.set('zip', searchParams.search);
+			} else {
+				//There's a search and it's not a ZIP. That means it's for an ID
+				$('.js-search-form__id').val(searchParams.search, true);
+				urlParameter.set('id', searchParams.search, true);
+			}
+
+			//no longer any need for the search param
+			urlParameter.set('search', '');
+		}
+
 	}
 }
 
@@ -657,7 +885,7 @@ function runSearch(searchId){
 		eventManager.fire('get_issue_by_id_returned', { owner: 'searchform', data: res });
 	});
 }
-},{}],7:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -744,7 +972,7 @@ function buildChart(){
 }
 
 
-},{"d3":11}],8:[function(require,module,exports){
+},{"d3":13}],10:[function(require,module,exports){
 'use strict';
 
 var d3 = require('d3');
@@ -943,7 +1171,7 @@ function buildChart(){
 	}
 }
 
-},{"d3":11}],9:[function(require,module,exports){
+},{"d3":13}],11:[function(require,module,exports){
 //node style error first
 // if ('serviceWorker' in navigator) {
 //     console.log('Common: SW supported, going to register');
@@ -965,6 +1193,7 @@ function buildChart(){
 // =============== base_scripts
 window.eventManager = require('./base_scripts/eventManager');
 window.api = require('./components/_api/_api.js'); //sits in components as it has an associated dom component (in the footer)
+window.urlParameter = require('./base_scripts/urlParameterHandler.js');
 window.$ = require('jquery');
 window.threeOneOne = {}; //container for all the 311 app modules
 
@@ -980,7 +1209,7 @@ window.threeOneOne.totalRequestsOverTime = require('./components/total-requests-
 $('.js-main').addClass('js-loaded');
 $('.js-header').addClass('js-loaded'); 
 
-},{"./base_scripts/eventManager":1,"./components/_api/_api.js":2,"./components/_header/_header.js":3,"./components/burn-down/_burn-down.js":4,"./components/map/_map.js":5,"./components/search-form/_search-form.js":6,"./components/total-requests-by-dept/_total-requests-by-dept.js":7,"./components/total-requests-over-time/_total-requests-over-time.js":8,"jquery":12}],10:[function(require,module,exports){
+},{"./base_scripts/eventManager":1,"./base_scripts/urlParameterHandler.js":3,"./components/_api/_api.js":4,"./components/_header/_header.js":5,"./components/burn-down/_burn-down.js":6,"./components/map/_map.js":7,"./components/search-form/_search-form.js":8,"./components/total-requests-by-dept/_total-requests-by-dept.js":9,"./components/total-requests-over-time/_total-requests-over-time.js":10,"jquery":14}],12:[function(require,module,exports){
 function corslite(url, callback, cors) {
     var sent = false;
 
@@ -1075,7 +1304,7 @@ function corslite(url, callback, cors) {
 
 if (typeof module !== 'undefined') module.exports = corslite;
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 // https://d3js.org Version 4.2.6. Copyright 2016 Mike Bostock.
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
@@ -17361,7 +17590,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
 
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.1.1
  * https://jquery.com/
@@ -27583,7 +27812,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /*
  Leaflet, a JavaScript library for mobile-friendly interactive maps. http://leafletjs.com
  (c) 2010-2013, Vladimir Agafonkin
@@ -36752,12 +36981,12 @@ L.Map.include({
 
 
 }(window, document));
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 module.exports = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 module.exports={
   "_args": [
     [
@@ -37052,7 +37281,7 @@ module.exports={
   "version": "2.4.0"
 }
 
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -37062,7 +37291,7 @@ module.exports = {
     REQUIRE_ACCESS_TOKEN: true
 };
 
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict';
 
 var util = require('./util'),
@@ -37191,7 +37420,7 @@ module.exports.featureLayer = function(_, options) {
     return new FeatureLayer(_, options);
 };
 
-},{"./format_url":19,"./marker":33,"./request":34,"./simplestyle":36,"./util":39,"sanitize-caja":41}],18:[function(require,module,exports){
+},{"./format_url":21,"./marker":35,"./request":36,"./simplestyle":38,"./util":41,"sanitize-caja":43}],20:[function(require,module,exports){
 'use strict';
 
 var Feedback = L.Class.extend({
@@ -37205,7 +37434,7 @@ var Feedback = L.Class.extend({
 
 module.exports = new Feedback();
 
-},{}],19:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 'use strict';
 
 var config = require('./config'),
@@ -37267,7 +37496,7 @@ module.exports.style = function(styleURL, accessToken) {
     return url;
 };
 
-},{"../package.json":15,"./config":16}],20:[function(require,module,exports){
+},{"../package.json":17,"./config":18}],22:[function(require,module,exports){
 'use strict';
 
 var isArray = require('isarray'),
@@ -37411,7 +37640,7 @@ module.exports = function(url, options) {
     return geocoder;
 };
 
-},{"./feedback":18,"./format_url":19,"./request":34,"./util":39,"isarray":14}],21:[function(require,module,exports){
+},{"./feedback":20,"./format_url":21,"./request":36,"./util":41,"isarray":16}],23:[function(require,module,exports){
 'use strict';
 
 var geocoder = require('./geocoder'),
@@ -37617,7 +37846,7 @@ module.exports.geocoderControl = function(_, options) {
     return new GeocoderControl(_, options);
 };
 
-},{"./geocoder":20,"./util":39}],22:[function(require,module,exports){
+},{"./geocoder":22,"./util":41}],24:[function(require,module,exports){
 'use strict';
 
 function utfDecode(c) {
@@ -37635,7 +37864,7 @@ module.exports = function(data) {
     };
 };
 
-},{}],23:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 'use strict';
 
 var util = require('./util'),
@@ -37835,7 +38064,7 @@ module.exports.gridControl = function(_, options) {
     return new GridControl(_, options);
 };
 
-},{"./util":39,"mustache":40,"sanitize-caja":41}],24:[function(require,module,exports){
+},{"./util":41,"mustache":42,"sanitize-caja":43}],26:[function(require,module,exports){
 'use strict';
 
 var util = require('./util'),
@@ -38060,7 +38289,7 @@ module.exports.gridLayer = function(_, options) {
     return new GridLayer(_, options);
 };
 
-},{"./grid":22,"./load_tilejson":29,"./request":34,"./util":39}],25:[function(require,module,exports){
+},{"./grid":24,"./load_tilejson":31,"./request":36,"./util":41}],27:[function(require,module,exports){
 'use strict';
 
 var leaflet = require('./leaflet');
@@ -38069,7 +38298,7 @@ require('./mapbox');
 
 module.exports = leaflet;
 
-},{"./leaflet":27,"./mapbox":31}],26:[function(require,module,exports){
+},{"./leaflet":29,"./mapbox":33}],28:[function(require,module,exports){
 'use strict';
 
 var InfoControl = L.Control.extend({
@@ -38186,10 +38415,10 @@ module.exports.infoControl = function(options) {
     return new InfoControl(options);
 };
 
-},{"sanitize-caja":41}],27:[function(require,module,exports){
+},{"sanitize-caja":43}],29:[function(require,module,exports){
 module.exports = window.L = require('leaflet/dist/leaflet-src');
 
-},{"leaflet/dist/leaflet-src":13}],28:[function(require,module,exports){
+},{"leaflet/dist/leaflet-src":15}],30:[function(require,module,exports){
 'use strict';
 
 var LegendControl = L.Control.extend({
@@ -38258,7 +38487,7 @@ module.exports.legendControl = function(options) {
     return new LegendControl(options);
 };
 
-},{"sanitize-caja":41}],29:[function(require,module,exports){
+},{"sanitize-caja":43}],31:[function(require,module,exports){
 'use strict';
 
 var request = require('./request'),
@@ -38284,7 +38513,7 @@ module.exports = {
     }
 };
 
-},{"./format_url":19,"./request":34,"./util":39}],30:[function(require,module,exports){
+},{"./format_url":21,"./request":36,"./util":41}],32:[function(require,module,exports){
 'use strict';
 
 var tileLayer = require('./tile_layer').tileLayer,
@@ -38520,7 +38749,7 @@ module.exports.map = function(element, _, options) {
     return new LMap(element, _, options);
 };
 
-},{"./feature_layer":17,"./feedback":18,"./grid_control":23,"./grid_layer":24,"./info_control":26,"./legend_control":28,"./load_tilejson":29,"./mapbox_logo":32,"./share_control":35,"./tile_layer":38,"sanitize-caja":41}],31:[function(require,module,exports){
+},{"./feature_layer":19,"./feedback":20,"./grid_control":25,"./grid_layer":26,"./info_control":28,"./legend_control":30,"./load_tilejson":31,"./mapbox_logo":34,"./share_control":37,"./tile_layer":40,"sanitize-caja":43}],33:[function(require,module,exports){
 'use strict';
 
 var geocoderControl = require('./geocoder_control'),
@@ -38576,7 +38805,7 @@ window.L.Icon.Default.imagePath =
     '//api.tiles.mapbox.com/mapbox.js/' + 'v' +
     require('../package.json').version + '/images';
 
-},{"../package.json":15,"./config":16,"./feature_layer":17,"./feedback":18,"./geocoder":20,"./geocoder_control":21,"./grid_control":23,"./grid_layer":24,"./info_control":26,"./legend_control":28,"./map":30,"./marker":33,"./share_control":35,"./simplestyle":36,"./style_layer":37,"./tile_layer":38,"mustache":40,"sanitize-caja":41}],32:[function(require,module,exports){
+},{"../package.json":17,"./config":18,"./feature_layer":19,"./feedback":20,"./geocoder":22,"./geocoder_control":23,"./grid_control":25,"./grid_layer":26,"./info_control":28,"./legend_control":30,"./map":32,"./marker":35,"./share_control":37,"./simplestyle":38,"./style_layer":39,"./tile_layer":40,"mustache":42,"sanitize-caja":43}],34:[function(require,module,exports){
 'use strict';
 
 var MapboxLogoControl = L.Control.extend({
@@ -38610,7 +38839,7 @@ module.exports.mapboxLogoControl = function(options) {
     return new MapboxLogoControl(options);
 };
 
-},{}],33:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 'use strict';
 
 var format_url = require('./format_url'),
@@ -38677,7 +38906,7 @@ module.exports = {
     createPopup: createPopup
 };
 
-},{"./format_url":19,"./util":39,"sanitize-caja":41}],34:[function(require,module,exports){
+},{"./format_url":21,"./util":41,"sanitize-caja":43}],36:[function(require,module,exports){
 'use strict';
 
 var corslite = require('corslite'),
@@ -38711,7 +38940,7 @@ module.exports = function(url, callback) {
     return corslite(url, onload);
 };
 
-},{"./config":16,"./util":39,"corslite":10}],35:[function(require,module,exports){
+},{"./config":18,"./util":41,"corslite":12}],37:[function(require,module,exports){
 'use strict';
 
 var format_url = require('./format_url');
@@ -38834,7 +39063,7 @@ module.exports.shareControl = function(_, options) {
     return new ShareControl(_, options);
 };
 
-},{"./format_url":19,"./load_tilejson":29}],36:[function(require,module,exports){
+},{"./format_url":21,"./load_tilejson":31}],38:[function(require,module,exports){
 'use strict';
 
 // an implementation of the simplestyle spec for polygon and linestring features
@@ -38881,7 +39110,7 @@ module.exports = {
     defaults: defaults
 };
 
-},{}],37:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 'use strict';
 
 var util = require('./util');
@@ -38964,7 +39193,7 @@ module.exports.styleLayer = function(_, options) {
     return new StyleLayer(_, options);
 };
 
-},{"./format_url":19,"./request":34,"./util":39,"sanitize-caja":41}],38:[function(require,module,exports){
+},{"./format_url":21,"./request":36,"./util":41,"sanitize-caja":43}],40:[function(require,module,exports){
 'use strict';
 
 var util = require('./util');
@@ -39064,7 +39293,7 @@ module.exports.tileLayer = function(_, options) {
     return new TileLayer(_, options);
 };
 
-},{"./load_tilejson":29,"./util":39,"sanitize-caja":41}],39:[function(require,module,exports){
+},{"./load_tilejson":31,"./util":41,"sanitize-caja":43}],41:[function(require,module,exports){
 'use strict';
 
 function contains(item, list) {
@@ -39111,7 +39340,7 @@ module.exports = {
     }
 };
 
-},{}],40:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 /*!
  * mustache.js - Logic-less {{mustache}} templates with JavaScript
  * http://github.com/janl/mustache.js
@@ -39742,7 +39971,7 @@ module.exports = {
 
 }));
 
-},{}],41:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 var html_sanitize = require('./sanitizer-bundle.js');
 
 module.exports = function(_) {
@@ -39762,7 +39991,7 @@ function cleanUrl(url) {
 
 function cleanId(id) { return id; }
 
-},{"./sanitizer-bundle.js":42}],42:[function(require,module,exports){
+},{"./sanitizer-bundle.js":44}],44:[function(require,module,exports){
 
 // Copyright (C) 2010 Google Inc.
 //
@@ -42211,4 +42440,4 @@ if (typeof module !== 'undefined') {
     module.exports = html_sanitize;
 }
 
-},{}]},{},[9]);
+},{}]},{},[11]);

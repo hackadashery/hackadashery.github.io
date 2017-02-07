@@ -1,9 +1,14 @@
 'use strict';
 
+var philadelphiaZipCodeList = [ 
+	"19102", "19103", "19104", "19106", "19107", "19109", "19111", "19112", "19114", "19115", "19116", "19118", "19119", "19120", "19121", "19122", 
+	"19123", "19124", "19125", "19126", "19127", "19128", "19129", "19130", "19131", "19132", "19133", "19134", "19135", "19136", "19137", "19138", 
+	"19139", "19140", "19141", "19142", "19143", "19144", "19145", "19146", "19147", "19148", "19149", "19150", "19151", "19152", "19153", "19154"
+]
+
 module.exports = {
 	init(){
-        
-		console.log("Initting search by filters");
+
 		$('.js-search-form__form').on('submit', function(e){
 			e.preventDefault();
 
@@ -52,6 +57,41 @@ module.exports = {
 
 			eventManager.fire('SEARCH_BY_FILTERS_FORM_SUBMITTED', queryString);
 		});
+
+		//====================== now that the listners are all set up, check if we have any url params to deal with.
+
+		//collect all the url params
+		var searchParams = {
+			search: urlParameter.get('search', true),
+			id: urlParameter.get('id', true),
+			zip: urlParameter.get('zip', true),
+			serviceType: urlParameter.get('service-type', true),
+			dateOfRequest: urlParameter.get('date-of-request', true),
+			agencyResponsible: urlParameter.get('agency-responsible', true)
+		}
+
+		//set them 
+		if (searchParams.zip) {               $('.js-search-form__zip').val(searchParams.zip); }
+		if (searchParams.serviceType) {       $('.js-search-form__service-type').val(searchParams.serviceType); }
+		if (searchParams.dateOfRequest) {     $('.js-search-form__date-of-request').val(searchParams.dateOfRequest); }
+		if (searchParams.agencyResponsible) { $('.js-search-form__agency-responsible').val(searchParams.agencyResponsible); }
+		if (searchParams.id) {                $('.js-search-form__id').val(searchParams.id); }
+
+		//search is a special case - could be ZIP or Requiest ID
+		if (searchParams.search){
+			if (philadelphiaZipCodeList.includes(searchParams.search)) {
+				$('.js-search-form__zip').val(searchParams.search);
+				urlParameter.set('zip', searchParams.search);
+			} else {
+				//There's a search and it's not a ZIP. That means it's for an ID
+				$('.js-search-form__id').val(searchParams.search, true);
+				urlParameter.set('id', searchParams.search, true);
+			}
+
+			//no longer any need for the search param
+			urlParameter.set('search', '');
+		}
+
 	}
 }
 
