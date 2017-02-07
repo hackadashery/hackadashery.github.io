@@ -6,6 +6,15 @@
     background-color: $hacka_blue;
     color: white;
 
+	&__left {
+		margin-right: rem($pad);
+	}
+
+	&__right {
+		margin-left: rem($pad);
+		text-align: right;
+	}
+
     @include breakpoint(medium){
 		flex-direction: row;
 		align-items: center;

@@ -4,14 +4,14 @@ module.exports = {
 	init(){
         
 		console.log("Initting search by filters");
-		$('.js-search-by-filters__form').on('submit', function(e){
+		$('.js-search-form__form').on('submit', function(e){
 			e.preventDefault();
 
-			var $advForm = $(this).closest('.js-search-by-filters__form');
+			var $advForm = $(this).closest('.js-search-form__form');
 			var queryStringsArray = [];
 
 			//get zip
-			var zipCode = $advForm.find('.js-search-by-filters__zip').val();
+			var zipCode = $advForm.find('.js-search-form__zip').val();
 			var zipQuery = '';
 			if (zipCode.length > 0) {
 				zipQuery = "zip='" + zipCode + "'";
@@ -19,7 +19,7 @@ module.exports = {
 			}
 
 			//get req number
-			var serviceNo = $advForm.find('.js-search-by-filters__service-type').val();
+			var serviceNo = $advForm.find('.js-search-form__service-type').val();
 			var serviceQuery = '';
 			if (serviceNo.length > 0) {
 				serviceQuery = "service_code='" + serviceNo + "'";
@@ -27,7 +27,7 @@ module.exports = {
 			}
 
 			//requested_datetime
-			var dateInput = $advForm.find('.js-search-by-filters__date-of-request').val();
+			var dateInput = $advForm.find('.js-search-form__date-of-request').val();
 			var dateQuery = '';
 			if (dateInput.length > 0){
 				var fromDate = new Date(dateInput);
@@ -40,7 +40,7 @@ module.exports = {
 				queryStringsArray.push(dateQuery);
 			}
 
-			var agencyInput = $advForm.find('.js-search-by-filters__agency-responsible').val();
+			var agencyInput = $advForm.find('.js-search-form__agency-responsible').val();
 			var agencyQuery = '';
 			if (agencyInput.length > 0){
 				agencyQuery = "agency_responsible='" + agencyInput + "'";

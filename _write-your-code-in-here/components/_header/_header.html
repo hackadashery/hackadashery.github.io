@@ -24,8 +24,8 @@
                 </a>
             </div>
 
-            <form class="main-nav__search" action="/philly311/find-request-by-id" method="GET">
-                <input type="text" name="id" class="main-nav__search-input" placeholder="Request ID / ZIP">
+            <form class="main-nav__search" action="/philly311/search" method="GET" class="js-header-search">
+                <input type="text" name="search" class="main-nav__search-input" placeholder="Request ID / ZIP">
                 <label class="main-nav__search-submit">
                     {{> _svg/search }}
                     <input type="submit" value="Search">

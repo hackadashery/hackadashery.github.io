@@ -1,15 +1,16 @@
 
 
-<form class="search-by-filters js-search-by-filters__form" action="/philly311/find-requests-by-address" method="GET">
+<form class="search-form js-search-form__form" action="/philly311/find-requests-by-address" method="GET">
 
-    <label class="search-by-filters__label">
-        <input type="text" placeholder="zip" name="zip" class="search-by-filters__input js-search-by-filters__zip">
+    <label class="search-form__label">
+        <div class="label-text">Search within a ZIP code:</div> 
+        <input type="text" placeholder="zip" name="zip" class="search-form__input js-search-form__zip">
     </label>
 
-    <label class="search-by-filters__label">
+    <label class="search-form__label">
         <div class="label-text">What type of service request was it?</div> 
         <!-- request ids: https://gist.github.com/mheadd/7171ea534e3e3afe8037f639b630c3d5 -->
-        <select type="text" class="search-by-filters__input js-search-by-filters__service-type" name="service-type">
+        <select type="text" class="search-form__input js-search-form__service-type" name="service-type">
             <option selected value> -- select an option -- </option>
             <option value="SR-LI21">Maintenance Residential</option>
             <option value="SR-ST03">Rubbish/Recyclable Material Collection</option>
@@ -65,14 +66,14 @@
     </label>
 
     <!-- http://dev.office.com/fabric#/components/datepicker -->
-    <label class="search-by-filters__label">
+    <label class="search-form__label">
         <div class="label-text">When did you make the request?</div> 
-        <input type="date" class="search-by-filters__input js-search-by-filters__date-of-request" name="date-of-request">
+        <input type="date" class="search-form__input js-search-form__date-of-request" name="date-of-request">
     </label>
 
-    <label class="search-by-filters__label">
+    <label class="search-form__label">
         <div class="label-text">Agency</div> 
-        <select type="text" class="search-by-filters__input js-search-by-filters__agency-responsible" name="agency-responsible">
+        <select type="text" class="search-form__input js-search-form__agency-responsible" name="agency-responsible">
             <option selected value> -- select an option -- </option>
             <option value="Streets Department">Streets Department</option>
             <option value="Community Life Improvement Program">Community Life Improvement Program</option>
@@ -128,10 +129,21 @@
     </label>
 
 
-    <input type="submit" value="Search" class="search-by-filters__submit js-search-by-filters__submit" />
+    <input type="submit" value="Search" class="search-form__submit js-search-form__submit" />
 
 </form>
 
+<div class="search-form__or"><span class="search-form__or-text">Or</span></div>
+
+<form class="search-form js-search-form__form" action="/philly311/find-requests-by-address" method="GET">
+    <label class="search-form__label">
+        <div class="label-text">Search a specific request ID:</div> 
+        <input type="text" placeholder="Request ID" name="id" class="search-form__input js-search-form__id">
+    </label>
+
+    <input type="submit" value="Search" class="search-form__submit js-search-form__submit" />
+</form>
+
 <script>
-    threeOneOne.searchByFilters.init();
+    threeOneOne.searchForm.init();
 </script>
