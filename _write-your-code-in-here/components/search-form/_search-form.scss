@@ -26,14 +26,30 @@
 	//the ro divider between the 2 forms =============== WARNING! MAGIC NUMBER!
 	&__or {
 		text-align: center;
-		margin: rem($pad * 2) 0 rem(($pad * 2) + 23);
+		margin: 0 0 rem(($pad * 2) + 23);
 		border-bottom: 1px dashed rgba($rule-color, 0.5);
 		height: 23px;
+		width: 100%;
 
 		&-text { //span
 			display: inline-block;
 			padding: rem($pad);
 			background-color:$background-color-dark;
+		}
+	}
+
+	.search-form__id-section { //not actually needed, but it keeps the symmetry :)
+		width: 100%;
+	}
+	//Fade out the filter section when there is something in the id field (modifier class set by JS)
+	.search-form__filter-section {
+		width: 100%;
+		opacity: 1;
+		transition: opacity 0.5s ease;
+	}
+	&--id-active {
+		.search-form__filter-section {
+			opacity: 0.3;
 		}
 	}
 }

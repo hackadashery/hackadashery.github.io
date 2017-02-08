@@ -814,60 +814,76 @@ module.exports = {
 	init(){
 
 		//The filter form
-		$('.js-search-filter-form__form').on('submit', function(e){
+		$('.js-search-form__form').on('submit', function(e){
 			e.preventDefault();
 			var $thisForm = $(this);
 			var queryStringsArray = [];
 
-			//get zip
-			var zipCode = $thisForm.find('.js-search-form__zip').val();
-			var zipQuery = '';
-			if (zipCode.length > 0) {
-				zipQuery = 'zipcode="' + zipCode + '"';
-				queryStringsArray.push(zipQuery);
-			}
-
-			//get req number
-			var serviceNo = $thisForm.find('.js-search-form__service-type').val();
-			var serviceQuery = '';
-			if (serviceNo.length > 0) {
-				serviceQuery = "service_code='" + serviceNo + "'";
-				queryStringsArray.push(serviceQuery);
-			}
-
-			//requested_datetime
-			var dateInput = $thisForm.find('.js-search-form__date-of-request').val();
-			var dateQuery = '';
-			if (dateInput.length > 0){
-				var fromDate = new Date(dateInput);
-				fromDate.setDate(fromDate.getDate() - 1);
-				var toDate = new Date(dateInput);
-				toDate.setDate(toDate.getDate() + 1);
-				//Wrong: $where=requested_datetime%20between%20%272016-09-25T00:00:00.000Z%27%20and%20%272016-10-15T00:00:00.000Z%27
-				//Right: $where=requested_datetime%20between%20%272016-09-25T00:00:00%27%20and%20%272016-10-15T00:00:00%27
-				dateQuery = "requested_datetime between '" + fromDate.toISOString().replace('.000Z', '') + "' and '" + toDate.toISOString().replace('.000Z', '') + "'";
-				queryStringsArray.push(dateQuery);
-			}
-
-			var agencyInput = $thisForm.find('.js-search-form__agency-responsible').val();
-			var agencyQuery = '';
-			if (agencyInput.length > 0){
-				agencyQuery = "agency_responsible='" + agencyInput + "'";
-				queryStringsArray.push(agencyQuery);
-			}
-
-			var queryString = queryStringsArray.join(' AND ') + "&$limit=1000";
-
-			eventManager.fire('SEARCH_BY_FILTERS_FORM_SUBMITTED', queryString);
-		});
-
-		//The ID form
-		$('.js-search-id-form__form').on('submit', function(e){
-			e.preventDefault();
+			//Is there an id set? 
 			var searchID = $(this).find('.js-search-form__id').val();
-			console.log('submitting!');
-			eventManager.fire('SEARCH_BY_ID_SUBMITTED', searchID);
+			if (searchID.length > 0) {
+				//there is - so don't even look at the other things in the form. ID wins
+				eventManager.fire('SEARCH_BY_ID_SUBMITTED', searchID);
+			} else {
+
+				//get zip
+				var zipCode = $thisForm.find('.js-search-form__zip').val();
+				var zipQuery = '';
+				if (zipCode.length > 0) {
+					zipQuery = 'zipcode="' + zipCode + '"';
+					queryStringsArray.push(zipQuery);
+				}
+
+				//get req number
+				var serviceNo = $thisForm.find('.js-search-form__service-type').val();
+				var serviceQuery = '';
+				if (serviceNo.length > 0) {
+					serviceQuery = "service_code='" + serviceNo + "'";
+					queryStringsArray.push(serviceQuery);
+				}
+
+				//requested_datetime
+				var dateInput = $thisForm.find('.js-search-form__date-of-request').val();
+				var dateQuery = '';
+				if (dateInput.length > 0){
+					var fromDate = new Date(dateInput);
+					fromDate.setDate(fromDate.getDate() - 1);
+					var toDate = new Date(dateInput);
+					toDate.setDate(toDate.getDate() + 1);
+					//Wrong: $where=requested_datetime%20between%20%272016-09-25T00:00:00.000Z%27%20and%20%272016-10-15T00:00:00.000Z%27
+					//Right: $where=requested_datetime%20between%20%272016-09-25T00:00:00%27%20and%20%272016-10-15T00:00:00%27
+					dateQuery = "requested_datetime between '" + fromDate.toISOString().replace('.000Z', '') + "' and '" + toDate.toISOString().replace('.000Z', '') + "'";
+					queryStringsArray.push(dateQuery);
+				}
+
+				var agencyInput = $thisForm.find('.js-search-form__agency-responsible').val();
+				var agencyQuery = '';
+				if (agencyInput.length > 0){
+					agencyQuery = "agency_responsible='" + agencyInput + "'";
+					queryStringsArray.push(agencyQuery);
+				}
+
+				var queryString = queryStringsArray.join(' AND ') + "&$limit=1000";
+
+				eventManager.fire('SEARCH_BY_FILTERS_FORM_SUBMITTED', queryString);
+			} //end if ID is set
+
 		});
+
+		//another fun little bit, if the id input has content, fade out the rest of the form to indicate it'll have no impact
+		$('.js-search-form__id').on('keydown change', function(e){
+			//get what's in the input field - but wait for it to update
+			setTimeout(function(){ 
+				var idVal = $('.js-search-form__id').val();	
+				console.log('idVal', idVal);
+				if (idVal.length > 0) {
+					$('.js-search-form__form').addClass('search-form--id-active');
+				} else {
+					$('.js-search-form__form').removeClass('search-form--id-active');
+				}
+			}, 10);
+		});
+
 
 		//====================== now that the listners are all set up, check if we have any url params to deal with.
 
