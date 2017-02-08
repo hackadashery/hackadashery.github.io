@@ -16,7 +16,9 @@ module.exports = {
                 console.log("returned!", arguments);
                 eventManager.fire('SEARCH_BY_FILTERS_API_RETURNED', {owner:'general-search-form', data: {query: queryString, results: data}});
 				$('.js-api').removeClass('api--waiting');
-            });
+            }).fail(function(err){
+				console.error('API error:', err);
+			});
 
         });
 
@@ -30,6 +32,8 @@ module.exports = {
 				console.log('returned!', arguments);
 				eventManager.fire('GET_ISSUE_BY_ID_RETURNED', { data: {results: data}});
 				$('.js-api').removeClass('api--waiting');
+			}).fail(function(err){
+				console.error('API error:', err);
 			});
 		});
 	},

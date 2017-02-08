@@ -19,7 +19,7 @@ module.exports = {
 			var zipCode = $thisForm.find('.js-search-form__zip').val();
 			var zipQuery = '';
 			if (zipCode.length > 0) {
-				zipQuery = "zip='" + zipCode + "'";
+				zipQuery = 'zipcode="' + zipCode + '"';
 				queryStringsArray.push(zipQuery);
 			}
 
@@ -97,10 +97,12 @@ module.exports = {
 			if (philadelphiaZipCodeList.includes(searchParams.search)) {
 				$('.js-search-form__zip').val(searchParams.search);
 				urlParameter.set('zip', searchParams.search);
+				filterFormShouldSubmit = true;
 			} else {
 				//There's a search and it's not a ZIP. That means it's for an ID
 				$('.js-search-form__id').val(searchParams.search, true);
 				urlParameter.set('id', searchParams.search, true);
+				idFormShouldSubmit = true;
 			}
 
 			//no longer any need for the search param
